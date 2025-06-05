@@ -20,7 +20,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { useDebounce } from "@/hooks/use-debounce";
-import { AdvancedFilters, type FilterOption } from "./_components/AdvancedFilters";
+import { AdvancedFilters, type FilterOption } from "@/components/ui/advanced-filters";
 import Papa from 'papaparse';
 import { saveAs } from 'file-saver';
 import { toast } from "sonner";
