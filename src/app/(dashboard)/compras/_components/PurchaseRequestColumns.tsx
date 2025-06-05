@@ -49,24 +49,6 @@ export type PurchaseRequest = {
   } | null;
 };
 
-// Helper function to handle status updates (Approve/Reject)
-const handleStatusUpdate = async (id: string, newStatusId: string, router: ReturnType<typeof useRouter>) => {
-  const supabase = createClient();
-  try {
-    const { error } = await supabase
-      .from("purchase_requests")
-      .update({ status_id: newStatusId, updated_at: new Date().toISOString() })
-      .eq("id", id);
-
-    if (error) throw error;
-
-    toast.success(`Status da solicitação atualizado com sucesso!`);
-    router.refresh(); // Refresh data in the table
-  } catch (error: any) {
-    console.error(`Erro ao atualizar status da solicitação:`, error);
-    toast.error(`Erro ao atualizar status: ${error.message}`);
-  }
-};
 
 // Helper function to handle deletion
 const handleDelete = async (id: string, router: ReturnType<typeof useRouter>) => {

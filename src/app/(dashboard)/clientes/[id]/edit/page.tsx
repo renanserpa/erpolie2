@@ -99,10 +99,9 @@ export default function EditClientPage() {
         </CardHeader>
         <CardContent>
           {client && (
-            <ClientForm 
-              initialData={client} 
+            <ClientForm
+              initialData={client}
               onSuccess={handleSuccess}
-              isEditing={true}
             />
           )}
         </CardContent>

@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { DataTable } from "@/components/ui/data-table";
-import { columns } from "./_components/ClientColumns";
+import { clientColumns } from "./_components/ClientColumns";
 import { Plus, FileDown, FileUp, Filter } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { useDebounce } from "@/hooks/use-debounce";
@@ -26,35 +26,26 @@ export default function ClientesPage() {
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
   const [isFiltersOpen, setIsFiltersOpen] = useState(false);
   const [activeFilters, setActiveFilters] = useState<Record<string, any>>({});
-  const [visibleColumns, setVisibleColumns] = useState<string[]>([
-    "name", "email", "phone", "document", "city", "status", "actions"
-  ]);
   
   const debouncedSearchQuery = useDebounce(searchQuery, 500);
 
   // Opções de filtro para clientes
   const filterOptions: FilterOption[] = [
-    { id: "status", label: "Status", type: "select", options: [
-      { value: "Ativo", label: "Ativo" },
-      { value: "Inativo", label: "Inativo" },
-      { value: "Pendente", label: "Pendente" }
-    ]},
+    {
+      id: "is_active",
+      label: "Status",
+      type: "select",
+      options: [
+        { value: "true", label: "Ativo" },
+        { value: "false", label: "Inativo" },
+      ],
+    },
     { id: "city", label: "Cidade", type: "text" },
     { id: "state", label: "Estado", type: "text" },
     { id: "created_at", label: "Data de Cadastro", type: "date" }
   ];
 
   // Opções de colunas visíveis
-  const columnOptions = [
-    { id: "name", label: "Nome" },
-    { id: "email", label: "Email" },
-    { id: "phone", label: "Telefone" },
-    { id: "document", label: "Documento" },
-    { id: "city", label: "Cidade" },
-    { id: "state", label: "Estado" },
-    { id: "status", label: "Status" },
-    { id: "actions", label: "Ações" }
-  ];
 
   // Carregar dados dos clientes
   const fetchClients = async () => {
@@ -100,7 +91,7 @@ export default function ClientesPage() {
             document: '01471569128',
             city: 'Cuiabá',
             state: 'MT',
-            status: 'Ativo',
+            is_active: true,
             created_at: new Date().toISOString()
           },
           {
@@ -111,7 +102,7 @@ export default function ClientesPage() {
             document: '12345678900',
             city: 'São Paulo',
             state: 'SP',
-            status: 'Ativo',
+            is_active: true,
             created_at: new Date().toISOString()
           }
         ]);
@@ -140,7 +131,7 @@ export default function ClientesPage() {
         Documento: client.document,
         Cidade: client.city,
         Estado: client.state,
-        Status: client.status,
+        Status: client.is_active ? 'Ativo' : 'Inativo',
         'Data de Cadastro': new Date(client.created_at).toLocaleDateString('pt-BR')
       }));
       
@@ -194,6 +185,11 @@ export default function ClientesPage() {
   const handleClientClick = (clientId: string) => {
     router.push(`/clientes/${clientId}`);
   };
+
+  const columns = clientColumns(
+    () => {},
+    () => {}
+  );
 
   return (
     <div className="space-y-4">
@@ -274,11 +270,8 @@ export default function ClientesPage() {
           {isFiltersOpen && (
             <div className="mb-6">
               <AdvancedFilters
-                options={filterOptions}
+                filterOptions={filterOptions}
                 onFilterChange={setActiveFilters}
-                columnOptions={columnOptions}
-                visibleColumns={visibleColumns}
-                onVisibleColumnsChange={setVisibleColumns}
               />
             </div>
           )}
@@ -296,7 +289,7 @@ export default function ClientesPage() {
           )}
 
           <DataTable
-            columns={columns.filter(col => visibleColumns.includes(col.id))}
+            columns={columns}
             data={clients}
             isLoading={isLoading}
             onRowClick={(row) => handleClientClick(row.id)}

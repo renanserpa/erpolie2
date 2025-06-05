@@ -28,7 +28,7 @@ const formatDate = (dateString: string | null | undefined) => {
   if (!dateString) return "-";
   try {
     return new Date(dateString).toLocaleDateString("pt-BR");
-  } catch (e) {
+  } catch (_err) {
     return "Data inválida";
   }
 };
