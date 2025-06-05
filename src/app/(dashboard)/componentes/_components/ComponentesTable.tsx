@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from 'react';
-import { 
+import {
   Table,
   TableBody,
   TableCell,
@@ -13,13 +13,14 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { useSupabaseData, createRecord, updateRecord, deleteRecord } from "@/lib/data-hooks";
+import type { Component } from "@/types/schema";
 import { Loader2, Plus, Pencil, Trash2, Search } from "lucide-react";
 import { toast } from "sonner";
 
 export default function ComponentesTable() {
   const [isOpen, setIsOpen] = useState(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
-  const [currentItem, setCurrentItem] = useState<any>(null);
+  const [currentItem, setCurrentItem] = useState<Component | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [formData, setFormData] = useState({
     name: '',
@@ -42,7 +43,7 @@ export default function ComponentesTable() {
     item.description?.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  const handleOpenDialog = (item?: any) => {
+  const handleOpenDialog = (item?: Component) => {
     if (item) {
       setCurrentItem(item);
       setFormData({
@@ -67,7 +68,7 @@ export default function ComponentesTable() {
     setIsOpen(true);
   };
 
-  const handleOpenDeleteDialog = (item: any) => {
+  const handleOpenDeleteDialog = (item: Component) => {
     setCurrentItem(item);
     setIsDeleteDialogOpen(true);
   };
@@ -301,7 +302,7 @@ export default function ComponentesTable() {
             <DialogTitle>Confirmar Exclusão</DialogTitle>
           </DialogHeader>
           <div className="py-4">
-            <p>Tem certeza que deseja excluir o componente "{currentItem?.name}"?</p>
+            <p>Tem certeza que deseja excluir o componente &quot;{currentItem?.name}&quot;?</p>
             <p className="text-sm text-muted-foreground mt-2">Esta ação não pode ser desfeita.</p>
           </div>
           <DialogFooter>

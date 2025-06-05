@@ -18,6 +18,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
 import { createRecord, updateRecord } from "@/lib/utils/data-hooks";
+import type { Client } from "@/types/schema";
 import { Switch } from "@/components/ui/switch";
 
 // Define Zod schema para validação do formulário de cliente
@@ -37,13 +38,13 @@ const clientFormSchema = z.object({
 type ClientFormValues = z.infer<typeof clientFormSchema>;
 
 interface ClientFormProps {
-  initialData?: any; // Para edição
+  initialData?: Partial<Client>; // Para edição
   onSuccess?: () => void; // Callback após submissão bem-sucedida
 }
 
 export function ClientForm({ initialData, onSuccess }: ClientFormProps) {
   const form = useForm<ClientFormValues>({
-    resolver: zodResolver(clientFormSchema) as any,
+    resolver: zodResolver(clientFormSchema),
     defaultValues: {
       name: initialData?.name || "",
       email: initialData?.email || "",

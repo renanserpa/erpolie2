@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -17,7 +17,7 @@ import { toast } from "sonner";
 import { ClientForm } from "./_components/ClientForm";
 import { getClients } from "@/lib/data-hooks";
 
-// Defina um tipo básico para Client (faça melhor depois)
+// Tipagem para Cliente
 type Client = {
   id: string;
   name: string;
@@ -59,7 +59,7 @@ export default function ClientesPage() {
   ];
 
   // Carregar dados dos clientes
-  const fetchClients = async () => {
+  const fetchClients = useCallback(async () => {
     try {
       setIsLoading(true);
       setError(null);
@@ -116,17 +116,21 @@ export default function ClientesPage() {
         console.warn("Usando dados mockados para clientes");
       }
     } catch (err) {
-      console.error("Error fetching clients:", err);
-      setError((err as Error).message || "Erro ao carregar clientes");
+      // err é unknown por padrão, então faça a checagem
+      if (err instanceof Error) {
+        setError(err.message);
+      } else {
+        setError("Erro ao carregar clientes");
+      }
       toast.error("Erro ao carregar lista de clientes.");
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [debouncedSearchQuery, activeFilters]);
 
   useEffect(() => {
     fetchClients();
-  }, [debouncedSearchQuery, activeFilters]);
+  }, [fetchClients]);
 
   // Função para exportar clientes para CSV
   const exportToCSV = () => {
@@ -160,7 +164,7 @@ export default function ClientesPage() {
 
     Papa.parse(file, {
       header: true,
-      complete: async (results) => {
+      complete: async (results: Papa.ParseResult<unknown>) => {
         try {
           toast.success(`${results.data.length} clientes importados com sucesso!`);
           fetchClients();
@@ -271,7 +275,10 @@ export default function ClientesPage() {
         <CardContent>
           {isFiltersOpen && (
             <div className="mb-6">
-              <AdvancedFilters filterOptions={filterOptions} onFilterChange={setActiveFilters} />
+              <AdvancedFilters
+                filterOptions={filterOptions}
+                onFilterChange={setActiveFilters}
+              />
             </div>
           )}
 
@@ -289,7 +296,7 @@ export default function ClientesPage() {
             columns={columns}
             data={clients}
             isLoading={isLoading}
-            onRowClick={(row) => handleClientClick(row.id)}
+            onRowClick={(row: Client) => handleClientClick(row.id)}
           />
         </CardContent>
       </Card>

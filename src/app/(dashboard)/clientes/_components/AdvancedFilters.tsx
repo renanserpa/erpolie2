@@ -74,7 +74,7 @@ export function AdvancedFilters({ filterOptions, onFilterChange }: AdvancedFilte
             <FormField
               key={option.id}
               control={form.control}
-              name={option.id as any}
+              name={option.id as keyof FilterFormValues}
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>{option.label}</FormLabel>
