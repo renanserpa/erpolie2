@@ -96,11 +96,15 @@ export function Dashboard({ className }: DashboardProps) {
       
       // Carregar dados do dashboard com os filtros iniciais
       await fetchDashboardData();
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error("Erro ao carregar dados iniciais:", error);
-      toast.error(`Erro ao carregar dados: ${error.message}`);
+      if (error instanceof Error) {
+        toast.error(`Erro ao carregar dados: ${error.message}`);
+      } else {
+        toast.error("Erro desconhecido ao carregar dados");
+      }
     }
-  }, []);
+  }, [fetchDashboardData, supabase]);
   
   useEffect(() => {
     fetchInitialData();
@@ -111,10 +115,10 @@ export function Dashboard({ className }: DashboardProps) {
     }, 5 * 60 * 1000);
     
     return () => clearInterval(intervalId);
-  }, [fetchInitialData]);
+  }, [fetchDashboardData, fetchInitialData]);
   
   // Buscar dados do dashboard com base nos filtros
-  const fetchDashboardData = async () => {
+  const fetchDashboardData = useCallback(async () => {
     setIsLoading(true);
     try {
       // Parâmetros de filtro
@@ -131,16 +135,20 @@ export function Dashboard({ className }: DashboardProps) {
       setChartData(charts);
       
       toast.success("Dashboard atualizado com sucesso!");
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error("Erro ao buscar dados do dashboard:", error);
-      toast.error(`Erro ao carregar dashboard: ${error.message}`);
+      if (error instanceof Error) {
+        toast.error(`Erro ao carregar dashboard: ${error.message}`);
+      } else {
+        toast.error("Erro desconhecido ao carregar dashboard");
+      }
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [dateRange.from, dateRange.to, divisionFilter, supabase, fetchKpiData, fetchChartData]);
   
   // Buscar dados de KPI
-  const fetchKpiData = async (fromDate: string, toDate: string, divisionId: string | null): Promise<KpiData> => {
+  const fetchKpiData = useCallback(async (fromDate: string, toDate: string, divisionId: string | null): Promise<KpiData> => {
     try {
       // Período anterior para comparação (mesmo intervalo)
       const daysDiff = Math.ceil((new Date(toDate).getTime() - new Date(fromDate).getTime()) / (1000 * 3600 * 24));
@@ -267,7 +275,7 @@ export function Dashboard({ className }: DashboardProps) {
       const totalDeliveries = deliveryData?.length || 0;
       
       // 6. Total de Clientes
-      let customerQuery = supabase
+      const customerQuery = supabase
         .from("customers")
         .select("id");
         
@@ -296,10 +304,10 @@ export function Dashboard({ className }: DashboardProps) {
       console.error("Erro ao buscar KPIs:", error);
       throw error;
     }
-  };
+  }, [supabase]);
   
   // Buscar dados para gráficos
-  const fetchChartData = async (fromDate: string, toDate: string, divisionId: string | null): Promise<ChartData> => {
+  const fetchChartData = useCallback(async (fromDate: string, toDate: string, divisionId: string | null): Promise<ChartData> => {
     try {
       // 1. Vendas por Categoria
       let categoryQuery = supabase
@@ -523,7 +531,7 @@ export function Dashboard({ className }: DashboardProps) {
       console.error("Erro ao buscar dados para gráficos:", error);
       throw error;
     }
-  };
+  }, [supabase]);
   
   // Aplicar filtros
   const handleApplyFilters = () => {

@@ -17,35 +17,28 @@ import { toast } from "sonner";
 import { ClientForm } from "./_components/ClientForm";
 import { getClients } from "@/lib/data-hooks";
 
+// Defina um tipo básico para Client (faça melhor depois)
+type Client = {
+  id: string;
+  name: string;
+  email: string;
+  phone: string;
+  document: string;
+  city: string;
+  state: string;
+  is_active: boolean;
+  created_at: string;
+};
+
 export default function ClientesPage() {
   const router = useRouter();
   const [searchQuery, setSearchQuery] = useState("");
   const [isLoading, setIsLoading] = useState(true);
-  const [clients, setClients] = useState<any[]>([]);
+  const [clients, setClients] = useState<Client[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
   const [isFiltersOpen, setIsFiltersOpen] = useState(false);
-  const [activeFilters, setActiveFilters] = useState<Record<string, any>>({});
-  const [visibleColumns, setVisibleColumns] = useState<string[]>([
-    "name",
-    "email",
-    "phone",
-    "document",
-    "city",
-    "is_active",
-    "actions",
-  ]);
-
-  const columnOptions = [
-    { id: "name", label: "Nome" },
-    { id: "email", label: "Email" },
-    { id: "phone", label: "Telefone" },
-    { id: "document", label: "Documento" },
-    { id: "city", label: "Cidade" },
-    { id: "state", label: "Estado" },
-    { id: "is_active", label: "Status" },
-    { id: "actions", label: "Ações" },
-  ];
+  const [activeFilters, setActiveFilters] = useState<Record<string, unknown>>({});
 
   const debouncedSearchQuery = useDebounce(searchQuery, 500);
 
@@ -72,7 +65,7 @@ export default function ClientesPage() {
       setError(null);
 
       // Construir query com filtros
-      const query: Record<string, any> = {};
+      const query: Record<string, unknown> = {};
 
       if (debouncedSearchQuery) {
         query.name = `ilike.%${debouncedSearchQuery}%`;
@@ -82,13 +75,10 @@ export default function ClientesPage() {
       Object.entries(activeFilters).forEach(([key, value]) => {
         if (value !== undefined && value !== null && value !== "") {
           if (key === "created_at" && typeof value === "string") {
-            // Filtro de data
             query[key] = `gte.${value}`;
           } else if (typeof value === "string") {
-            // Filtro de texto com busca parcial
             query[key] = `ilike.%${value}%`;
           } else {
-            // Outros tipos de filtro
             query[key] = value;
           }
         }
@@ -99,7 +89,6 @@ export default function ClientesPage() {
       if (result.success) {
         setClients(result.data || []);
       } else {
-        // Usar dados mockados para demonstração
         setClients([
           {
             id: "1",
@@ -126,9 +115,9 @@ export default function ClientesPage() {
         ]);
         console.warn("Usando dados mockados para clientes");
       }
-    } catch (err: any) {
+    } catch (err) {
       console.error("Error fetching clients:", err);
-      setError(err.message || "Erro ao carregar clientes");
+      setError((err as Error).message || "Erro ao carregar clientes");
       toast.error("Erro ao carregar lista de clientes.");
     } finally {
       setIsLoading(false);
@@ -150,9 +139,7 @@ export default function ClientesPage() {
         Cidade: client.city,
         Estado: client.state,
         Status: client.is_active ? "Ativo" : "Inativo",
-        "Data de Cadastro": new Date(client.created_at).toLocaleDateString(
-          "pt-BR"
-        ),
+        "Data de Cadastro": new Date(client.created_at).toLocaleDateString("pt-BR"),
       }));
 
       const csv = Papa.unparse(dataToExport);
@@ -175,10 +162,8 @@ export default function ClientesPage() {
       header: true,
       complete: async (results) => {
         try {
-          // Aqui você implementaria a lógica para salvar os clientes importados
-          // Por enquanto, apenas mostramos uma mensagem de sucesso
           toast.success(`${results.data.length} clientes importados com sucesso!`);
-          fetchClients(); // Recarregar a lista após importação
+          fetchClients();
         } catch (error) {
           console.error("Erro ao importar clientes:", error);
           toast.error("Erro ao importar clientes.");
@@ -190,18 +175,15 @@ export default function ClientesPage() {
       },
     });
 
-    // Limpar o input para permitir selecionar o mesmo arquivo novamente
     event.target.value = "";
   };
 
-  // Função para lidar com o sucesso na criação de um cliente
   const handleCreateSuccess = () => {
     setIsCreateDialogOpen(false);
     fetchClients();
     toast.success("Cliente criado com sucesso!");
   };
 
-  // Função para navegar para a página de detalhes do cliente
   const handleClientClick = (clientId: string) => {
     router.push(`/clientes/${clientId}`);
   };
@@ -220,9 +202,7 @@ export default function ClientesPage() {
           <label htmlFor="import-csv" className="cursor-pointer">
             <Button
               variant="outline"
-              onClick={() =>
-                document.getElementById("import-csv")?.click()
-              }
+              onClick={() => document.getElementById("import-csv")?.click()}
             >
               <FileUp className="mr-2 h-4 w-4" />
               Importar CSV
@@ -291,10 +271,7 @@ export default function ClientesPage() {
         <CardContent>
           {isFiltersOpen && (
             <div className="mb-6">
-              <AdvancedFilters
-                filterOptions={filterOptions}
-                onFilterChange={setActiveFilters}
-              />
+              <AdvancedFilters filterOptions={filterOptions} onFilterChange={setActiveFilters} />
             </div>
           )}
 
