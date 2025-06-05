@@ -27,18 +27,28 @@ export default function ClientesPage() {
   const [isFiltersOpen, setIsFiltersOpen] = useState(false);
   const [activeFilters, setActiveFilters] = useState<Record<string, any>>({});
   const [visibleColumns, setVisibleColumns] = useState<string[]>([
-    "name", "email", "phone", "document", "city", "status", "actions"
+    "name",
+    "email",
+    "phone",
+    "document",
+    "city",
+    "is_active",
+    "actions",
   ]);
   
   const debouncedSearchQuery = useDebounce(searchQuery, 500);
 
   // Opções de filtro para clientes
   const filterOptions: FilterOption[] = [
-    { id: "status", label: "Status", type: "select", options: [
-      { value: "Ativo", label: "Ativo" },
-      { value: "Inativo", label: "Inativo" },
-      { value: "Pendente", label: "Pendente" }
-    ]},
+    {
+      id: "is_active",
+      label: "Status",
+      type: "select",
+      options: [
+        { value: true, label: "Ativo" },
+        { value: false, label: "Inativo" },
+      ],
+    },
     { id: "city", label: "Cidade", type: "text" },
     { id: "state", label: "Estado", type: "text" },
     { id: "created_at", label: "Data de Cadastro", type: "date" }
@@ -52,8 +62,8 @@ export default function ClientesPage() {
     { id: "document", label: "Documento" },
     { id: "city", label: "Cidade" },
     { id: "state", label: "Estado" },
-    { id: "status", label: "Status" },
-    { id: "actions", label: "Ações" }
+    { id: "is_active", label: "Status" },
+    { id: "actions", label: "Ações" },
   ];
 
   // Carregar dados dos clientes
@@ -100,7 +110,7 @@ export default function ClientesPage() {
             document: '01471569128',
             city: 'Cuiabá',
             state: 'MT',
-            status: 'Ativo',
+            is_active: true,
             created_at: new Date().toISOString()
           },
           {
@@ -111,7 +121,7 @@ export default function ClientesPage() {
             document: '12345678900',
             city: 'São Paulo',
             state: 'SP',
-            status: 'Ativo',
+            is_active: true,
             created_at: new Date().toISOString()
           }
         ]);
@@ -140,7 +150,7 @@ export default function ClientesPage() {
         Documento: client.document,
         Cidade: client.city,
         Estado: client.state,
-        Status: client.status,
+        Status: client.is_active ? 'Ativo' : 'Inativo',
         'Data de Cadastro': new Date(client.created_at).toLocaleDateString('pt-BR')
       }));
       
