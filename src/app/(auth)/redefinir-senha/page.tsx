@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import Link from "next/link";
 import { createClient } from "@/lib/supabase/client"; // Importação correta
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -43,9 +42,10 @@ export default function RedefinirSenhaPage() {
       }
 
       setSuccess(true);
-    } catch (error: any) {
-      console.error("Password reset error:", error.message);
-      setError("Falha ao redefinir a senha. " + error.message);
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : String(error);
+      console.error("Password reset error:", message);
+      setError("Falha ao redefinir a senha. " + message);
     } finally {
       setLoading(false);
     }
