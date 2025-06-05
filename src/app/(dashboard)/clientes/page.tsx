@@ -6,13 +6,13 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { DataTable } from "@/components/ui/data-table";
-import { columns } from "./_components/ClientColumns";
+import { clientColumns } from "./_components/ClientColumns";
 import { Plus, FileDown, FileUp, Filter } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { useDebounce } from "@/hooks/use-debounce";
 import { AdvancedFilters, type FilterOption } from "@/components/ui/advanced-filters";
-import Papa from 'papaparse';
-import { saveAs } from 'file-saver';
+import Papa from "papaparse";
+import { saveAs } from "file-saver";
 import { toast } from "sonner";
 import { ClientForm } from "./_components/ClientForm";
 import { getClients } from "@/lib/data-hooks";
@@ -35,7 +35,18 @@ export default function ClientesPage() {
     "is_active",
     "actions",
   ]);
-  
+
+  const columnOptions = [
+    { id: "name", label: "Nome" },
+    { id: "email", label: "Email" },
+    { id: "phone", label: "Telefone" },
+    { id: "document", label: "Documento" },
+    { id: "city", label: "Cidade" },
+    { id: "state", label: "Estado" },
+    { id: "is_active", label: "Status" },
+    { id: "actions", label: "Ações" },
+  ];
+
   const debouncedSearchQuery = useDebounce(searchQuery, 500);
 
   // Opções de filtro para clientes
@@ -51,19 +62,7 @@ export default function ClientesPage() {
     },
     { id: "city", label: "Cidade", type: "text" },
     { id: "state", label: "Estado", type: "text" },
-    { id: "created_at", label: "Data de Cadastro", type: "date" }
-  ];
-
-  // Opções de colunas visíveis
-  const columnOptions = [
-    { id: "name", label: "Nome" },
-    { id: "email", label: "Email" },
-    { id: "phone", label: "Telefone" },
-    { id: "document", label: "Documento" },
-    { id: "city", label: "Cidade" },
-    { id: "state", label: "Estado" },
-    { id: "is_active", label: "Status" },
-    { id: "actions", label: "Ações" },
+    { id: "created_at", label: "Data de Cadastro", type: "date" },
   ];
 
   // Carregar dados dos clientes
@@ -71,21 +70,21 @@ export default function ClientesPage() {
     try {
       setIsLoading(true);
       setError(null);
-      
+
       // Construir query com filtros
       const query: Record<string, any> = {};
-      
+
       if (debouncedSearchQuery) {
         query.name = `ilike.%${debouncedSearchQuery}%`;
       }
-      
+
       // Adicionar filtros ativos à query
       Object.entries(activeFilters).forEach(([key, value]) => {
-        if (value !== undefined && value !== null && value !== '') {
-          if (key === 'created_at' && typeof value === 'string') {
+        if (value !== undefined && value !== null && value !== "") {
+          if (key === "created_at" && typeof value === "string") {
             // Filtro de data
             query[key] = `gte.${value}`;
-          } else if (typeof value === 'string') {
+          } else if (typeof value === "string") {
             // Filtro de texto com busca parcial
             query[key] = `ilike.%${value}%`;
           } else {
@@ -96,41 +95,41 @@ export default function ClientesPage() {
       });
 
       const result = await getClients(query);
-      
+
       if (result.success) {
         setClients(result.data || []);
       } else {
         // Usar dados mockados para demonstração
         setClients([
           {
-            id: '1',
-            name: 'Renan Serpa',
-            email: 'renan@nutecnologia.com',
-            phone: '65992834900',
-            document: '01471569128',
-            city: 'Cuiabá',
-            state: 'MT',
+            id: "1",
+            name: "Renan Serpa",
+            email: "renan@nutecnologia.com",
+            phone: "65992834900",
+            document: "01471569128",
+            city: "Cuiabá",
+            state: "MT",
             is_active: true,
-            created_at: new Date().toISOString()
+            created_at: new Date().toISOString(),
           },
           {
-            id: '2',
-            name: 'Maria Silva',
-            email: 'maria@exemplo.com',
-            phone: '11987654321',
-            document: '12345678900',
-            city: 'São Paulo',
-            state: 'SP',
+            id: "2",
+            name: "Maria Silva",
+            email: "maria@exemplo.com",
+            phone: "11987654321",
+            document: "12345678900",
+            city: "São Paulo",
+            state: "SP",
             is_active: true,
-            created_at: new Date().toISOString()
-          }
+            created_at: new Date().toISOString(),
+          },
         ]);
-        console.warn('Usando dados mockados para clientes');
+        console.warn("Usando dados mockados para clientes");
       }
     } catch (err: any) {
-      console.error('Error fetching clients:', err);
-      setError(err.message || 'Erro ao carregar clientes');
-      toast.error('Erro ao carregar lista de clientes.');
+      console.error("Error fetching clients:", err);
+      setError(err.message || "Erro ao carregar clientes");
+      toast.error("Erro ao carregar lista de clientes.");
     } finally {
       setIsLoading(false);
     }
@@ -143,25 +142,27 @@ export default function ClientesPage() {
   // Função para exportar clientes para CSV
   const exportToCSV = () => {
     try {
-      const dataToExport = clients.map(client => ({
+      const dataToExport = clients.map((client) => ({
         Nome: client.name,
         Email: client.email,
         Telefone: client.phone,
         Documento: client.document,
         Cidade: client.city,
         Estado: client.state,
-        Status: client.is_active ? 'Ativo' : 'Inativo',
-        'Data de Cadastro': new Date(client.created_at).toLocaleDateString('pt-BR')
+        Status: client.is_active ? "Ativo" : "Inativo",
+        "Data de Cadastro": new Date(client.created_at).toLocaleDateString(
+          "pt-BR"
+        ),
       }));
-      
+
       const csv = Papa.unparse(dataToExport);
-      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-      saveAs(blob, `clientes_${new Date().toISOString().split('T')[0]}.csv`);
-      
-      toast.success('Clientes exportados com sucesso!');
+      const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+      saveAs(blob, `clientes_${new Date().toISOString().split("T")[0]}.csv`);
+
+      toast.success("Clientes exportados com sucesso!");
     } catch (error) {
-      console.error('Erro ao exportar clientes:', error);
-      toast.error('Erro ao exportar clientes.');
+      console.error("Erro ao exportar clientes:", error);
+      toast.error("Erro ao exportar clientes.");
     }
   };
 
@@ -179,31 +180,33 @@ export default function ClientesPage() {
           toast.success(`${results.data.length} clientes importados com sucesso!`);
           fetchClients(); // Recarregar a lista após importação
         } catch (error) {
-          console.error('Erro ao importar clientes:', error);
-          toast.error('Erro ao importar clientes.');
+          console.error("Erro ao importar clientes:", error);
+          toast.error("Erro ao importar clientes.");
         }
       },
       error: (error) => {
-        console.error('Erro ao processar arquivo CSV:', error);
-        toast.error('Erro ao processar arquivo CSV.');
-      }
+        console.error("Erro ao processar arquivo CSV:", error);
+        toast.error("Erro ao processar arquivo CSV.");
+      },
     });
-    
+
     // Limpar o input para permitir selecionar o mesmo arquivo novamente
-    event.target.value = '';
+    event.target.value = "";
   };
 
   // Função para lidar com o sucesso na criação de um cliente
   const handleCreateSuccess = () => {
     setIsCreateDialogOpen(false);
     fetchClients();
-    toast.success('Cliente criado com sucesso!');
+    toast.success("Cliente criado com sucesso!");
   };
 
   // Função para navegar para a página de detalhes do cliente
   const handleClientClick = (clientId: string) => {
     router.push(`/clientes/${clientId}`);
   };
+
+  const columns = clientColumns(() => {}, () => {});
 
   return (
     <div className="space-y-4">
@@ -215,7 +218,12 @@ export default function ClientesPage() {
             Exportar CSV
           </Button>
           <label htmlFor="import-csv" className="cursor-pointer">
-            <Button variant="outline" onClick={() => document.getElementById('import-csv')?.click()}>
+            <Button
+              variant="outline"
+              onClick={() =>
+                document.getElementById("import-csv")?.click()
+              }
+            >
               <FileUp className="mr-2 h-4 w-4" />
               Importar CSV
             </Button>
@@ -270,8 +278,8 @@ export default function ClientesPage() {
                 />
               </svg>
             </div>
-            <Button 
-              variant="outline" 
+            <Button
+              variant="outline"
               className="flex items-center gap-2"
               onClick={() => setIsFiltersOpen(!isFiltersOpen)}
             >
@@ -284,11 +292,8 @@ export default function ClientesPage() {
           {isFiltersOpen && (
             <div className="mb-6">
               <AdvancedFilters
-                options={filterOptions}
+                filterOptions={filterOptions}
                 onFilterChange={setActiveFilters}
-                columnOptions={columnOptions}
-                visibleColumns={visibleColumns}
-                onVisibleColumnsChange={setVisibleColumns}
               />
             </div>
           )}
@@ -297,16 +302,14 @@ export default function ClientesPage() {
             <div className="bg-red-50 border-l-4 border-red-400 p-4 mb-4">
               <div className="flex">
                 <div className="ml-3">
-                  <p className="text-sm text-red-700">
-                    {error}
-                  </p>
+                  <p className="text-sm text-red-700">{error}</p>
                 </div>
               </div>
             </div>
           )}
 
           <DataTable
-            columns={columns.filter(col => visibleColumns.includes(col.id))}
+            columns={columns}
             data={clients}
             isLoading={isLoading}
             onRowClick={(row) => handleClientClick(row.id)}
