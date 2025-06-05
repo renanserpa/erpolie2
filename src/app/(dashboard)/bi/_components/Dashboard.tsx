@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useCallback } from 'react';
+import { DateRange } from 'react-day-picker';
 import { createClient } from "@/lib/supabase/client";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { DateRangePicker } from "@/components/ui/date-range-picker";
@@ -44,6 +45,11 @@ export function Dashboard({ className }: DashboardProps) {
     from: startOfMonth(new Date()),
     to: endOfMonth(new Date())
   });
+  const handleDateChange = (range: DateRange) => {
+    if (range?.from && range?.to) {
+      setDateRange({ from: range.from, to: range.to });
+    }
+  };
   const [divisionFilter, setDivisionFilter] = useState<string>("all");
   const [kpiData, setKpiData] = useState<KpiData>({
     totalRevenue: 0,
@@ -627,7 +633,7 @@ export function Dashboard({ className }: DashboardProps) {
         <div className="flex flex-col md:flex-row gap-2">
           <DateRangePicker
             date={dateRange}
-            onDateChange={setDateRange}
+            onDateChange={handleDateChange}
             className="w-full md:w-auto"
           />
           
