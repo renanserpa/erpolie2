@@ -123,14 +123,22 @@ export const productColumns: ColumnDef<Product>[] = [
     cell: ({ row }) => <div className="text-right">{row.original.stock_quantity ?? "-"}</div>,
   },
   {
-    accessorKey: "status",
+    accessorKey: "is_active",
     header: "Status",
     cell: ({ row }) => {
-      const status = row.original.status || "-";
-      return <Badge variant={status === "Ativo" ? "default" : "secondary"}>{status}</Badge>;
+      const isActive = row.original.is_active !== false;
+      return (
+        <Badge variant={isActive ? "default" : "secondary"}>
+          {isActive ? "Ativo" : "Inativo"}
+        </Badge>
+      );
     },
     filterFn: (row, id, value) => {
-      return value.includes(row.getValue(id));
+      const isActive = row.getValue(id) !== false;
+      return (
+        (value.includes("Ativo") && isActive) ||
+        (value.includes("Inativo") && !isActive)
+      );
     },
   },
   {
