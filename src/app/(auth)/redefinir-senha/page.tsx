@@ -42,9 +42,10 @@ export default function RedefinirSenhaPage() {
       }
 
       setSuccess(true);
-    } catch (error: any) {
-      console.error("Password reset error:", error.message);
-      setError("Falha ao redefinir a senha. " + error.message);
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : String(error);
+      console.error("Password reset error:", message);
+      setError("Falha ao redefinir a senha. " + message);
     } finally {
       setLoading(false);
     }

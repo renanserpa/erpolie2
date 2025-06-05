@@ -34,8 +34,9 @@ export default function RecuperarSenhaPage() {
       }
 
       setSuccess(true);
-    } catch (error: any) {
-      console.error("Password recovery error:", error.message);
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : String(error);
+      console.error("Password recovery error:", message);
       setError("Falha ao enviar o email de recuperação. Verifique seu e-mail e tente novamente.");
     } finally {
       setLoading(false);

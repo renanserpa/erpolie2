@@ -28,13 +28,18 @@ import {
   ResponsiveContainer
 } from 'recharts';
 
+interface DashboardConfig {
+  limite?: number;
+  [key: string]: unknown;
+}
+
 interface DashboardBI {
   id: string;
   titulo: string;
   descricao: string | null;
   tipo: string;
   periodo: string;
-  configuracao: any;
+  configuracao: DashboardConfig | null;
   created_at: string;
   updated_at: string;
 }
@@ -46,7 +51,7 @@ export default function BIDashboardTable() {
   const [isViewDialogOpen, setIsViewDialogOpen] = useState(false);
   const [currentDashboard, setCurrentDashboard] = useState<DashboardBI | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
-  const [chartData, setChartData] = useState<any[]>([]);
+  const [chartData, setChartData] = useState<Record<string, unknown>[]>([]);
   const [loadingChart, setLoadingChart] = useState(false);
 
   useEffect(() => {
@@ -63,9 +68,10 @@ export default function BIDashboardTable() {
       
       if (error) throw error;
       setDashboards(data || []);
-    } catch (error: any) {
-      console.error("Erro ao buscar dashboards:", error);
-      toast.error(`Erro ao buscar dashboards: ${error.message}`);
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : String(error);
+      console.error("Erro ao buscar dashboards:", message);
+      toast.error(`Erro ao buscar dashboards: ${message}`);
     } finally {
       setLoading(false);
     }
@@ -121,9 +127,10 @@ export default function BIDashboardTable() {
         setChartData([]);
         toast.error('Dados não disponíveis para este dashboard');
       }
-    } catch (error: any) {
-      console.error("Erro ao buscar dados do gráfico:", error);
-      toast.error(`Erro ao buscar dados do gráfico: ${error.message}`);
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : String(error);
+      console.error("Erro ao buscar dados do gráfico:", message);
+      toast.error(`Erro ao buscar dados do gráfico: ${message}`);
       setChartData([]);
     } finally {
       setLoadingChart(false);
