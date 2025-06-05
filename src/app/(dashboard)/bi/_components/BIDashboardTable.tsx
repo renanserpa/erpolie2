@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
@@ -54,11 +54,7 @@ export default function BIDashboardTable() {
   const [chartData, setChartData] = useState<Record<string, unknown>[]>([]);
   const [loadingChart, setLoadingChart] = useState(false);
 
-  useEffect(() => {
-    fetchDashboards();
-  }, []);
-
-  const fetchDashboards = async () => {
+  const fetchDashboards = useCallback(async () => {
     try {
       setLoading(true);
       const { data, error } = await supabase
@@ -75,7 +71,11 @@ export default function BIDashboardTable() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [supabase]);
+
+  useEffect(() => {
+    fetchDashboards();
+  }, [fetchDashboards]);
 
   const handleOpenViewDialog = async (dashboard: DashboardBI) => {
     setCurrentDashboard(dashboard);
@@ -362,7 +362,7 @@ export default function BIDashboardTable() {
         ) : filteredDashboards.length === 0 ? (
           <div className="text-center py-8 text-muted-foreground">
             {searchTerm ? (
-              <p>Nenhum dashboard encontrado para "{searchTerm}"</p>
+              <p>Nenhum dashboard encontrado para &quot;{searchTerm}&quot;</p>
             ) : (
               <p>Nenhum dashboard disponível.</p>
             )}
