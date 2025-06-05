@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card';
-import { Activity, BarChart, DollarSign, Users } from 'lucide-react';
+import { Activity } from 'lucide-react';
 import { useLowStockAlerts } from '@/lib/utils/dashboard-hooks';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
