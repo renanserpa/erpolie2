@@ -16,19 +16,7 @@ import { saveAs } from "file-saver";
 import { toast } from "sonner";
 import { ClientForm } from "./_components/ClientForm";
 import { getClients } from "@/lib/data-hooks";
-
-// Tipagem para Cliente
-type Client = {
-  id: string;
-  name: string;
-  email: string;
-  phone: string;
-  document: string;
-  city: string;
-  state: string;
-  is_active: boolean;
-  created_at: string;
-};
+import type { Client } from "@/types/schema"; // use apenas ESTE, remova o type local duplicado!
 
 export default function ClientesPage() {
   const router = useRouter();
@@ -116,12 +104,8 @@ export default function ClientesPage() {
         console.warn("Usando dados mockados para clientes");
       }
     } catch (err) {
-      // err é unknown por padrão, então faça a checagem
-      if (err instanceof Error) {
-        setError(err.message);
-      } else {
-        setError("Erro ao carregar clientes");
-      }
+      if (err instanceof Error) setError(err.message);
+      else setError("Erro ao carregar clientes");
       toast.error("Erro ao carregar lista de clientes.");
     } finally {
       setIsLoading(false);

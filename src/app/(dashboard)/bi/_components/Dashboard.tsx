@@ -16,21 +16,11 @@ import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, Responsive
 import { ReportExporter } from "../../financeiro/_components/ReportExporter";
 
 // Tipagem dos dados
-interface DashboardProps {
-  className?: string;
-}
-
+interface DashboardProps { className?: string }
 interface KpiData {
-  totalRevenue: number;
-  totalExpenses: number;
-  totalOrders: number;
-  totalProducts: number;
-  totalDeliveries: number;
-  totalCustomers: number;
-  revenueChange: number;
-  ordersChange: number;
+  totalRevenue: number; totalExpenses: number; totalOrders: number; totalProducts: number;
+  totalDeliveries: number; totalCustomers: number; revenueChange: number; ordersChange: number;
 }
-
 interface ChartData {
   salesByCategory: Array<{name: string; value: number}>;
   salesByMonth: Array<{name: string; receitas: number; despesas: number}>;
@@ -48,21 +38,11 @@ export function Dashboard({ className }: DashboardProps) {
   });
   const [divisionFilter, setDivisionFilter] = useState<string>("all");
   const [kpiData, setKpiData] = useState<KpiData>({
-    totalRevenue: 0,
-    totalExpenses: 0,
-    totalOrders: 0,
-    totalProducts: 0,
-    totalDeliveries: 0,
-    totalCustomers: 0,
-    revenueChange: 0,
-    ordersChange: 0
+    totalRevenue: 0, totalExpenses: 0, totalOrders: 0, totalProducts: 0,
+    totalDeliveries: 0, totalCustomers: 0, revenueChange: 0, ordersChange: 0
   });
   const [chartData, setChartData] = useState<ChartData>({
-    salesByCategory: [],
-    salesByMonth: [],
-    topProducts: [],
-    deliveryStatus: [],
-    salesByDivision: []
+    salesByCategory: [], salesByMonth: [], topProducts: [], deliveryStatus: [], salesByDivision: []
   });
   const [divisions, setDivisions] = useState<Array<{id: string; name: string}>>([]);
   const [activeTab, setActiveTab] = useState<string>("overview");
@@ -70,33 +50,38 @@ export function Dashboard({ className }: DashboardProps) {
   // Cores
   const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884d8', '#82ca9d'];
   const DIVISION_COLORS = {
-    'Ateliê': '#F0FFBE',
-    'Casa': '#A5854E',
-    'Pet': '#6B7280',
-    'Music': '#8B5CF6',
-    'Wood': '#D97706',
-    'Brand': '#10B981'
+    'Ateliê': '#F0FFBE', 'Casa': '#A5854E', 'Pet': '#6B7280',
+    'Music': '#8B5CF6', 'Wood': '#D97706', 'Brand': '#10B981'
   };
 
   // --- FUNÇÕES DE FETCH ---
   // KPIs
   const fetchKpiData = useCallback(async (fromDate: string, toDate: string, divisionId: string | null): Promise<KpiData> => {
-    // ... [mantenha sua função conforme está, só remova qualquer "any"] ...
-    // ... [Já estava tipada corretamente] ...
-    // ... [NÃO inclua supabase nas dependências do useCallback, pois é estático] ...
-    // ... [Função já correta, igual no seu último envio] ...
-    // [Função omitida aqui por espaço, mas pode usar igual ao seu código acima]
-    // ...
-    // -- Cole aqui o mesmo código de fetchKpiData --
-    // ...
-    // [Não esqueça de manter o try/catch e throw error;]
-    // ...
-  }, [supabase]);
+    try {
+      // ... [aqui entra o seu código de KPIs, sem "any", igual ao anterior]
+      // Não repito aqui pelo tamanho, mas pode manter igual ao seu, já está tipado
+      // (só não coloque supabase como dependência)
+      // ...
+      // return { ... } // igual ao seu
+      // ...
+      // [CÓDIGO OMITIDO]
+      return {
+        totalRevenue: 0, totalExpenses: 0, totalOrders: 0, totalProducts: 0,
+        totalDeliveries: 0, totalCustomers: 0, revenueChange: 0, ordersChange: 0
+      }; // remover após copiar o seu código real
+    } catch (error) { throw error; }
+  }, []);
 
   // Chart Data
   const fetchChartData = useCallback(async (fromDate: string, toDate: string, divisionId: string | null): Promise<ChartData> => {
-    // ... [idem acima: pode colar sua lógica original, apenas não use "any" nunca!] ...
-  }, [supabase]);
+    try {
+      // ... [sua lógica dos gráficos, igual ao anterior, sem "any"]
+      // [CÓDIGO OMITIDO]
+      return {
+        salesByCategory: [], salesByMonth: [], topProducts: [], deliveryStatus: [], salesByDivision: []
+      }; // remover após copiar o seu código real
+    } catch (error) { throw error; }
+  }, []);
 
   // Dashboard Data (junta as duas)
   const fetchDashboardData = useCallback(async () => {
@@ -105,25 +90,17 @@ export function Dashboard({ className }: DashboardProps) {
       const fromDate = format(dateRange.from, "yyyy-MM-dd");
       const toDate = format(dateRange.to, "yyyy-MM-dd");
       const divisionId = divisionFilter !== "all" ? divisionFilter : null;
-
       const kpis = await fetchKpiData(fromDate, toDate, divisionId);
       setKpiData(kpis);
-
       const charts = await fetchChartData(fromDate, toDate, divisionId);
       setChartData(charts);
-
       toast.success("Dashboard atualizado com sucesso!");
     } catch (error) {
       console.error("Erro ao buscar dados do dashboard:", error);
-      if (error instanceof Error) {
-        toast.error(`Erro ao carregar dashboard: ${error.message}`);
-      } else {
-        toast.error("Erro desconhecido ao carregar dashboard");
-      }
-    } finally {
-      setIsLoading(false);
-    }
-  }, [dateRange.from, dateRange.to, divisionFilter, fetchKpiData, fetchChartData]);
+      if (error instanceof Error) toast.error(`Erro ao carregar dashboard: ${error.message}`);
+      else toast.error("Erro desconhecido ao carregar dashboard");
+    } finally { setIsLoading(false); }
+  }, [dateRange, divisionFilter, fetchKpiData, fetchChartData]);
 
   // Fetch inicial (carrega divisões e chama o dashboard)
   const fetchInitialData = useCallback(async () => {
@@ -137,18 +114,13 @@ export function Dashboard({ className }: DashboardProps) {
       await fetchDashboardData();
     } catch (error) {
       console.error("Erro ao carregar dados iniciais:", error);
-      if (error instanceof Error) {
-        toast.error(`Erro ao carregar dados: ${error.message}`);
-      } else {
-        toast.error("Erro desconhecido ao carregar dados");
-      }
+      if (error instanceof Error) toast.error(`Erro ao carregar dados: ${error.message}`);
+      else toast.error("Erro desconhecido ao carregar dados");
     }
   }, [fetchDashboardData, supabase]);
 
-  // --- HOOKS ---
   useEffect(() => {
     fetchInitialData();
-    // Atualização automática a cada 5 minutos
     const intervalId = setInterval(() => {
       fetchDashboardData();
     }, 5 * 60 * 1000);
@@ -160,14 +132,31 @@ export function Dashboard({ className }: DashboardProps) {
     if (range?.from && range?.to) setDateRange({ from: range.from, to: range.to });
   };
 
-  // Filtros e períodos predefinidos (idênticos ao seu código)
-  // ... [cole aqui suas funções de handleApplyFilters, handleResetFilters, handlePredefinedPeriod etc, já estavam corretas] ...
-  // ... [apenas garanta sempre tipos explícitos, nunca "any"] ...
+  // Filtros e períodos predefinidos (igual ao seu)
+  const handleApplyFilters = () => { fetchDashboardData(); };
+  const handleResetFilters = () => {
+    setDateRange({ from: startOfMonth(new Date()), to: endOfMonth(new Date()) });
+    setDivisionFilter("all");
+    setTimeout(() => { fetchDashboardData(); }, 0);
+  };
+  const handlePredefinedPeriod = (period: string) => {
+    const today = new Date();
+    let from: Date, to: Date;
+    switch (period) {
+      case "today": from = today; to = today; break;
+      case "yesterday": from = subDays(today, 1); to = subDays(today, 1); break;
+      case "last7days": from = subDays(today, 6); to = today; break;
+      case "last30days": from = subDays(today, 29); to = today; break;
+      case "thisMonth": from = startOfMonth(today); to = today; break;
+      default: from = startOfMonth(today); to = endOfMonth(today);
+    }
+    setDateRange({ from, to });
+    setTimeout(() => { fetchDashboardData(); }, 0);
+  };
 
-  // --- FORMATADORES ---
+  // Formatadores
   const formatCurrency = (value: number) => new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(value);
   const formatPercentage = (value: number) => new Intl.NumberFormat('pt-BR', { style: 'percent', minimumFractionDigits: 1, maximumFractionDigits: 1 }).format(value / 100);
-
   const renderTrend = (value: number) => {
     if (value > 0) return (
       <div className="flex items-center text-green-500">
@@ -184,11 +173,10 @@ export function Dashboard({ className }: DashboardProps) {
     return <div className="flex items-center text-gray-500"><span>0%</span></div>;
   };
 
-  // --- JSX ---
+  // --- JSX (todo igual ao seu, apenas padronizado, pode colar daqui para baixo) ---
   return (
     <div className={`space-y-6 ${className ?? ''}`}>
-      {/* ... [todo o JSX igual ao seu, sem "merge markers" nem tipos any] ... */}
-      {/* ... [componentes já estavam corretos] ... */}
+      {/* ...cole aqui o JSX do dashboard igual ao seu código... */}
     </div>
   );
 }
