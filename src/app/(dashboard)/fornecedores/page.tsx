@@ -27,18 +27,28 @@ export default function FornecedoresPage() {
   const [isFiltersOpen, setIsFiltersOpen] = useState(false);
   const [activeFilters, setActiveFilters] = useState<Record<string, any>>({});
   const [visibleColumns, setVisibleColumns] = useState<string[]>([
-    "name", "fantasy_name", "cnpj", "email", "phone", "status", "actions"
+    "name",
+    "fantasy_name",
+    "cnpj",
+    "email",
+    "phone",
+    "is_active",
+    "actions",
   ]);
   
   const debouncedSearchQuery = useDebounce(searchQuery, 500);
 
   // Opções de filtro para fornecedores
   const filterOptions: FilterOption[] = [
-    { id: "status", label: "Status", type: "select", options: [
-      { value: "Ativo", label: "Ativo" },
-      { value: "Inativo", label: "Inativo" },
-      { value: "Bloqueado", label: "Bloqueado" }
-    ]},
+    {
+      id: "is_active",
+      label: "Status",
+      type: "select",
+      options: [
+        { value: true, label: "Ativo" },
+        { value: false, label: "Inativo" },
+      ],
+    },
     { id: "cnpj", label: "CNPJ", type: "text" },
     { id: "created_at", label: "Data de Cadastro", type: "date" }
   ];
@@ -50,8 +60,8 @@ export default function FornecedoresPage() {
     { id: "cnpj", label: "CNPJ" },
     { id: "email", label: "Email" },
     { id: "phone", label: "Telefone" },
-    { id: "status", label: "Status" },
-    { id: "actions", label: "Ações" }
+    { id: "is_active", label: "Status" },
+    { id: "actions", label: "Ações" },
   ];
 
   // Carregar dados dos fornecedores
@@ -97,7 +107,7 @@ export default function FornecedoresPage() {
             cnpj: '12.345.678/0001-90',
             email: 'contato@textiltech.com.br',
             phone: '11987654321',
-            status: 'Ativo',
+            is_active: true,
             created_at: new Date().toISOString()
           },
           {
@@ -107,7 +117,7 @@ export default function FornecedoresPage() {
             cnpj: '98.765.432/0001-10',
             email: 'vendas@dtntecidos.com.br',
             phone: '21987654321',
-            status: 'Ativo',
+            is_active: true,
             created_at: new Date().toISOString()
           }
         ]);
@@ -135,7 +145,7 @@ export default function FornecedoresPage() {
         'CNPJ': supplier.cnpj,
         'Email': supplier.email,
         'Telefone': supplier.phone,
-        'Status': supplier.status,
+        'Status': supplier.is_active ? 'Ativo' : 'Inativo',
         'Data de Cadastro': new Date(supplier.created_at).toLocaleDateString('pt-BR')
       }));
       
