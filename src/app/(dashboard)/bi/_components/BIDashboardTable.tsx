@@ -1,13 +1,12 @@
 "use client";
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
-import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+
 import { toast } from "sonner";
 import { createClient } from "@/lib/supabase/client";
 import { Search, X, FileText, BarChart3 } from 'lucide-react';
@@ -29,13 +28,18 @@ import {
   ResponsiveContainer
 } from 'recharts';
 
+interface DashboardConfig {
+  limite?: number;
+  [key: string]: unknown;
+}
+
 interface DashboardBI {
   id: string;
   titulo: string;
   descricao: string | null;
   tipo: string;
   periodo: string;
-  configuracao: any;
+  configuracao: DashboardConfig | null;
   created_at: string;
   updated_at: string;
 }
@@ -47,14 +51,10 @@ export default function BIDashboardTable() {
   const [isViewDialogOpen, setIsViewDialogOpen] = useState(false);
   const [currentDashboard, setCurrentDashboard] = useState<DashboardBI | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
-  const [chartData, setChartData] = useState<any[]>([]);
+  const [chartData, setChartData] = useState<Record<string, unknown>[]>([]);
   const [loadingChart, setLoadingChart] = useState(false);
 
-  useEffect(() => {
-    fetchDashboards();
-  }, []);
-
-  const fetchDashboards = async () => {
+  const fetchDashboards = useCallback(async () => {
     try {
       setLoading(true);
       const { data, error } = await supabase
@@ -64,13 +64,18 @@ export default function BIDashboardTable() {
       
       if (error) throw error;
       setDashboards(data || []);
-    } catch (error: any) {
-      console.error("Erro ao buscar dashboards:", error);
-      toast.error(`Erro ao buscar dashboards: ${error.message}`);
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : String(error);
+      console.error("Erro ao buscar dashboards:", message);
+      toast.error(`Erro ao buscar dashboards: ${message}`);
     } finally {
       setLoading(false);
     }
-  };
+  }, [supabase]);
+
+  useEffect(() => {
+    fetchDashboards();
+  }, [fetchDashboards]);
 
   const handleOpenViewDialog = async (dashboard: DashboardBI) => {
     setCurrentDashboard(dashboard);
@@ -122,9 +127,10 @@ export default function BIDashboardTable() {
         setChartData([]);
         toast.error('Dados não disponíveis para este dashboard');
       }
-    } catch (error: any) {
-      console.error("Erro ao buscar dados do gráfico:", error);
-      toast.error(`Erro ao buscar dados do gráfico: ${error.message}`);
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : String(error);
+      console.error("Erro ao buscar dados do gráfico:", message);
+      toast.error(`Erro ao buscar dados do gráfico: ${message}`);
       setChartData([]);
     } finally {
       setLoadingChart(false);
@@ -356,7 +362,7 @@ export default function BIDashboardTable() {
         ) : filteredDashboards.length === 0 ? (
           <div className="text-center py-8 text-muted-foreground">
             {searchTerm ? (
-              <p>Nenhum dashboard encontrado para "{searchTerm}"</p>
+              <p>Nenhum dashboard encontrado para &quot;{searchTerm}&quot;</p>
             ) : (
               <p>Nenhum dashboard disponível.</p>
             )}
