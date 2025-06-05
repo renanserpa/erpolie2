@@ -8,7 +8,6 @@ import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -20,7 +19,6 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { toast } from "sonner";
 import { createClient } from "@/lib/supabase/client";
 import { useRouter } from "next/navigation";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { PlusCircle, Trash2, Loader2 } from "lucide-react";
 import { InputNumber } from "@/components/ui/input-number";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -42,7 +40,6 @@ const purchaseRequestSchema = z.object({
 });
 
 type PurchaseRequestFormValues = z.infer<typeof purchaseRequestSchema>;
-type RequestItemValues = z.infer<typeof requestItemSchema>;
 
 // Define types for dropdown data
 type Department = { id: string; name: string };
@@ -111,8 +108,9 @@ export function PurchaseRequestForm({ initialData, onSuccess }: PurchaseRequestF
           }
         }
 
-      } catch (error: any) {
-        toast.error(error.message);
+      } catch (error: unknown) {
+        const message = error instanceof Error ? error.message : 'Erro ao buscar dados';
+        toast.error(message);
         console.error("Fetch data error:", error);
       } finally {
         setIsFetchingData(false);
@@ -196,9 +194,10 @@ export function PurchaseRequestForm({ initialData, onSuccess }: PurchaseRequestF
         onSuccess();
       }
       router.refresh();
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error("Erro ao salvar solicitação de compra:", error);
-      toast.error("Erro ao salvar solicitação de compra: " + error.message);
+      const message = error instanceof Error ? error.message : 'Erro ao salvar solicitação de compra';
+      toast.error("Erro ao salvar solicitação de compra: " + message);
     } finally {
       setIsLoading(false);
     }
@@ -284,7 +283,7 @@ export function PurchaseRequestForm({ initialData, onSuccess }: PurchaseRequestF
           <CardContent>
             {fields.length === 0 ? (
               <div className="text-center py-4 text-muted-foreground">
-                Nenhum item adicionado. Clique em "Adicionar Item" para começar.
+                Nenhum item adicionado. Clique em &quot;Adicionar Item&quot; para começar.
               </div>
             ) : (
               <div className="space-y-4">

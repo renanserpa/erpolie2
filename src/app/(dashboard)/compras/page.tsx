@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { Button } from "@/components/ui/button";
 import { DataTable } from "@/components/ui/data-table"; // Assuming a reusable DataTable component exists
 import { purchaseRequestColumns } from "./_components/PurchaseRequestColumns"; // We will create this next
@@ -34,7 +34,7 @@ export default function PurchaseRequestsPage() {
   const [loading, setLoading] = useState(true);
   const [isFormOpen, setIsFormOpen] = useState(false);
 
-  async function fetchData() {
+  const fetchData = useCallback(async () => {
     setLoading(true);
     const { data: requests, error } = await supabase
       .from("purchase_requests") // TODO: Verify table name
@@ -49,11 +49,11 @@ export default function PurchaseRequestsPage() {
       setData(requests || []);
     }
     setLoading(false);
-  }
+  }, [supabase]);
 
   useEffect(() => {
     fetchData();
-  }, []);
+  }, [fetchData]);
 
   const handleFormSuccess = () => {
     setIsFormOpen(false);

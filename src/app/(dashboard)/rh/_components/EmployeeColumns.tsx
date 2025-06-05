@@ -88,15 +88,22 @@ export const employeeColumns: ColumnDef<Employee>[] = [
     cell: ({ row }) => <div>{formatDate(row.original.hire_date)}</div>,
   },
   {
-    accessorKey: "status",
+    accessorKey: "is_active",
     header: "Status",
     cell: ({ row }) => {
-      const status = row.original.status || "-";
-      // TODO: Add badge variants based on status
-      return <Badge variant={status === 'Ativo' ? 'default' : 'secondary'}>{status}</Badge>;
+      const isActive = row.original.is_active !== false;
+      return (
+        <Badge variant={isActive ? "default" : "secondary"}>
+          {isActive ? "Ativo" : "Inativo"}
+        </Badge>
+      );
     },
     filterFn: (row, id, value) => {
-      return value.includes(row.getValue(id));
+      const isActive = row.getValue(id) !== false;
+      return (
+        (value.includes("Ativo") && isActive) ||
+        (value.includes("Inativo") && !isActive)
+      );
     },
   },
   {
