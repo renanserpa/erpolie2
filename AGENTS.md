@@ -1,8 +1,12 @@
 # AGENTS.md
 
+> **Importante:** leia este arquivo antes de implementar qualquer automação ou refatoração no repositório.
+
 ## Contexto do Projeto
 
 Este repositório concentra o ERP Olie, um projeto baseado em Next.js, TypeScript e scripts SQL. O objetivo deste documento é padronizar as diretrizes para quaisquer agentes, automações e desenvolvedores que atuem aqui, garantindo refatorações seguras e código consistente.
+
+Todos os agentes devem consultar também [`README.md`](README.md), [`CHECKLIST.md`](CHECKLIST.md), [`MODULOS.md`](MODULOS.md) e [`docs/documentacao_centralizada.md`](docs/documentacao_centralizada.md) antes de iniciar qualquer trabalho.
 
 ## Princípios para Agentes/Refatoração Automática
 
@@ -16,6 +20,7 @@ Este repositório concentra o ERP Olie, um projeto baseado em Next.js, TypeScrip
 ## Checklist para Abertura de Tarefas
 
 - [ ] O código segue padrões de robustez do projeto?
+- [ ] Documentação principal (README, CHECKLIST, MODULOS) foi consultada?
 - [ ] Não há dados mockados no produto final?
 - [ ] A alteração está restrita a um único módulo ou funcionalidade?
 - [ ] O commit/merge é pequeno e atômico?
@@ -38,7 +43,12 @@ Ao encontrar conflitos de merge, mantenha o lado mais atualizado e funcional. Se
 
 - Priorize ciclos curtos de desenvolvimento.
 - Realize commits menores e focados em uma única funcionalidade.
-- Revise o PR com freqüência para facilitar integrações.
+- Utilize mensagens de commit descritivas, preferencialmente no padrão imperativo.
+- Revise o PR com frequência para facilitar integrações.
+
+## Divisão de Tarefas
+
+Quando o escopo for amplo, divida em subtarefas menores e priorize entregas incrementais. Cada commit deve resolver uma parte clara do problema para facilitar revisões e reversões.
 
 ## Atualização Futuras deste Arquivo
 
