@@ -13,6 +13,23 @@ O agente **CODEX** é o executor oficial de código e automações, responsável
 - Sinalização de inconsistências e pontos de melhoria
 - Proposição de scripts e automações adicionais quando padrões recorrentes forem identificados
 
+Todos os agentes devem consultar também [`README.md`](README.md), [`CHECKLIST.md`](CHECKLIST.md), [`MODULOS.md`](MODULOS.md), [`FLUXOS.md`](FLUXOS.md) e [`docs/documentacao_centralizada.md`](docs/documentacao_centralizada.md) antes de iniciar qualquer trabalho.
+
+## Princípios para Agentes (CODEX)
+
+- Buscar a solução mais robusta, escalável e alinhada às práticas modernas
+- Reutilizar código e componentes sempre que possível
+- Evitar mocks ou dados simulados em produção. Utilize apenas em testes/dev
+- Dividir grandes mudanças em tarefas pequenas e commits atômicos
+- Priorizar performance, legibilidade e tipagem forte (TypeScript)
+- Documentar decisões importantes neste arquivo ou no PR
+- Sinalizar dependências desatualizadas e más práticas
+
+## Checklist para Tarefas/Commits do CODEX
+
+- [ ] O código segue os padrões e arquitetura definidos neste repositório?
+- [ ] Não há mocks ou dados simulados em produção?
+=======
 
 
 - Buscar a solução mais robusta, escalável e alinhada às práticas modernas
@@ -47,8 +64,16 @@ O agente **CODEX** é o executor oficial de código e automações, responsável
 - Utilizar mocks apenas em testes ou quando especificado explicitamente
 - Limpar dependências falsas e simulações antes do merge/deploy
 
+
 ## Automação e Scripts
 
+- Identificar padrões repetitivos e sugerir ou criar scripts (lint, fix, doc, test)
+- Gerar documentação automática quando possível (Typedoc/JSDoc)
+- Propor melhorias para o pipeline CI/CD
+- Validar periodicamente se scripts estão alinhados aos requisitos
+=======
+
+## Automação e Scripts
 
 
 ## Pequenos Ciclos e Commits
