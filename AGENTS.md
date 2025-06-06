@@ -56,6 +56,8 @@ O agente CODEX é o principal executor de código, refatoração e automação, 
 Data | Autor | Descrição
 ---- | ----- | ---------
 2025-06-06 | Renan/CODEX | Versão inicial, adaptada para priorizar automação, robustez e refino contínuo pelo agente CODEX.
+2025-06-06 | CODEX | Remoção de credenciais Supabase hardcoded em middleware, uso de variáveis de ambiente.
+2025-06-06 | CODEX | Criação da página /auth/verify para confirmação de cadastro.
 
 **Observação:** Este arquivo AGENTS.md deve ser consultado e atualizado sempre que um novo padrão, regra, dependência crítica ou decisão estrutural for adotada no projeto.
 
