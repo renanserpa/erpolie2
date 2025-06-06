@@ -25,7 +25,8 @@ export default function RecuperarSenhaPage() {
     setLoading(true);
 
     try {
-      const { error } = await supabase.auth.resetPasswordForEmail(email, {
+      const sanitizedEmail = email.trim().replace(/[<>]/g, "");
+      const { error } = await supabase.auth.resetPasswordForEmail(sanitizedEmail, {
         redirectTo: `${window.location.origin}/redefinir-senha`,
       });
 
@@ -81,6 +82,7 @@ export default function RecuperarSenhaPage() {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
+                  autoFocus
                   disabled={loading}
                 />
               </div>

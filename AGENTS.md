@@ -59,3 +59,5 @@ Data | Autor | Descrição
 
 **Observação:** Este arquivo AGENTS.md deve ser consultado e atualizado sempre que um novo padrão, regra, dependência crítica ou decisão estrutural for adotada no projeto.
 
+
+2025-06-07 | CODEX | Ajustada segurança do Supabase via variáveis de ambiente e criado fluxo de confirmação de cadastro. Build ainda falha por erros em módulos externos.

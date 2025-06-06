@@ -33,8 +33,9 @@ export default function RedefinirSenhaPage() {
     }
 
     try {
+      const sanitizedPassword = password.trim();
       const { error } = await supabase.auth.updateUser({
-        password: password,
+        password: sanitizedPassword,
       });
 
       if (error) {
