@@ -17,6 +17,7 @@ Todos os agentes devem consultar também [`README.md`](README.md), [`CHECKLIST.m
 
 ## Princípios para Agentes (CODEX)
 
+
 - Buscar a solução mais robusta, escalável e alinhada às práticas modernas
 - Reutilizar código e componentes sempre que possível
 - Evitar mocks ou dados simulados em produção. Utilize apenas em testes/dev
@@ -24,7 +25,7 @@ Todos os agentes devem consultar também [`README.md`](README.md), [`CHECKLIST.m
 - Priorizar performance, legibilidade e tipagem forte (TypeScript)
 - Documentar decisões importantes neste arquivo ou no PR
 - Sinalizar dependências desatualizadas e más práticas
-
+<
 ## Checklist para Tarefas/Commits do CODEX
 
 - [ ] O código segue os padrões e arquitetura definidos neste repositório?
@@ -50,7 +51,11 @@ Todos os agentes devem consultar também [`README.md`](README.md), [`CHECKLIST.m
 - Utilizar mocks apenas em testes ou quando especificado explicitamente
 - Limpar dependências falsas e simulações antes do merge/deploy
 
+
 ## Automação e Scripts
+
+=======
+
 
 - Identificar padrões repetitivos e sugerir ou criar scripts (lint, fix, doc, test)
 - Gerar documentação automática quando possível (Typedoc/JSDoc)

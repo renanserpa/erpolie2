@@ -1,9 +1,9 @@
 # MODULOS.md
 
+
 ## Visao Geral
 Este documento lista e descreve todos os modulos principais do Olie ERP. Cada modulo possui seu proprio arquivo detalhado com campos, fluxos, APIs e wireframes (ver pasta `/MODULOS`).
 
----
 ## 1. CLIENTES
 - **Descricao**: Cadastro completo de clientes PF/PJ, com campos obrigatorios e opcionais, historico de pedidos, contatos e segmentacao.
 - **Funcionalidades**:
@@ -15,7 +15,6 @@ Este documento lista e descreve todos os modulos principais do Olie ERP. Cada mo
   - Cadastro de novo cliente
   - Visualizacao do historico de pedidos
 
----
 ## 2. FORNECEDORES
 - **Descricao**: Cadastro de fornecedores, relacao de insumos fornecidos, avaliacao e historico de compras.
 - **Funcionalidades**:
@@ -27,7 +26,6 @@ Este documento lista e descreve todos os modulos principais do Olie ERP. Cada mo
   - Cadastro de novo fornecedor
   - Geracao de ordem de compra
 
----
 ## 3. ESTOQUE
 - **Descricao**: Controle de insumos e produtos acabados, movimentacoes, inventario, saldo minimo e rastreio por lote.
 - **Funcionalidades**:
@@ -40,7 +38,6 @@ Este documento lista e descreve todos os modulos principais do Olie ERP. Cada mo
   - Entrada e baixa automatica via ordem de producao
   - Inventario e ajustes manuais
 
----
 ## 4. PRODUTOS
 - **Descricao**: Cadastro de produtos, variacoes, componentes e personalizacoes (bordado, hotstamping, cor, tecido, ziper etc.).
 - **Funcionalidades**:
@@ -163,3 +160,26 @@ Este documento lista e descreve todos os modulos principais do Olie ERP. Cada mo
 
 ---
 **Para detalhamento completo de cada modulo, consulte os arquivos especificos na pasta `/MODULOS`.**
+=======
+Este documento descreve resumidamente os módulos que compõem o **Olie ERP** e suas principais funções.
+
+## Índice
+1. [Login](#login)
+2. [Dashboard](#dashboard)
+3. [Clientes](#clientes)
+4. [Fornecedores](#fornecedores)
+5. [Estoque](#estoque)
+6. [Produtos](#produtos)
+7. [Pedidos](#pedidos)
+8. [Compras](#compras)
+9. [Produção](#produção)
+10. [Logística](#logística)
+11. [Financeiro](#financeiro)
+12. [RH](#rh)
+13. [BI](#bi)
+14. [Configurações](#configurações)
+15. [Universidade/Onboarding](#universidadeonboarding)
+
+---
+
+
