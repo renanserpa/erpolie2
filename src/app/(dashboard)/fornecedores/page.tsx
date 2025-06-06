@@ -8,11 +8,17 @@ import { Input } from "@/components/ui/input";
 import { DataTable } from "@/components/ui/data-table";
 import { supplierColumns } from "./_components/SupplierColumns";
 import { Plus, FileDown, FileUp, Filter } from "lucide-react";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import { useDebounce } from "@/hooks/use-debounce";
 import { AdvancedFilters, type FilterOption } from "@/components/ui/advanced-filters";
-import Papa from 'papaparse';
-import { saveAs } from 'file-saver';
+import Papa from "papaparse";
+import { saveAs } from "file-saver";
 import { toast } from "sonner";
 import { SupplierForm } from "./_components/SupplierForm";
 import { getSuppliers } from "@/lib/data-hooks";
@@ -27,94 +33,84 @@ export default function FornecedoresPage() {
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
   const [isFiltersOpen, setIsFiltersOpen] = useState(false);
   const [activeFilters, setActiveFilters] = useState<Record<string, unknown>>({});
-  
+
   const debouncedSearchQuery = useDebounce(searchQuery, 500);
 
-  // Opções de filtro para fornecedores
+  // Filtros avançados para fornecedores
   const filterOptions: FilterOption[] = [
     {
       id: "is_active",
       label: "Status",
       type: "select",
       options: [
-        { value: "true", label: "Ativo" },
-        { value: "false", label: "Inativo" },
+        { value: true, label: "Ativo" },
+        { value: false, label: "Inativo" },
       ],
     },
     { id: "city", label: "Cidade", type: "text" },
     { id: "state", label: "Estado", type: "text" },
     { id: "document", label: "CNPJ", type: "text" },
+    { id: "created_at", label: "Data de Cadastro", type: "date" },
   ];
 
-  const columns = supplierColumns(
-    () => {},
-    () => {}
-  );
-
-  // Carregar dados dos fornecedores
+  // Carrega fornecedores do backend
   const fetchSuppliers = useCallback(async () => {
     try {
       setIsLoading(true);
       setError(null);
-      
-      // Construir query com filtros
       const query: Record<string, unknown> = {};
-      
       if (debouncedSearchQuery) {
         query.name = `ilike.%${debouncedSearchQuery}%`;
       }
-      
-      // Adicionar filtros ativos à query
       Object.entries(activeFilters).forEach(([key, value]) => {
-        if (value !== undefined && value !== null && value !== '') {
-          if (typeof value === 'string') {
-            // Filtro de texto com busca parcial
+        if (value !== undefined && value !== null && value !== "") {
+          if (key === "created_at" && typeof value === "string") {
+            query[key] = `gte.${value}`;
+          } else if (typeof value === "string") {
             query[key] = `ilike.%${value}%`;
           } else {
-            // Outros tipos de filtro
             query[key] = value;
           }
         }
       });
 
       const result = await getSuppliers(query);
-      
+
       if (result.success) {
         setSuppliers(result.data || []);
       } else {
-        // Usar dados mockados para demonstração
         setSuppliers([
           {
-            id: '1',
-            name: 'Fornecedor Têxtil Ltda',
-            fantasy_name: 'TextilTech',
-            document: '12.345.678/0001-90',
-            email: 'contato@textiltech.com.br',
-            phone: '11987654321',
+            id: "1",
+            name: "Fornecedor Têxtil Ltda",
+            fantasy_name: "TextilTech",
+            document: "12.345.678/0001-90",
+            email: "contato@textiltech.com.br",
+            phone: "11987654321",
+            city: "São Paulo",
+            state: "SP",
             is_active: true,
-            created_at: new Date().toISOString()
+            created_at: new Date().toISOString(),
           },
           {
-            id: '2',
-            name: 'Distribuidora de Tecidos Nacional S.A.',
-            fantasy_name: 'DTN Tecidos',
-            document: '98.765.432/0001-10',
-            email: 'vendas@dtntecidos.com.br',
-            phone: '21987654321',
+            id: "2",
+            name: "Distribuidora de Tecidos Nacional S.A.",
+            fantasy_name: "DTN Tecidos",
+            document: "98.765.432/0001-10",
+            email: "vendas@dtntecidos.com.br",
+            phone: "21987654321",
+            city: "Rio de Janeiro",
+            state: "RJ",
             is_active: true,
-            created_at: new Date().toISOString()
-          }
+            created_at: new Date().toISOString(),
+          },
         ]);
-        console.warn('Usando dados mockados para fornecedores');
+        console.warn("Usando dados mockados para fornecedores");
       }
-    } catch (err: unknown) {
-      console.error('Error fetching suppliers:', err);
-      if (err instanceof Error) {
-        setError(err.message);
-      } else {
-        setError('Erro ao carregar fornecedores');
-      }
-      toast.error('Erro ao carregar lista de fornecedores.');
+    } catch (err) {
+      if (err instanceof Error) setError(err.message);
+      else setError("Erro ao carregar fornecedores");
+      toast.error("Erro ao carregar lista de fornecedores.");
     } finally {
       setIsLoading(false);
     }
@@ -122,71 +118,66 @@ export default function FornecedoresPage() {
 
   useEffect(() => {
     fetchSuppliers();
-  }, [debouncedSearchQuery, activeFilters]);
+  }, [fetchSuppliers]);
 
-  // Função para exportar fornecedores para CSV
+  // Exportar para CSV
   const exportToCSV = () => {
     try {
-      const dataToExport = suppliers.map(supplier => ({
-        'Razão Social': supplier.name,
-        'Nome Fantasia': supplier.fantasy_name,
-        'CNPJ': supplier.document,
-        'Email': supplier.email,
-        'Telefone': supplier.phone,
-        'Status': supplier.is_active ? 'Ativo' : 'Inativo',
-        'Data de Cadastro': new Date(supplier.created_at).toLocaleDateString('pt-BR')
+      const dataToExport = suppliers.map((supplier) => ({
+        "Razão Social": supplier.name,
+        "Nome Fantasia": supplier.fantasy_name,
+        "CNPJ": supplier.document,
+        "Cidade": supplier.city,
+        "Estado": supplier.state,
+        "Email": supplier.email,
+        "Telefone": supplier.phone,
+        "Status": supplier.is_active ? "Ativo" : "Inativo",
+        "Data de Cadastro": new Date(supplier.created_at).toLocaleDateString("pt-BR"),
       }));
-      
       const csv = Papa.unparse(dataToExport);
-      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-      saveAs(blob, `fornecedores_${new Date().toISOString().split('T')[0]}.csv`);
-      
-      toast.success('Fornecedores exportados com sucesso!');
+      const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+      saveAs(blob, `fornecedores_${new Date().toISOString().split("T")[0]}.csv`);
+      toast.success("Fornecedores exportados com sucesso!");
     } catch (error) {
-      console.error('Erro ao exportar fornecedores:', error);
-      toast.error('Erro ao exportar fornecedores.');
+      console.error("Erro ao exportar fornecedores:", error);
+      toast.error("Erro ao exportar fornecedores.");
     }
   };
 
-  // Função para importar fornecedores de CSV
+  // Importar CSV (simula importação, apenas reload)
   const importFromCSV = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (!file) return;
-
     Papa.parse(file, {
       header: true,
       complete: async (results) => {
-        try {
-          // Aqui você implementaria a lógica para salvar os fornecedores importados
-          // Por enquanto, apenas mostramos uma mensagem de sucesso
-          toast.success(`${results.data.length} fornecedores importados com sucesso!`);
-          fetchSuppliers(); // Recarregar a lista após importação
-        } catch (error) {
-          console.error('Erro ao importar fornecedores:', error);
-          toast.error('Erro ao importar fornecedores.');
-        }
+        toast.success(`${results.data.length} fornecedores importados com sucesso!`);
+        fetchSuppliers();
       },
       error: (error) => {
-        console.error('Erro ao processar arquivo CSV:', error);
-        toast.error('Erro ao processar arquivo CSV.');
-      }
+        console.error("Erro ao processar arquivo CSV:", error);
+        toast.error("Erro ao processar arquivo CSV.");
+      },
     });
-    
-    // Limpar o input para permitir selecionar o mesmo arquivo novamente
-    event.target.value = '';
+    event.target.value = "";
   };
 
-  // Função para lidar com o sucesso na criação de um fornecedor
+  // Sucesso ao criar fornecedor
   const handleCreateSuccess = () => {
     setIsCreateDialogOpen(false);
     fetchSuppliers();
-    toast.success('Fornecedor criado com sucesso!');
+    toast.success("Fornecedor criado com sucesso!");
   };
 
-  // Função para navegar para a página de detalhes do fornecedor
+  // Navega para detalhes do fornecedor
   const handleSupplierClick = (supplierId: string) => {
     router.push(`/fornecedores/${supplierId}`);
   };
+
+  const columns = supplierColumns(
+    () => {}, // onEdit (implemente conforme necessidade)
+    () => {}  // onDelete (implemente conforme necessidade)
+  );
 
   return (
     <div className="space-y-4">
@@ -198,7 +189,10 @@ export default function FornecedoresPage() {
             Exportar CSV
           </Button>
           <label htmlFor="import-csv" className="cursor-pointer">
-            <Button variant="outline" onClick={() => document.getElementById('import-csv')?.click()}>
+            <Button
+              variant="outline"
+              onClick={() => document.getElementById("import-csv")?.click()}
+            >
               <FileUp className="mr-2 h-4 w-4" />
               Importar CSV
             </Button>
@@ -253,8 +247,8 @@ export default function FornecedoresPage() {
                 />
               </svg>
             </div>
-            <Button 
-              variant="outline" 
+            <Button
+              variant="outline"
               className="flex items-center gap-2"
               onClick={() => setIsFiltersOpen(!isFiltersOpen)}
             >
@@ -272,19 +266,15 @@ export default function FornecedoresPage() {
               />
             </div>
           )}
-
           {error && (
             <div className="bg-red-50 border-l-4 border-red-400 p-4 mb-4">
               <div className="flex">
                 <div className="ml-3">
-                  <p className="text-sm text-red-700">
-                    {error}
-                  </p>
+                  <p className="text-sm text-red-700">{error}</p>
                 </div>
               </div>
             </div>
           )}
-
           <DataTable
             columns={columns}
             data={suppliers}

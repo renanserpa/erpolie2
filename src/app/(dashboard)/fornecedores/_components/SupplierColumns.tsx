@@ -5,11 +5,19 @@ import { ColumnDef } from "@tanstack/react-table";
 import { ArrowUpDown, MoreHorizontal, Trash2, Edit, Eye } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { Badge } from "@/components/ui/badge";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
-// Define the data structure for a Supplier based on the actual database schema
+// Tipagem do fornecedor
 export type Supplier = {
   id: string;
   name: string;
@@ -28,26 +36,32 @@ export type Supplier = {
   updated_at?: string | null;
 };
 
-// Placeholder delete function (moved outside columns definition)
-const handleDeleteSupplier = async (supplierId: string, supplierName: string, onDelete: (id: string, name: string) => void) => {
+// Função auxiliar para exclusão
+const handleDeleteSupplier = async (
+  supplierId: string,
+  supplierName: string,
+  onDelete: (id: string, name: string) => void
+) => {
   onDelete(supplierId, supplierName);
 };
 
-// Define columns as a function to accept callbacks
-export const supplierColumns = (onEdit: (supplier: Supplier) => void, onDelete: (supplierId: string, supplierName: string) => void): ColumnDef<Supplier>[] => [
+export const supplierColumns = (
+  onEdit: (supplier: Supplier) => void,
+  onDelete: (supplierId: string, supplierName: string) => void
+): ColumnDef<Supplier>[] => [
   {
     id: "select",
     header: ({ table }) => (
       <Checkbox
         checked={table.getIsAllPageRowsSelected()}
-        onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
+        onCheckedChange={value => table.toggleAllPageRowsSelected(!!value)}
         aria-label="Selecionar todas as linhas"
       />
     ),
     cell: ({ row }) => (
       <Checkbox
         checked={row.getIsSelected()}
-        onCheckedChange={(value) => row.toggleSelected(!!value)}
+        onCheckedChange={value => row.toggleSelected(!!value)}
         aria-label="Selecionar linha"
       />
     ),
@@ -56,19 +70,20 @@ export const supplierColumns = (onEdit: (supplier: Supplier) => void, onDelete: 
   },
   {
     accessorKey: "name",
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Razão Social
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
-      );
-    },
+    header: ({ column }) => (
+      <Button
+        variant="ghost"
+        onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+      >
+        Razão Social
+        <ArrowUpDown className="ml-2 h-4 w-4" />
+      </Button>
+    ),
     cell: ({ row }) => (
-      <Link href={`/fornecedores/${row.original.id}`} className="font-medium text-blue-600 hover:underline">
+      <Link
+        href={`/fornecedores/${row.original.id}`}
+        className="font-medium text-blue-600 hover:underline"
+      >
         {row.getValue("name")}
       </Link>
     ),
@@ -84,16 +99,6 @@ export const supplierColumns = (onEdit: (supplier: Supplier) => void, onDelete: 
     cell: ({ row }) => <div>{row.original.document || "-"}</div>,
   },
   {
-    accessorKey: "email",
-    header: "Email",
-    cell: ({ row }) => <div>{row.original.email || "-"}</div>,
-  },
-  {
-    accessorKey: "phone",
-    header: "Telefone",
-    cell: ({ row }) => <div>{row.original.phone || "-"}</div>,
-  },
-  {
     accessorKey: "city",
     header: "Cidade",
     cell: ({ row }) => <div>{row.original.city || "-"}</div>,
@@ -102,6 +107,16 @@ export const supplierColumns = (onEdit: (supplier: Supplier) => void, onDelete: 
     accessorKey: "state",
     header: "Estado",
     cell: ({ row }) => <div>{row.original.state || "-"}</div>,
+  },
+  {
+    accessorKey: "email",
+    header: "Email",
+    cell: ({ row }) => <div>{row.original.email || "-"}</div>,
+  },
+  {
+    accessorKey: "phone",
+    header: "Telefone",
+    cell: ({ row }) => <div>{row.original.phone || "-"}</div>,
   },
   {
     accessorKey: "is_active",
@@ -127,7 +142,7 @@ export const supplierColumns = (onEdit: (supplier: Supplier) => void, onDelete: 
     enableHiding: false,
     cell: ({ row }) => {
       const supplier = row.original;
-
+      const router = useRouter();
       return (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
@@ -138,17 +153,15 @@ export const supplierColumns = (onEdit: (supplier: Supplier) => void, onDelete: 
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Ações</DropdownMenuLabel>
-            <DropdownMenuItem
-              onClick={() => navigator.clipboard.writeText(supplier.id)}
-            >
+            <DropdownMenuItem onClick={() => navigator.clipboard.writeText(supplier.id)}>
               Copiar ID Fornecedor
             </DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem onClick={() => onEdit(supplier)}>
               <Edit className="mr-2 h-4 w-4" /> Editar Fornecedor
             </DropdownMenuItem>
-            <DropdownMenuItem 
-              onClick={() => window.location.href = `/fornecedores/${supplier.id}`}
+            <DropdownMenuItem
+              onClick={() => router.push(`/fornecedores/${supplier.id}`)}
             >
               <Eye className="mr-2 h-4 w-4" /> Ver Detalhes
             </DropdownMenuItem>
@@ -166,5 +179,5 @@ export const supplierColumns = (onEdit: (supplier: Supplier) => void, onDelete: 
   },
 ];
 
-// Export columns alias para compatibilidade com a página
+// Export para compatibilidade
 export const columns = supplierColumns;
