@@ -1,5 +1,7 @@
+
 # Visao Geral
 Este documento lista e descreve todos os modulos principais do Olie ERP. Cada modulo possui seu proprio arquivo detalhado com campos, fluxos, APIs e wireframes (ver pasta `/MODULOS`).
+
 
 ## 1. CLIENTES
 - **Descricao**: Cadastro completo de clientes PF/PJ, com campos obrigatorios e opcionais, historico de pedidos, contatos e segmentacao.
@@ -145,6 +147,8 @@ Este documento lista e descreve todos os modulos principais do Olie ERP. Cada mo
 - **Fluxos Relacionados**:
   - Onboarding de novo colaborador
   - Validacao de treinamento obrigatorio
+
+
 
 Este documento descreve resumidamente os módulos que compõem o **Olie ERP** e suas principais funções.
 

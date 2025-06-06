@@ -92,4 +92,3 @@ O Olie ERP é um sistema de gestão modular, inteligente e escalável, desenvolv
 - `CHECKLIST.md` — Progresso por módulo, bugs e pendências
 - `README.md` — Resumo para novos devs/consultores
 - `FAQ.md` — Dúvidas, padrões e alertas
-

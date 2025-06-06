@@ -1,5 +1,4 @@
 
-# AGENTS.md – Diretrizes para o Agente CODEX e Automação do Projeto Olie ERP
 
 1. **Contexto do Projeto**
 Este repositório centraliza o desenvolvimento do Olie ERP — sistema modular, escalável e altamente automatizado para gestão de ateliês criativos, com stack Next.js + TypeScript + Supabase.
@@ -59,4 +58,4 @@ Data | Autor | Descrição
 2025-06-06 | Renan/CODEX | Versão inicial, adaptada para priorizar automação, robustez e refino contínuo pelo agente CODEX.
 
 **Observação:** Este arquivo AGENTS.md deve ser consultado e atualizado sempre que um novo padrão, regra, dependência crítica ou decisão estrutural for adotada no projeto.
-=
+
