@@ -8,13 +8,7 @@ import { Input } from "@/components/ui/input";
 import { DataTable } from "@/components/ui/data-table";
 import { supplierColumns } from "./_components/SupplierColumns";
 import { Plus, FileDown, FileUp, Filter } from "lucide-react";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { useDebounce } from "@/hooks/use-debounce";
 import { AdvancedFilters, type FilterOption } from "@/components/ui/advanced-filters";
 import Papa from "papaparse";
@@ -86,10 +80,10 @@ export default function FornecedoresPage() {
             name: "Fornecedor Têxtil Ltda",
             fantasy_name: "TextilTech",
             document: "12.345.678/0001-90",
-            city: "São Paulo",
-            state: "SP",
             email: "contato@textiltech.com.br",
             phone: "11987654321",
+            city: "São Paulo",
+            state: "SP",
             is_active: true,
             created_at: new Date().toISOString(),
           },
@@ -98,10 +92,10 @@ export default function FornecedoresPage() {
             name: "Distribuidora de Tecidos Nacional S.A.",
             fantasy_name: "DTN Tecidos",
             document: "98.765.432/0001-10",
-            city: "Rio de Janeiro",
-            state: "RJ",
             email: "vendas@dtntecidos.com.br",
             phone: "21987654321",
+            city: "Rio de Janeiro",
+            state: "RJ",
             is_active: true,
             created_at: new Date().toISOString(),
           },
@@ -176,8 +170,8 @@ export default function FornecedoresPage() {
   };
 
   const columns = supplierColumns(
-    () => {}, // onEdit (implemente se quiser ação de editar)
-    () => {}  // onDelete (implemente se quiser ação de excluir)
+    () => {}, // onEdit (implemente conforme necessidade)
+    () => {}  // onDelete (implemente conforme necessidade)
   );
 
   return (

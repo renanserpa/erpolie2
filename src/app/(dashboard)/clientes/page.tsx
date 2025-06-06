@@ -13,7 +13,7 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
+  DialogTrigger
 } from "@/components/ui/dialog";
 import { useDebounce } from "@/hooks/use-debounce";
 import { AdvancedFilters, type FilterOption } from "@/components/ui/advanced-filters";
@@ -101,7 +101,7 @@ export default function ClientesPage() {
             document: "12345678900",
             city: "São Paulo",
             state: "SP",
-            is_active: false,
+            is_active: true,
             created_at: new Date().toISOString(),
           },
         ]);

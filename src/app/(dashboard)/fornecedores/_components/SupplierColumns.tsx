@@ -15,13 +15,14 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Badge } from "@/components/ui/badge";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 // Tipagem do fornecedor
 export type Supplier = {
   id: string;
   name: string;
   fantasy_name?: string | null;
-  document?: string | null; // CNPJ
+  document?: string | null;
   email?: string | null;
   phone?: string | null;
   address?: string | null;
@@ -99,16 +100,6 @@ export const supplierColumns = (
     cell: ({ row }) => <div>{row.original.document || "-"}</div>,
   },
   {
-    accessorKey: "email",
-    header: "Email",
-    cell: ({ row }) => <div>{row.original.email || "-"}</div>,
-  },
-  {
-    accessorKey: "phone",
-    header: "Telefone",
-    cell: ({ row }) => <div>{row.original.phone || "-"}</div>,
-  },
-  {
     accessorKey: "city",
     header: "Cidade",
     cell: ({ row }) => <div>{row.original.city || "-"}</div>,
@@ -117,6 +108,16 @@ export const supplierColumns = (
     accessorKey: "state",
     header: "Estado",
     cell: ({ row }) => <div>{row.original.state || "-"}</div>,
+  },
+  {
+    accessorKey: "email",
+    header: "Email",
+    cell: ({ row }) => <div>{row.original.email || "-"}</div>,
+  },
+  {
+    accessorKey: "phone",
+    header: "Telefone",
+    cell: ({ row }) => <div>{row.original.phone || "-"}</div>,
   },
   {
     accessorKey: "is_active",
@@ -142,7 +143,7 @@ export const supplierColumns = (
     enableHiding: false,
     cell: ({ row }) => {
       const supplier = row.original;
-
+      const router = useRouter();
       return (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
@@ -161,7 +162,7 @@ export const supplierColumns = (
               <Edit className="mr-2 h-4 w-4" /> Editar Fornecedor
             </DropdownMenuItem>
             <DropdownMenuItem
-              onClick={() => window.location.href = `/fornecedores/${supplier.id}`}
+              onClick={() => router.push(`/fornecedores/${supplier.id}`)}
             >
               <Eye className="mr-2 h-4 w-4" /> Ver Detalhes
             </DropdownMenuItem>
