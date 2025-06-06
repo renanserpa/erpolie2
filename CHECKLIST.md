@@ -1,4 +1,5 @@
 
+
 📋 **Checklist Geral do Olie ERP**
 
 Este arquivo centraliza os checklists de tarefas, validações e revisões para desenvolvimento, automação, QA e releases. Todo PR, sprint, refatoração ou inclusão de nova funcionalidade deve passar pelos itens abaixo.
@@ -54,7 +55,4 @@ Este arquivo centraliza os checklists de tarefas, validações e revisões para 
 ### 🔁 Histórico de Atualizações
 - 2024-06-06: Primeira versão consolidada do CHECKLIST.md (por Renan + squad Olie)
 - (adicione data, autor e resumo da alteração a cada nova atualização)
-
-**Importante:** Este arquivo deve ser revisado e assinado (digitalmente ou via PR) por todos envolvidos a cada release principal, migração de stack ou inclusão de novo agente/IA. Mantém o Olie ERP sempre auditável, seguro e com evolução controlada!
-=======
 

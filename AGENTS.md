@@ -17,6 +17,7 @@ Todos os agentes devem consultar também [`README.md`](README.md), [`CHECKLIST.m
 
 ## Princípios para Agentes (CODEX)
 
+
 - Buscar a solução mais robusta, escalável e alinhada às práticas modernas
 - Reutilizar código e componentes sempre que possível
 - Evitar mocks ou dados simulados em produção. Utilize apenas em testes/dev
@@ -24,25 +25,11 @@ Todos os agentes devem consultar também [`README.md`](README.md), [`CHECKLIST.m
 - Priorizar performance, legibilidade e tipagem forte (TypeScript)
 - Documentar decisões importantes neste arquivo ou no PR
 - Sinalizar dependências desatualizadas e más práticas
-
+<
 ## Checklist para Tarefas/Commits do CODEX
 
 - [ ] O código segue os padrões e arquitetura definidos neste repositório?
 - [ ] Não há mocks ou dados simulados em produção?
-=======
-
-
-- Buscar a solução mais robusta, escalável e alinhada às práticas modernas
-- Reutilizar código e componentes sempre que possível
-- Evitar mocks ou dados simulados em produção. Utilize apenas em testes/dev
-- Dividir grandes mudanças em tarefas pequenas e commits atômicos
-- Priorizar performance, legibilidade e tipagem forte (TypeScript)
-- Documentar decisões importantes neste arquivo ou no PR
-- Sinalizar dependências desatualizadas e más práticas
-
-## Checklist para Tarefas/Commits do CODEX
-
-
 - [ ] A alteração está restrita a um único módulo ou funcionalidade?
 - [ ] O commit é pequeno, atômico e de fácil revisão?
 - [ ] Todos os testes, lint e build foram executados e passaram (`npm test`, `npm run lint`, `npx next build`)?
@@ -67,14 +54,13 @@ Todos os agentes devem consultar também [`README.md`](README.md), [`CHECKLIST.m
 
 ## Automação e Scripts
 
+=======
+
+
 - Identificar padrões repetitivos e sugerir ou criar scripts (lint, fix, doc, test)
 - Gerar documentação automática quando possível (Typedoc/JSDoc)
 - Propor melhorias para o pipeline CI/CD
 - Validar periodicamente se scripts estão alinhados aos requisitos
-=======
-
-## Automação e Scripts
-
 
 ## Pequenos Ciclos e Commits
 
