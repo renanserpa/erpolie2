@@ -10,9 +10,6 @@ import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { TrendingUp, TrendingDown } from "lucide-react";
 import { format, subDays, startOfMonth, endOfMonth } from "date-fns";
-import { ptBR } from "date-fns/locale";
-// Importe gráficos se necessário
-// import { BarChart, Bar, ... } from 'recharts';
 
 interface DashboardProps { className?: string }
 interface KpiData {
@@ -43,11 +40,10 @@ export function Dashboard({ className }: DashboardProps) {
     salesByCategory: [], salesByMonth: [], topProducts: [], deliveryStatus: [], salesByDivision: []
   });
   const [divisions, setDivisions] = useState<Array<{ id: string; name: string }>>([]);
-  // const [activeTab, setActiveTab] = useState<string>("overview"); // se usar abas
 
-  // --- Fetch Functions (cole aqui suas lógicas reais) ---
+  // --- Fetch Functions (personalize conforme sua lógica real) ---
   const fetchKpiData = useCallback(async (fromDate: string, toDate: string, divisionId: string | null): Promise<KpiData> => {
-    // ...lógica real aqui
+    // ...implemente a lógica real aqui conforme seu banco
     return {
       totalRevenue: 0, totalExpenses: 0, totalOrders: 0, totalProducts: 0,
       totalDeliveries: 0, totalCustomers: 0, revenueChange: 0, ordersChange: 0
@@ -55,7 +51,7 @@ export function Dashboard({ className }: DashboardProps) {
   }, []);
 
   const fetchChartData = useCallback(async (fromDate: string, toDate: string, divisionId: string | null): Promise<ChartData> => {
-    // ...lógica real aqui
+    // ...implemente a lógica real aqui conforme seu banco
     return {
       salesByCategory: [], salesByMonth: [], topProducts: [], deliveryStatus: [], salesByDivision: []
     };
@@ -145,7 +141,6 @@ export function Dashboard({ className }: DashboardProps) {
     return <div className="flex items-center text-gray-500"><span>0%</span></div>;
   };
 
-  // --- JSX ---
   return (
     <div className={`space-y-6 ${className ?? ''}`}>
       <div className="flex flex-col md:flex-row justify-between gap-4">
@@ -178,17 +173,39 @@ export function Dashboard({ className }: DashboardProps) {
         <Button variant="outline" size="sm" onClick={() => handlePredefinedPeriod("last30days")}>Últimos 30 dias</Button>
         <Button variant="outline" size="sm" onClick={() => handlePredefinedPeriod("thisMonth")}>Este mês</Button>
       </div>
-      {/* 
-        Coloque aqui seus cards, gráficos, KPIs, etc.
-        Exemplo de uso dos helpers:
+      {/* Exemplo de uso dos helpers em cards/KPIs: */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <Card>
+          <CardHeader>
+            <CardTitle>Total de Receitas</CardTitle>
+            <CardDescription>Entradas no período selecionado</CardDescription>
+          </CardHeader>
           <CardContent>
-            <div>Total de Receitas: {formatCurrency(kpiData.totalRevenue)}</div>
+            <div className="text-2xl font-bold">{formatCurrency(kpiData.totalRevenue)}</div>
             <div>Variação: {renderTrend(kpiData.revenueChange)}</div>
           </CardContent>
         </Card>
-      */}
-      {/* ...restante do dashboard */}
+        <Card>
+          <CardHeader>
+            <CardTitle>Total de Despesas</CardTitle>
+            <CardDescription>Saídas no período selecionado</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{formatCurrency(kpiData.totalExpenses)}</div>
+            <div>Pedidos: {kpiData.totalOrders} ({renderTrend(kpiData.ordersChange)})</div>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader>
+            <CardTitle>Total de Clientes</CardTitle>
+            <CardDescription>Clientes ativos cadastrados</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{kpiData.totalCustomers}</div>
+          </CardContent>
+        </Card>
+      </div>
+      {/* Implemente gráficos e outras visualizações conforme necessário */}
     </div>
   );
 }
