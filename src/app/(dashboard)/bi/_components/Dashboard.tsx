@@ -39,24 +39,139 @@ export function Dashboard({ className }: DashboardProps) {
   const [chartData, setChartData] = useState<ChartData>({
     salesByCategory: [], salesByMonth: [], topProducts: [], deliveryStatus: [], salesByDivision: []
   });
-  const [divisions, setDivisions] = useState<Array<{ id: string; name: string }>>([]);
+  const [divisions, setDivisions] = useState<Array<{id: string; name: string}>>([]);
+  const [activeTab, setActiveTab] = useState<string>("overview");
 
-  // --- Fetch Functions (personalize conforme sua lógica real) ---
+  // Cores para gráficos e divisões (mantém para seu futuro uso)
+  const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884d8', '#82ca9d'];
+  const DIVISION_COLORS = {
+    'Ateliê': '#F0FFBE',
+    'Casa': '#A5854E',
+    'Pet': '#6B7280',
+    'Music': '#8B5CF6',
+    'Wood': '#D97706',
+    'Brand': '#10B981'
+  };
+
+  // --- BUSCA OS DADOS DO DASHBOARD (kpi e gráficos) ---
   const fetchKpiData = useCallback(async (fromDate: string, toDate: string, divisionId: string | null): Promise<KpiData> => {
-    // ...implemente a lógica real aqui conforme seu banco
-    return {
-      totalRevenue: 0, totalExpenses: 0, totalOrders: 0, totalProducts: 0,
-      totalDeliveries: 0, totalCustomers: 0, revenueChange: 0, ordersChange: 0
-    };
-  }, []);
+    try {
+      const daysDiff = Math.ceil((new Date(toDate).getTime() - new Date(fromDate).getTime()) / (1000 * 3600 * 24));
+      const prevFromDate = format(subDays(new Date(fromDate), daysDiff), "yyyy-MM-dd");
+      const prevToDate = format(subDays(new Date(toDate), 1), "yyyy-MM-dd");
+      // 1. Receitas
+      let query = supabase
+        .from("financial_transactions")
+        .select("amount")
+        .eq("type", "income")
+        .gte("date", fromDate)
+        .lte("date", toDate);
+      if (divisionId) query = query.eq("division_id", divisionId);
+      const { data: revenueData, error: revenueError } = await query;
+      if (revenueError) throw revenueError;
+      const totalRevenue = revenueData?.reduce((sum, item) => sum + item.amount, 0) || 0;
+      // 1.1 Período anterior
+      let prevQuery = supabase
+        .from("financial_transactions")
+        .select("amount")
+        .eq("type", "income")
+        .gte("date", prevFromDate)
+        .lte("date", prevToDate);
+      if (divisionId) prevQuery = prevQuery.eq("division_id", divisionId);
+      const { data: prevRevenueData, error: prevRevenueError } = await prevQuery;
+      if (prevRevenueError) throw prevRevenueError;
+      const prevTotalRevenue = prevRevenueData?.reduce((sum, item) => sum + item.amount, 0) || 0;
+      const revenueChange = prevTotalRevenue > 0 
+        ? ((totalRevenue - prevTotalRevenue) / prevTotalRevenue) * 100 
+        : 100;
+      // 2. Despesas
+      let expenseQuery = supabase
+        .from("financial_transactions")
+        .select("amount")
+        .eq("type", "expense")
+        .gte("date", fromDate)
+        .lte("date", toDate);
+      if (divisionId) expenseQuery = expenseQuery.eq("division_id", divisionId);
+      const { data: expenseData, error: expenseError } = await expenseQuery;
+      if (expenseError) throw expenseError;
+      const totalExpenses = expenseData?.reduce((sum, item) => sum + item.amount, 0) || 0;
+      // 3. Pedidos
+      let orderQuery = supabase
+        .from("orders")
+        .select("id")
+        .gte("created_at", fromDate)
+        .lte("created_at", toDate);
+      if (divisionId) orderQuery = orderQuery.eq("division_id", divisionId);
+      const { data: orderData, error: orderError } = await orderQuery;
+      if (orderError) throw orderError;
+      const totalOrders = orderData?.length || 0;
+      // 3.1 Pedidos do período anterior
+      let prevOrderQuery = supabase
+        .from("orders")
+        .select("id")
+        .gte("created_at", prevFromDate)
+        .lte("created_at", prevToDate);
+      if (divisionId) prevOrderQuery = prevOrderQuery.eq("division_id", divisionId);
+      const { data: prevOrderData, error: prevOrderError } = await prevOrderQuery;
+      if (prevOrderError) throw prevOrderError;
+      const prevTotalOrders = prevOrderData?.length || 0;
+      const ordersChange = prevTotalOrders > 0 
+        ? ((totalOrders - prevTotalOrders) / prevTotalOrders) * 100 
+        : 100;
+      // 4. Produtos
+      let productQuery = supabase
+        .from("products")
+        .select("id");
+      if (divisionId) productQuery = productQuery.eq("division_id", divisionId);
+      const { data: productData, error: productError } = await productQuery;
+      if (productError) throw productError;
+      const totalProducts = productData?.length || 0;
+      // 5. Entregas
+      let deliveryQuery = supabase
+        .from("deliveries")
+        .select("id, orders!inner(division_id)")
+        .gte("created_at", fromDate)
+        .lte("created_at", toDate);
+      if (divisionId) deliveryQuery = deliveryQuery.eq("orders.division_id", divisionId);
+      const { data: deliveryData, error: deliveryError } = await deliveryQuery;
+      if (deliveryError) throw deliveryError;
+      const totalDeliveries = deliveryData?.length || 0;
+      // 6. Clientes
+      const customerQuery = supabase
+        .from("customers")
+        .select("id");
+      // Filtro de divisão para clientes: depende do seu modelo, então aqui não aplica
+      const { data: customerData, error: customerError } = await customerQuery;
+      if (customerError) throw customerError;
+      const totalCustomers = customerData?.length || 0;
+      return {
+        totalRevenue,
+        totalExpenses,
+        totalOrders,
+        totalProducts,
+        totalDeliveries,
+        totalCustomers,
+        revenueChange,
+        ordersChange
+      };
+    } catch (error) {
+      console.error("Erro ao buscar KPIs:", error);
+      throw error;
+    }
+  }, [supabase]);
 
+  // Exemplo de fetchChartData (você pode customizar pra gráficos reais depois)
   const fetchChartData = useCallback(async (fromDate: string, toDate: string, divisionId: string | null): Promise<ChartData> => {
-    // ...implemente a lógica real aqui conforme seu banco
     return {
-      salesByCategory: [], salesByMonth: [], topProducts: [], deliveryStatus: [], salesByDivision: []
+      salesByCategory: [],
+      salesByMonth: [],
+      topProducts: [],
+      deliveryStatus: [],
+      salesByDivision: [],
     };
   }, []);
 
+  // Carregar divisões e dashboard no início, auto-refresh
   const fetchDashboardData = useCallback(async () => {
     setIsLoading(true);
     try {
@@ -97,14 +212,11 @@ export function Dashboard({ className }: DashboardProps) {
     fetchInitialData();
     const intervalId = setInterval(() => {
       fetchDashboardData();
-    }, 5 * 60 * 1000);
+    }, 5 * 60 * 1000); // 5 minutos
     return () => clearInterval(intervalId);
   }, [fetchDashboardData, fetchInitialData]);
 
   // Filtros
-  const handleDateChange = (range: DateRange) => {
-    if (range?.from && range?.to) setDateRange({ from: range.from, to: range.to });
-  };
   const handleApplyFilters = () => { fetchDashboardData(); };
   const handleResetFilters = () => {
     setDateRange({ from: startOfMonth(new Date()), to: endOfMonth(new Date()) });
@@ -148,7 +260,7 @@ export function Dashboard({ className }: DashboardProps) {
         <div className="flex flex-col md:flex-row gap-2">
           <DateRangePicker
             date={dateRange}
-            onDateChange={handleDateChange}
+            onDateChange={(range) => { if (range?.from && range?.to) setDateRange({ from: range.from, to: range.to }); }}
             className="w-full md:w-auto"
           />
           <Select value={divisionFilter} onValueChange={setDivisionFilter}>

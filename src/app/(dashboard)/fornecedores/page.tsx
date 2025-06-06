@@ -8,7 +8,13 @@ import { Input } from "@/components/ui/input";
 import { DataTable } from "@/components/ui/data-table";
 import { supplierColumns } from "./_components/SupplierColumns";
 import { Plus, FileDown, FileUp, Filter } from "lucide-react";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import { useDebounce } from "@/hooks/use-debounce";
 import { AdvancedFilters, type FilterOption } from "@/components/ui/advanced-filters";
 import Papa from "papaparse";
@@ -52,7 +58,6 @@ export default function FornecedoresPage() {
     try {
       setIsLoading(true);
       setError(null);
-
       const query: Record<string, unknown> = {};
       if (debouncedSearchQuery) {
         query.name = `ilike.%${debouncedSearchQuery}%`;

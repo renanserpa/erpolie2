@@ -22,7 +22,7 @@ export type Supplier = {
   id: string;
   name: string;
   fantasy_name?: string | null;
-  document?: string | null;
+  document?: string | null; // CNPJ
   email?: string | null;
   phone?: string | null;
   address?: string | null;
@@ -45,7 +45,6 @@ const handleDeleteSupplier = async (
   onDelete(supplierId, supplierName);
 };
 
-// Colunas da tabela de fornecedores
 export const supplierColumns = (
   onEdit: (supplier: Supplier) => void,
   onDelete: (supplierId: string, supplierName: string) => void
@@ -180,5 +179,5 @@ export const supplierColumns = (
   },
 ];
 
-// Export para compatibilidade (import { columns } from ...)
+// Export para compatibilidade
 export const columns = supplierColumns;
