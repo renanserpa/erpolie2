@@ -8,11 +8,12 @@ import { ArrowLeft, Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
 import { getRecordById } from '@/lib/data-hooks';
 import { SupplierForm } from '../../_components/SupplierForm';
+import type { Supplier } from '@/types/schema';
 
 export default function EditSupplierPage() {
   const params = useParams();
   const router = useRouter();
-  const [supplier, setSupplier] = useState<any>(null);
+  const [supplier, setSupplier] = useState<Supplier | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -47,9 +48,13 @@ export default function EditSupplierPage() {
         
         console.warn('Usando dados mockados para fornecedor');
       }
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error('Error fetching supplier details:', err);
-      setError(err.message || 'Erro ao carregar detalhes do fornecedor');
+      if (err instanceof Error) {
+        setError(err.message);
+      } else {
+        setError('Erro ao carregar detalhes do fornecedor');
+      }
       toast.error('Erro ao carregar detalhes do fornecedor.');
     } finally {
       setLoading(false);

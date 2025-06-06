@@ -1,22 +1,23 @@
 "use client";
 
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { ArrowLeft, Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
 import { getRecordById } from '@/lib/data-hooks';
+import { StockItem } from '@/types/schema';
 import { StockItemForm } from '../../_components/StockItemForm';
 
 export default function EditStockItemPage() {
-  const params = useParams();
+  const params = useParams<{ id: string }>();
   const router = useRouter();
-  const [stockItem, setStockItem] = useState<any>(null);
+  const [stockItem, setStockItem] = useState<StockItem | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  const fetchStockItem = async () => {
+  const fetchStockItem = useCallback(async () => {
     try {
       setLoading(true);
       setError(null);
@@ -55,18 +56,19 @@ export default function EditStockItemPage() {
         
         console.warn('Usando dados mockados para item de estoque');
       }
-    } catch (err: any) {
-      console.error('Error fetching stock item details:', err);
-      setError(err.message || 'Erro ao carregar detalhes do item de estoque');
+    } catch (err: unknown) {
+      const error = err instanceof Error ? err : new Error('Unknown error');
+      console.error('Error fetching stock item details:', error);
+      setError(error.message || 'Erro ao carregar detalhes do item de estoque');
       toast.error('Erro ao carregar detalhes do item de estoque.');
     } finally {
       setLoading(false);
     }
-  };
+  }, [params.id]);
 
   useEffect(() => {
     fetchStockItem();
-  }, [params.id]);
+  }, [fetchStockItem]);
 
   const handleSuccess = () => {
     toast.success('Item de estoque atualizado com sucesso');

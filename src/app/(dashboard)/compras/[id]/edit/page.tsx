@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -8,15 +8,16 @@ import { ArrowLeft, Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
 import { getRecordById } from '@/lib/data-hooks';
 import { PurchaseRequestForm } from '../../_components/PurchaseRequestForm';
+import type { PurchaseRequest } from '@/types/schema';
 
 export default function EditPurchaseRequestPage() {
   const params = useParams();
   const router = useRouter();
-  const [purchaseRequest, setPurchaseRequest] = useState<any>(null);
+  const [purchaseRequest, setPurchaseRequest] = useState<PurchaseRequest | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  const fetchPurchaseRequest = async () => {
+  const fetchPurchaseRequest = useCallback(async () => {
     try {
       setLoading(true);
       setError(null);
@@ -57,18 +58,19 @@ export default function EditPurchaseRequestPage() {
         
         console.warn('Usando dados mockados para solicitação de compra');
       }
-    } catch (err: any) {
-      console.error('Error fetching purchase request details:', err);
-      setError(err.message || 'Erro ao carregar detalhes da solicitação de compra');
-      toast.error('Erro ao carregar detalhes da solicitação de compra.');
-    } finally {
-      setLoading(false);
-    }
-  };
+      } catch (err: unknown) {
+        console.error('Error fetching purchase request details:', err);
+        const message = err instanceof Error ? err.message : 'Erro ao carregar detalhes da solicitação de compra';
+        setError(message);
+        toast.error('Erro ao carregar detalhes da solicitação de compra.');
+      } finally {
+        setLoading(false);
+      }
+  }, [params.id]);
 
   useEffect(() => {
     fetchPurchaseRequest();
-  }, [params.id]);
+  }, [fetchPurchaseRequest]);
 
   const handleSuccess = () => {
     toast.success('Solicitação de compra atualizada com sucesso');

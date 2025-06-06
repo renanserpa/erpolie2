@@ -34,7 +34,7 @@ type AuditLog = {
   action_type: AuditAction;
   entity_type: string;
   entity_id: string | null;
-  details: any;
+  details: Record<string, unknown>;
   ip_address: string | null;
   user_agent: string | null;
   created_at: string;
@@ -117,7 +117,7 @@ export default function AuditLogPage() {
             ...log, 
             user_email: userData?.full_name || log.user_id 
           };
-        } catch (e) {
+        } catch {
           return { ...log, user_email: log.user_id };
         }
       }));

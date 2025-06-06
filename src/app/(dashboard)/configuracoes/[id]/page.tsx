@@ -4,7 +4,6 @@ import React, { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { createSupabaseClient } from "@/lib/supabase/client";
 import { ArrowLeft, Edit, Trash2, FileText, Settings, Globe, User, Database } from "lucide-react";
 import { format } from "date-fns";
