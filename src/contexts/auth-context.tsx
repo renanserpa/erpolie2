@@ -3,6 +3,7 @@
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { createClient } from "@/lib/supabase/client";
 import { toast } from "sonner";
+import type { AuthUser, UserProfile } from "@/types/auth";
 
 // Tipos para o sistema de permissões
 export type Permission = {
@@ -39,8 +40,8 @@ export type Module = {
 
 // Contexto de autenticação e autorização
 type AuthContextType = {
-  user: any | null;
-  profile: any | null;
+  user: AuthUser | null;
+  profile: UserProfile | null;
   roles: Role[];
   permissions: Permission[];
   modules: Module[];
@@ -57,8 +58,8 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const supabase = createClient();
-  const [user, setUser] = useState<any | null>(null);
-  const [profile, setProfile] = useState<any | null>(null);
+  const [user, setUser] = useState<AuthUser | null>(null);
+  const [profile, setProfile] = useState<UserProfile | null>(null);
   const [roles, setRoles] = useState<Role[]>([]);
   const [permissions, setPermissions] = useState<Permission[]>([]);
   const [modules, setModules] = useState<Module[]>([]);
@@ -227,7 +228,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     
     // Configurar listener para mudanças de autenticação
     const { data: authListener } = supabase.auth.onAuthStateChange(
-      async (event, session) => {
+      async (event) => {
         if (event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED') {
           setIsAuthenticated(true);
           await loadUserAndPermissions();
@@ -245,7 +246,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     return () => {
       authListener.subscription.unsubscribe();
     };
-  }, []);
+  }, [supabase]);
   
   // Verificar se o usuário tem uma permissão específica
   const hasPermission = (permissionCode: string): boolean => {

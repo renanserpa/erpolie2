@@ -23,9 +23,12 @@ export default function LoginPage() {
     setError(null);
     setLoading(true);
 
+    const sanitizedEmail = email.trim().replace(/[<>]/g, "");
+    const sanitizedPassword = password.trim();
+
     const { error } = await supabase.auth.signInWithPassword({
-      email,
-      password,
+      email: sanitizedEmail,
+      password: sanitizedPassword,
     });
 
     setLoading(false);
@@ -61,6 +64,7 @@ export default function LoginPage() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
+                autoFocus
                 disabled={loading}
               />
             </div>
