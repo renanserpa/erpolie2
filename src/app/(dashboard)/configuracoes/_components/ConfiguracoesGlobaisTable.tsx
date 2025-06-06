@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
@@ -11,7 +11,7 @@ import { Switch } from "@/components/ui/switch";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { toast } from "sonner";
 import { createClient } from "@/lib/supabase/client";
-import { Plus, Pencil, Trash2, Search, X, FileText, Settings } from 'lucide-react';
+import { Plus, Pencil, Trash2, Search, X, FileText } from 'lucide-react';
 
 interface ConfiguracaoGlobal {
   id: string;
@@ -70,9 +70,9 @@ export default function ConfiguracoesGlobaisTable() {
 
   useEffect(() => {
     fetchConfiguracoes();
-  }, []);
+  }, [fetchConfiguracoes]);
 
-  const fetchConfiguracoes = async () => {
+  const fetchConfiguracoes = useCallback(async () => {
     try {
       setLoading(true);
       const { data, error } = await supabase
@@ -83,13 +83,14 @@ export default function ConfiguracoesGlobaisTable() {
       
       if (error) throw error;
       setConfiguracoes(data || []);
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error("Erro ao buscar configurações:", error);
-      toast.error(`Erro ao buscar configurações: ${error.message}`);
+      const message = error instanceof Error ? error.message : 'Erro ao buscar configurações';
+      toast.error(`Erro ao buscar configurações: ${message}`);
     } finally {
       setLoading(false);
     }
-  };
+  }, [supabase]);
 
   const handleOpenCreateDialog = () => {
     setCurrentConfiguracao(null);
@@ -193,7 +194,7 @@ export default function ConfiguracoesGlobaisTable() {
       if (formData.tipo === 'json') {
         try {
           JSON.parse(formData.valor);
-        } catch (e) {
+        } catch {
           toast.error("O valor deve ser um JSON válido");
           return;
         }
@@ -258,9 +259,10 @@ export default function ConfiguracoesGlobaisTable() {
       
       setIsDialogOpen(false);
       fetchConfiguracoes();
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error("Erro ao salvar configuração:", error);
-      toast.error(`Erro ao salvar configuração: ${error.message}`);
+      const message = error instanceof Error ? error.message : 'Erro ao salvar configuração';
+      toast.error(`Erro ao salvar configuração: ${message}`);
     }
   };
 
@@ -278,9 +280,10 @@ export default function ConfiguracoesGlobaisTable() {
       toast.success("Configuração excluída com sucesso");
       setIsDeleteDialogOpen(false);
       fetchConfiguracoes();
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error("Erro ao excluir configuração:", error);
-      toast.error(`Erro ao excluir configuração: ${error.message}`);
+      const message = error instanceof Error ? error.message : 'Erro ao excluir configuração';
+      toast.error(`Erro ao excluir configuração: ${message}`);
     }
   };
 
@@ -372,7 +375,7 @@ export default function ConfiguracoesGlobaisTable() {
             {searchTerm || categoriaFilter ? (
               <p>Nenhuma configuração encontrada com os filtros aplicados</p>
             ) : (
-              <p>Nenhuma configuração cadastrada. Clique em "Nova Configuração" para começar.</p>
+              <p>Nenhuma configuração cadastrada. Clique em &quot;Nova Configuração&quot; para começar.</p>
             )}
           </div>
         ) : (

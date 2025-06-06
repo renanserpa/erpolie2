@@ -8,7 +8,6 @@ import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -18,6 +17,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { createRecord, updateRecord } from "@/lib/data-hooks";
 import { toast } from "sonner";
+import type { Group } from "./GroupColumns";
 
 // Define Zod schema based on the 'stock_groups' table
 const groupFormSchema = z.object({
@@ -29,7 +29,7 @@ const groupFormSchema = z.object({
 type GroupFormValues = z.infer<typeof groupFormSchema>;
 
 interface GroupFormProps {
-  initialData?: any; // For editing
+  initialData?: Partial<Group>; // For editing
   onSuccess?: () => void; // Callback after successful submission
 }
 

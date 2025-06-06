@@ -14,14 +14,16 @@ export type Supplier = {
   id: string;
   name: string;
   fantasy_name?: string | null;
-  cnpj?: string | null;
+  document?: string | null; // CNPJ
   email?: string | null;
   phone?: string | null;
   address?: string | null;
   city?: string | null;
   state?: string | null;
   postal_code?: string | null;
-  status: string;
+  contact_name?: string | null;
+  notes?: string | null;
+  is_active: boolean;
   created_at: string;
   updated_at?: string | null;
 };
@@ -77,29 +79,47 @@ export const supplierColumns = (onEdit: (supplier: Supplier) => void, onDelete: 
     cell: ({ row }) => <div>{row.original.fantasy_name || "-"}</div>,
   },
   {
-    accessorKey: "cnpj",
+    accessorKey: "document",
     header: "CNPJ",
-    cell: ({ row }) => <div>{row.original.cnpj || "-"}</div>,
+    cell: ({ row }) => <div>{row.original.document || "-"}</div>,
   },
   {
     accessorKey: "email",
     header: "Email",
     cell: ({ row }) => <div>{row.original.email || "-"}</div>,
   },
-   {
+  {
     accessorKey: "phone",
     header: "Telefone",
     cell: ({ row }) => <div>{row.original.phone || "-"}</div>,
   },
   {
-    accessorKey: "status",
+    accessorKey: "city",
+    header: "Cidade",
+    cell: ({ row }) => <div>{row.original.city || "-"}</div>,
+  },
+  {
+    accessorKey: "state",
+    header: "Estado",
+    cell: ({ row }) => <div>{row.original.state || "-"}</div>,
+  },
+  {
+    accessorKey: "is_active",
     header: "Status",
     cell: ({ row }) => {
-      const status = row.original.status || "Inativo";
-      return <Badge variant={status === "Ativo" ? "default" : "secondary"}>{status}</Badge>;
+      const isActive = row.original.is_active !== false;
+      return (
+        <Badge variant={isActive ? "default" : "secondary"}>
+          {isActive ? "Ativo" : "Inativo"}
+        </Badge>
+      );
     },
     filterFn: (row, id, value) => {
-      return value.includes(row.getValue(id));
+      const isActive = row.getValue(id) !== false;
+      return (
+        (value.includes("Ativo") && isActive) ||
+        (value.includes("Inativo") && !isActive)
+      );
     },
   },
   {

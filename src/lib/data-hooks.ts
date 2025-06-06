@@ -5,15 +5,16 @@
 import { createClient } from '@/lib/supabase/client';
 import { toast } from 'sonner';
 import {
-  Client, Supplier, StockItem, Component, Supply,
-  Product, Order, ProductionOrder, PurchaseRequest,
-  DeliveryRoute, StockMovement
+  Client,
+  Supplier,
+  StockItem,
+  Component
 } from '@/types/schema';
 
 export { useSupabaseData } from './utils/data-hooks';
 
 // Função genérica para tratar erros do Supabase
-export const handleSupabaseError = (error: any) => {
+export const handleSupabaseError = (error: unknown) => {
   console.error('Erro Supabase:', error);
   
   // Mensagens de erro específicas baseadas no código de erro
@@ -25,7 +26,10 @@ export const handleSupabaseError = (error: any) => {
   };
 
   // Extrair código de erro se disponível
-  const pgError = error?.code || '';
+  const pgError =
+    typeof error === 'object' && error !== null && 'code' in error
+      ? String((error as { code: string }).code)
+      : '';
   const message = errorMessages[pgError] || 'Erro ao acessar o banco de dados.';
   
   toast.error(message);
@@ -33,7 +37,7 @@ export const handleSupabaseError = (error: any) => {
 };
 
 // Função para criar um novo registro
-export const createRecord = async <T extends Record<string, any>>(
+export const createRecord = async <T extends Record<string, unknown>>(
   table: string, 
   data: Partial<T>
 ): Promise<{ success: boolean; data?: T; error?: string }> => {
@@ -46,7 +50,7 @@ export const createRecord = async <T extends Record<string, any>>(
         acc[key] = value;
       }
       return acc;
-    }, {} as Record<string, any>);
+    }, {} as Record<string, unknown>);
     
     const { data: result, error } = await supabase
       .from(table)
@@ -65,7 +69,7 @@ export const createRecord = async <T extends Record<string, any>>(
 };
 
 // Função para atualizar um registro existente
-export const updateRecord = async <T extends Record<string, any>>(
+export const updateRecord = async <T extends Record<string, unknown>>(
   table: string, 
   id: string, 
   data: Partial<T>
@@ -79,7 +83,7 @@ export const updateRecord = async <T extends Record<string, any>>(
         acc[key] = value;
       }
       return acc;
-    }, {} as Record<string, any>);
+    }, {} as Record<string, unknown>);
     
     // Adicionar updated_at automaticamente
     cleanData.updated_at = new Date().toISOString();
@@ -125,7 +129,7 @@ export const deleteRecord = async (
 };
 
 // Função para buscar um registro por ID
-export const getRecordById = async <T extends Record<string, any>>(
+export const getRecordById = async <T extends Record<string, unknown>>(
   table: string, 
   id: string
 ): Promise<{ success: boolean; data?: T; error?: string }> => {
@@ -149,9 +153,9 @@ export const getRecordById = async <T extends Record<string, any>>(
 };
 
 // Função para buscar registros com filtros
-export const getRecords = async <T extends Record<string, any>>(
+export const getRecords = async <T extends Record<string, unknown>>(
   table: string, 
-  query: Record<string, any> = {}
+  query: Record<string, unknown> = {}
 ): Promise<{ success: boolean; data?: T[]; error?: string }> => {
   try {
     const supabase = createClient();
@@ -210,7 +214,7 @@ export const getRecords = async <T extends Record<string, any>>(
 };
 
 // Funções específicas para cada entidade
-export const getClients = async (query: Record<string, any> = {}) => {
+export const getClients = async (query: Record<string, unknown> = {}) => {
   return getRecords<Client>('clients', query);
 };
 
@@ -231,7 +235,7 @@ export const deleteClient = async (id: string) => {
   return deleteRecord('clients', id);
 };
 
-export const getSuppliers = async (query: Record<string, any> = {}) => {
+export const getSuppliers = async (query: Record<string, unknown> = {}) => {
   return getRecords<Supplier>('suppliers', query);
 };
 
@@ -251,7 +255,7 @@ export const deleteSupplier = async (id: string) => {
   return deleteRecord('suppliers', id);
 };
 
-export const getStockItems = async (query: Record<string, any> = {}) => {
+export const getStockItems = async (query: Record<string, unknown> = {}) => {
   // Tratamento especial para o filtro de estoque baixo
   if (query.low_stock) {
     delete query.low_stock;
@@ -365,7 +369,7 @@ export const deleteStockItem = async (id: string) => {
   return deleteRecord('stock_items', id);
 };
 
-export const getComponents = async (query: Record<string, any> = {}) => {
+export const getComponents = async (query: Record<string, unknown> = {}) => {
   try {
     const supabase = createClient();
     
@@ -456,7 +460,7 @@ export const deleteComponent = async (id: string) => {
   return deleteRecord('components', id);
 };
 
-export const getSupplies = async (query: Record<string, any> = {}) => {
+export const getSupplies = async (query: Record<string, unknown> = {}) => {
   // Tratamento especial para o filtro de estoque baixo
   if (query.low_stock) {
     delete query.low_stock;
