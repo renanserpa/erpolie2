@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from 'react';
-import { 
+import {
   Table,
   TableBody,
   TableCell,
@@ -13,6 +13,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { useSupabaseData, createRecord, updateRecord, deleteRecord } from "@/lib/data-hooks";
+import type { Client } from "@/types/schema";
 import { Loader2, Plus, Pencil, Trash2, Search, Eye } from "lucide-react";
 import { toast } from "sonner";
 import { useRouter } from 'next/navigation';
@@ -21,7 +22,7 @@ export default function ClientesTable() {
   const router = useRouter();
   const [isOpen, setIsOpen] = useState(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
-  const [currentItem, setCurrentItem] = useState<any>(null);
+  const [currentItem, setCurrentItem] = useState<Client | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [formData, setFormData] = useState({
     name: '',
@@ -46,7 +47,7 @@ export default function ClientesTable() {
     item.document?.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  const handleOpenDialog = (item?: any) => {
+  const handleOpenDialog = (item?: Client) => {
     if (item) {
       setCurrentItem(item);
       setFormData({
@@ -79,12 +80,12 @@ export default function ClientesTable() {
     setIsOpen(true);
   };
 
-  const handleOpenDeleteDialog = (item: any) => {
+  const handleOpenDeleteDialog = (item: Client) => {
     setCurrentItem(item);
     setIsDeleteDialogOpen(true);
   };
 
-  const handleViewDetails = (item: any) => {
+  const handleViewDetails = (item: Client) => {
     router.push(`/clientes/${item.id}`);
   };
 
@@ -349,7 +350,7 @@ export default function ClientesTable() {
             <DialogTitle>Confirmar Exclusão</DialogTitle>
           </DialogHeader>
           <div className="py-4">
-            <p>Tem certeza que deseja excluir o cliente "{currentItem?.name}"?</p>
+            <p>Tem certeza que deseja excluir o cliente &quot;{currentItem?.name}&quot;?</p>
             <p className="text-sm text-muted-foreground mt-2">Esta ação não pode ser desfeita.</p>
           </div>
           <DialogFooter>

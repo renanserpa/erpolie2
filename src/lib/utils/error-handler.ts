@@ -13,15 +13,16 @@ export class ErrorHandler {
    * @param customMessage Mensagem personalizada opcional
    * @returns Mensagem de erro formatada
    */
-  static handleSupabaseError(error: any, customMessage?: string): string {
+  static handleSupabaseError(error: unknown, customMessage?: string): string {
     console.error("Erro Supabase:", error);
     
     // Mensagem padrão
     let message = customMessage || "Ocorreu um erro ao processar sua solicitação.";
     
     // Verificar se é um erro do Supabase
-    if (error && error.code) {
-      switch (error.code) {
+    if (typeof error === "object" && error && "code" in error) {
+      const supabaseError = error as { code: string; message?: string };
+      switch (supabaseError.code) {
         case "PGRST116":
           message = "Registro não encontrado.";
           break;
@@ -48,8 +49,8 @@ export class ErrorHandler {
           break;
         default:
           // Se tiver uma mensagem de erro, usar ela
-          if (error.message) {
-            message = `Erro: ${error.message}`;
+          if (supabaseError.message) {
+            message = `Erro: ${supabaseError.message}`;
           }
       }
     }
@@ -70,15 +71,16 @@ export class ErrorHandler {
    * @param customMessage Mensagem personalizada opcional
    * @returns Mensagem de erro formatada
    */
-  static handleError(error: any, customMessage?: string): string {
+  static handleError(error: unknown, customMessage?: string): string {
     console.error("Erro:", error);
     
     // Mensagem padrão
     let message = customMessage || "Ocorreu um erro ao processar sua solicitação.";
     
     // Se for um erro com mensagem, usar a mensagem
-    if (error && error.message) {
-      message = error.message;
+    if (typeof error === "object" && error && "message" in error) {
+      const err = error as { message: string };
+      message = err.message;
     }
     
     // Exibir toast com o erro

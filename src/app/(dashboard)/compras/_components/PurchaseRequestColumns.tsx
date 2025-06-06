@@ -49,24 +49,6 @@ export type PurchaseRequest = {
   } | null;
 };
 
-// Helper function to handle status updates (Approve/Reject)
-const handleStatusUpdate = async (id: string, newStatusId: string, router: ReturnType<typeof useRouter>) => {
-  const supabase = createClient();
-  try {
-    const { error } = await supabase
-      .from("purchase_requests")
-      .update({ status_id: newStatusId, updated_at: new Date().toISOString() })
-      .eq("id", id);
-
-    if (error) throw error;
-
-    toast.success(`Status da solicitação atualizado com sucesso!`);
-    router.refresh(); // Refresh data in the table
-  } catch (error: any) {
-    console.error(`Erro ao atualizar status da solicitação:`, error);
-    toast.error(`Erro ao atualizar status: ${error.message}`);
-  }
-};
 
 // Helper function to handle deletion
 const handleDelete = async (id: string, router: ReturnType<typeof useRouter>) => {
@@ -83,11 +65,102 @@ const handleDelete = async (id: string, router: ReturnType<typeof useRouter>) =>
 
     toast.success("Solicitação excluída com sucesso!");
     router.refresh(); // Refresh data in the table
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Erro ao excluir solicitação:", error);
-    toast.error("Erro ao excluir solicitação: " + error.message);
+    const message = error instanceof Error ? error.message : 'Erro ao excluir solicitação';
+    toast.error("Erro ao excluir solicitação: " + message);
   }
 };
+
+interface ActionsCellProps {
+  request: PurchaseRequest;
+}
+
+function ActionsCell({ request }: ActionsCellProps) {
+  const router = useRouter();
+  const [approvalDialogOpen, setApprovalDialogOpen] = useState(false);
+  const [approvalAction, setApprovalAction] = useState<"approve" | "reject">("approve");
+
+  const isPending = request.status?.name.toLowerCase().includes("pendent") || false;
+
+  return (
+    <>
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button variant="ghost" className="h-8 w-8 p-0">
+            <span className="sr-only">Abrir menu</span>
+            <MoreHorizontal className="h-4 w-4" />
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="end">
+          <DropdownMenuLabel>Ações</DropdownMenuLabel>
+          <DropdownMenuItem onClick={() => navigator.clipboard.writeText(request.id)}>
+            Copiar ID
+          </DropdownMenuItem>
+          <DropdownMenuSeparator />
+          {isPending && (
+            <>
+              <DropdownMenuItem
+                className="text-green-600 focus:text-green-700 focus:bg-green-100"
+                onClick={() => {
+                  setApprovalAction("approve");
+                  setApprovalDialogOpen(true);
+                }}
+              >
+                <CheckCircle className="mr-2 h-4 w-4" /> Aprovar
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                className="text-red-600 focus:text-red-700 focus:bg-red-100"
+                onClick={() => {
+                  setApprovalAction("reject");
+                  setApprovalDialogOpen(true);
+                }}
+              >
+                <XCircle className="mr-2 h-4 w-4" /> Rejeitar
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <Dialog>
+                <DialogTrigger asChild>
+                  <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
+                    <Edit className="mr-2 h-4 w-4" /> Editar
+                  </DropdownMenuItem>
+                </DialogTrigger>
+                <DialogContent className="sm:max-w-[800px]">
+                  <PurchaseRequestForm
+                    initialData={request}
+                    onSuccess={() => router.refresh()}
+                  />
+                </DialogContent>
+              </Dialog>
+              <DropdownMenuItem
+                className="text-red-600 focus:text-red-700 focus:bg-red-100"
+                onClick={() => handleDelete(request.id, router)}
+              >
+                <Trash2 className="mr-2 h-4 w-4" /> Excluir
+              </DropdownMenuItem>
+            </>
+          )}
+          {!isPending && (
+            <DropdownMenuItem disabled>
+              Nenhuma ação disponível
+            </DropdownMenuItem>
+          )}
+        </DropdownMenuContent>
+      </DropdownMenu>
+
+      <PurchaseRequestApprovalDialog
+        purchaseRequest={request}
+        action={approvalAction}
+        open={approvalDialogOpen}
+        onOpenChange={setApprovalDialogOpen}
+        onSuccess={() => {
+          setApprovalDialogOpen(false);
+          router.refresh();
+        }}
+      />
+    </>
+  );
+}
 
 export const purchaseRequestColumns = (): ColumnDef<PurchaseRequest>[] => [
   {
@@ -155,93 +228,6 @@ export const purchaseRequestColumns = (): ColumnDef<PurchaseRequest>[] => [
   },
   {
     id: "actions",
-    cell: ({ row }) => {
-      const request = row.original;
-      const router = useRouter();
-
-      const [approvalDialogOpen, setApprovalDialogOpen] = useState(false);
-      const [approvalAction, setApprovalAction] = useState<"approve" | "reject">("approve");
-
-      // Check if request is in a pending state
-      const isPending = request.status?.name.toLowerCase().includes("pendent") || false;
-
-      return (
-        <>
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="ghost" className="h-8 w-8 p-0">
-                <span className="sr-only">Abrir menu</span>
-                <MoreHorizontal className="h-4 w-4" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              <DropdownMenuLabel>Ações</DropdownMenuLabel>
-              <DropdownMenuItem onClick={() => navigator.clipboard.writeText(request.id)}>
-                Copiar ID
-              </DropdownMenuItem>
-              <DropdownMenuSeparator />
-              {isPending && (
-                <>
-                  <DropdownMenuItem
-                    className="text-green-600 focus:text-green-700 focus:bg-green-100"
-                    onClick={() => {
-                      setApprovalAction("approve");
-                      setApprovalDialogOpen(true);
-                    }}
-                  >
-                    <CheckCircle className="mr-2 h-4 w-4" /> Aprovar
-                  </DropdownMenuItem>
-                  <DropdownMenuItem
-                    className="text-red-600 focus:text-red-700 focus:bg-red-100"
-                    onClick={() => {
-                      setApprovalAction("reject");
-                      setApprovalDialogOpen(true);
-                    }}
-                  >
-                    <XCircle className="mr-2 h-4 w-4" /> Rejeitar
-                  </DropdownMenuItem>
-                  <DropdownMenuSeparator />
-                  <Dialog>
-                    <DialogTrigger asChild>
-                      <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
-                        <Edit className="mr-2 h-4 w-4" /> Editar
-                      </DropdownMenuItem>
-                    </DialogTrigger>
-                    <DialogContent className="sm:max-w-[800px]">
-                      <PurchaseRequestForm 
-                        initialData={request}
-                        onSuccess={() => router.refresh()}
-                      />
-                    </DialogContent>
-                  </Dialog>
-                  <DropdownMenuItem
-                    className="text-red-600 focus:text-red-700 focus:bg-red-100"
-                    onClick={() => handleDelete(request.id, router)}
-                  >
-                    <Trash2 className="mr-2 h-4 w-4" /> Excluir
-                  </DropdownMenuItem>
-                </>
-              )}
-              {!isPending && (
-                <DropdownMenuItem disabled>
-                  Nenhuma ação disponível
-                </DropdownMenuItem>
-              )}
-            </DropdownMenuContent>
-          </DropdownMenu>
-
-          <PurchaseRequestApprovalDialog
-            purchaseRequest={request}
-            action={approvalAction}
-            open={approvalDialogOpen}
-            onOpenChange={setApprovalDialogOpen}
-            onSuccess={() => {
-              setApprovalDialogOpen(false);
-              router.refresh();
-            }}
-          />
-        </>
-      );
-    },
+    cell: ({ row }) => <ActionsCell request={row.original} />,
   },
 ];

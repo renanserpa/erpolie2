@@ -1,12 +1,12 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { DataTable } from "@/components/ui/data-table";
-import { columns } from "./_components/SupplierColumns";
+import { supplierColumns } from "./_components/SupplierColumns";
 import { Plus, FileDown, FileUp, Filter } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { useDebounce } from "@/hooks/use-debounce";
@@ -16,52 +16,49 @@ import { saveAs } from 'file-saver';
 import { toast } from "sonner";
 import { SupplierForm } from "./_components/SupplierForm";
 import { getSuppliers } from "@/lib/data-hooks";
+import type { Supplier } from "@/types/schema";
 
 export default function FornecedoresPage() {
   const router = useRouter();
   const [searchQuery, setSearchQuery] = useState("");
   const [isLoading, setIsLoading] = useState(true);
-  const [suppliers, setSuppliers] = useState<any[]>([]);
+  const [suppliers, setSuppliers] = useState<Supplier[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
   const [isFiltersOpen, setIsFiltersOpen] = useState(false);
-  const [activeFilters, setActiveFilters] = useState<Record<string, any>>({});
-  const [visibleColumns, setVisibleColumns] = useState<string[]>([
-    "name", "fantasy_name", "cnpj", "email", "phone", "status", "actions"
-  ]);
+  const [activeFilters, setActiveFilters] = useState<Record<string, unknown>>({});
   
   const debouncedSearchQuery = useDebounce(searchQuery, 500);
 
   // Opções de filtro para fornecedores
   const filterOptions: FilterOption[] = [
-    { id: "status", label: "Status", type: "select", options: [
-      { value: "Ativo", label: "Ativo" },
-      { value: "Inativo", label: "Inativo" },
-      { value: "Bloqueado", label: "Bloqueado" }
-    ]},
-    { id: "cnpj", label: "CNPJ", type: "text" },
-    { id: "created_at", label: "Data de Cadastro", type: "date" }
+    {
+      id: "is_active",
+      label: "Status",
+      type: "select",
+      options: [
+        { value: "true", label: "Ativo" },
+        { value: "false", label: "Inativo" },
+      ],
+    },
+    { id: "city", label: "Cidade", type: "text" },
+    { id: "state", label: "Estado", type: "text" },
+    { id: "document", label: "CNPJ", type: "text" },
   ];
 
-  // Opções de colunas visíveis
-  const columnOptions = [
-    { id: "name", label: "Razão Social" },
-    { id: "fantasy_name", label: "Nome Fantasia" },
-    { id: "cnpj", label: "CNPJ" },
-    { id: "email", label: "Email" },
-    { id: "phone", label: "Telefone" },
-    { id: "status", label: "Status" },
-    { id: "actions", label: "Ações" }
-  ];
+  const columns = supplierColumns(
+    () => {},
+    () => {}
+  );
 
   // Carregar dados dos fornecedores
-  const fetchSuppliers = async () => {
+  const fetchSuppliers = useCallback(async () => {
     try {
       setIsLoading(true);
       setError(null);
       
       // Construir query com filtros
-      const query: Record<string, any> = {};
+      const query: Record<string, unknown> = {};
       
       if (debouncedSearchQuery) {
         query.name = `ilike.%${debouncedSearchQuery}%`;
@@ -70,10 +67,7 @@ export default function FornecedoresPage() {
       // Adicionar filtros ativos à query
       Object.entries(activeFilters).forEach(([key, value]) => {
         if (value !== undefined && value !== null && value !== '') {
-          if (key === 'created_at' && typeof value === 'string') {
-            // Filtro de data
-            query[key] = `gte.${value}`;
-          } else if (typeof value === 'string') {
+          if (typeof value === 'string') {
             // Filtro de texto com busca parcial
             query[key] = `ilike.%${value}%`;
           } else {
@@ -94,33 +88,37 @@ export default function FornecedoresPage() {
             id: '1',
             name: 'Fornecedor Têxtil Ltda',
             fantasy_name: 'TextilTech',
-            cnpj: '12.345.678/0001-90',
+            document: '12.345.678/0001-90',
             email: 'contato@textiltech.com.br',
             phone: '11987654321',
-            status: 'Ativo',
+            is_active: true,
             created_at: new Date().toISOString()
           },
           {
             id: '2',
             name: 'Distribuidora de Tecidos Nacional S.A.',
             fantasy_name: 'DTN Tecidos',
-            cnpj: '98.765.432/0001-10',
+            document: '98.765.432/0001-10',
             email: 'vendas@dtntecidos.com.br',
             phone: '21987654321',
-            status: 'Ativo',
+            is_active: true,
             created_at: new Date().toISOString()
           }
         ]);
         console.warn('Usando dados mockados para fornecedores');
       }
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error('Error fetching suppliers:', err);
-      setError(err.message || 'Erro ao carregar fornecedores');
+      if (err instanceof Error) {
+        setError(err.message);
+      } else {
+        setError('Erro ao carregar fornecedores');
+      }
       toast.error('Erro ao carregar lista de fornecedores.');
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [debouncedSearchQuery, activeFilters]);
 
   useEffect(() => {
     fetchSuppliers();
@@ -132,10 +130,10 @@ export default function FornecedoresPage() {
       const dataToExport = suppliers.map(supplier => ({
         'Razão Social': supplier.name,
         'Nome Fantasia': supplier.fantasy_name,
-        'CNPJ': supplier.cnpj,
+        'CNPJ': supplier.document,
         'Email': supplier.email,
         'Telefone': supplier.phone,
-        'Status': supplier.status,
+        'Status': supplier.is_active ? 'Ativo' : 'Inativo',
         'Data de Cadastro': new Date(supplier.created_at).toLocaleDateString('pt-BR')
       }));
       
@@ -269,11 +267,8 @@ export default function FornecedoresPage() {
           {isFiltersOpen && (
             <div className="mb-6">
               <AdvancedFilters
-                options={filterOptions}
+                filterOptions={filterOptions}
                 onFilterChange={setActiveFilters}
-                columnOptions={columnOptions}
-                visibleColumns={visibleColumns}
-                onVisibleColumnsChange={setVisibleColumns}
               />
             </div>
           )}
@@ -291,7 +286,7 @@ export default function FornecedoresPage() {
           )}
 
           <DataTable
-            columns={columns.filter(col => visibleColumns.includes(col.id))}
+            columns={columns}
             data={suppliers}
             isLoading={isLoading}
             onRowClick={(row) => handleSupplierClick(row.id)}

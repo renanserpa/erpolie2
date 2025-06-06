@@ -36,8 +36,10 @@ const movementFormSchema = z.object({
 
 type MovementFormValues = z.infer<typeof movementFormSchema>;
 
+import type { StockMovement } from "./MovementColumns";
+
 interface MovementFormProps {
-  initialData?: any;
+  initialData?: Partial<StockMovement>;
   onSuccess?: () => void;
 }
 
@@ -81,7 +83,7 @@ export function MovementForm({ initialData, onSuccess }: MovementFormProps) {
   const handleMovementTypeChange = (value: string) => {
     if (value === "entrada" || value === "saida" || value === "ajuste" || value === "transferencia") {
       setMovementType(value);
-      form.setValue("movement_type", value as any);
+      form.setValue("movement_type", value as MovementFormValues["movement_type"]);
     }
   };
 

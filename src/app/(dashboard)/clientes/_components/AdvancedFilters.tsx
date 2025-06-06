@@ -8,17 +8,14 @@ import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { toast } from "sonner";
-import { createRecord, updateRecord } from "@/lib/data-hooks";
 
 // Define Zod schema para validação do formulário de filtros avançados
 const filterFormSchema = z.object({
@@ -77,7 +74,7 @@ export function AdvancedFilters({ filterOptions, onFilterChange }: AdvancedFilte
             <FormField
               key={option.id}
               control={form.control}
-              name={option.id as any}
+              name={option.id as keyof FilterFormValues}
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>{option.label}</FormLabel>

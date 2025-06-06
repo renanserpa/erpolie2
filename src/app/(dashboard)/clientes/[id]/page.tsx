@@ -1,23 +1,23 @@
 "use client";
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { useParams, useRouter } from 'next/navigation';
-import { createClient } from '@/lib/supabase/client';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { ArrowLeft, Pencil, Trash2, Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
 import { getRecordById, deleteRecord } from '@/lib/data-hooks';
+import type { Client } from '@/types/schema';
 
 export default function ClientDetailsPage() {
   const params = useParams();
   const router = useRouter();
-  const [client, setClient] = useState<any>(null);
+  const [client, setClient] = useState<Client | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [deleting, setDeleting] = useState(false);
 
-  const fetchClient = async () => {
+  const fetchClient = useCallback(async () => {
     try {
       setLoading(true);
       setError(null);
@@ -44,9 +44,13 @@ export default function ClientDetailsPage() {
         
         console.warn('Usando dados mockados para cliente');
       }
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error('Error fetching client details:', err);
-      setError(err.message || 'Erro ao carregar detalhes do cliente');
+      if (err instanceof Error) {
+        setError(err.message);
+      } else {
+        setError('Erro ao carregar detalhes do cliente');
+      }
       
       // Criar um cliente mockado para demonstração
       setClient({
@@ -67,11 +71,11 @@ export default function ClientDetailsPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [params.id]);
 
   useEffect(() => {
     fetchClient();
-  }, [params.id]);
+  }, [fetchClient]);
 
   const handleDelete = async () => {
     if (!confirm('Tem certeza que deseja excluir este cliente?')) {
@@ -88,9 +92,13 @@ export default function ClientDetailsPage() {
       } else {
         throw new Error('Erro ao excluir cliente');
       }
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error('Error deleting client:', err);
-      toast.error(err.message || 'Erro ao excluir cliente');
+      if (err instanceof Error) {
+        toast.error(err.message);
+      } else {
+        toast.error('Erro ao excluir cliente');
+      }
     } finally {
       setDeleting(false);
     }
