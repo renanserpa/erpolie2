@@ -1,10 +1,12 @@
+
 # OLIE ERP
 **Sistema de Gestão Modular e Inteligente para Ateliês e Negócios Criativos**
+
 > **Atenção:** todos os agentes, automações e desenvolvedores devem ler `README.md`, `AGENTS.md`, `CHECKLIST.md` e `MODULOS.md` antes de contribuir ou alterar qualquer parte do projeto.
----
+
 ## ✨ Visão Geral
 O **Olie ERP** é um sistema de gestão 100% digital, escalável e personalizável, desenvolvido para atender as necessidades do Ateliê Olie e negócios artesanais similares. Automatiza e integra pedidos, produção, estoque, compras, financeiro, logística, RH e BI, com suporte completo à personalização de produtos, controle de múltiplos setores e expansão futura para franquias e multiunidades.
----
+
 ## 🚀 Principais Funcionalidades
 - Controle total do ciclo do pedido (da venda à entrega)
 - Produção e personalização de produtos multi-componente (bordado, hotstamping, etc)
@@ -13,7 +15,7 @@ O **Olie ERP** é um sistema de gestão 100% digital, escalável e personalizáv
 - Controle financeiro e RH
 - Multiusuário, permissões, logs e auditoria
 - Pronto para integrações com WhatsApp, marketplaces, automações e BI
----
+
 ## 🛠 Stack Tecnológica
 - **Frontend:** Next.js (React) + TailwindCSS
 - **Backend & Banco:** Supabase (PostgreSQL, Auth, Storage, Functions)
@@ -21,7 +23,7 @@ O **Olie ERP** é um sistema de gestão 100% digital, escalável e personalizáv
 - **Idiomas:** Português do Brasil (pt-BR)
 - **Design:** Moderno, responsivo, acessível, dark mode
 - **Padrão:** TypeScript, código tipado, DataTable centralizado, componentes modulares
----
+
 ## 🗂 Estrutura do Projeto
 - **README.md** — Você está aqui!
 - **ARQUITETURA.md** — Estrutura técnica, pastas, convenções e módulos ([link](./ARQUITETURA.md))
@@ -30,7 +32,7 @@ O **Olie ERP** é um sistema de gestão 100% digital, escalável e personalizáv
 - **FLUXOS.md** — Mapas dos fluxos principais (Pedido, Produção, Estoque, Entrega, etc) ([link](./FLUXOS.md))
 - **MODULOS/** — Subpastas com docs detalhados para cada módulo (Clientes, Pedidos, Produção, etc)
 - **docs/** — Outras documentações técnicas, exemplos e guias
----
+
 ## ⚡ Como Rodar o Projeto
 1. **Pré-requisitos**
    - Node.js >= 18.x
@@ -68,13 +70,6 @@ yarn build # ou npm run build
 - `FLUXOS.md`: Mapas e explicações dos principais fluxos operacionais
 - `MODULOS/`: Documentos detalhados de cada módulo do sistema
 
-## 👥 Time & Colaboradores
-- Renan Serpa — Founder, CTO, Product Owner
-- Equipe Olie — Produção, Criação, Atendimento
-- @crewai — Agente de engenharia/automação
-- @devolie — Backend/Supabase
-- @docwriter — Documentação técnica e funcional
-- @atelieolie — Especialista em fluxo real de produção
 
 ## 📢 Contribuindo
 Leia o `AGENTS.md` e o `CHECKLIST.md` antes de abrir um PR ou realizar alterações significativas.
@@ -90,3 +85,4 @@ Sempre atualize a documentação relacionada às alterações.
 
 ## 📄 Licença
 Este projeto é privado para o Ateliê Olie. Não distribua sem autorização.
+
