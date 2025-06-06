@@ -15,8 +15,6 @@ O agente **CODEX** é o executor oficial de código e automações, responsável
 
 Todos os agentes devem consultar também [`README.md`](README.md), [`CHECKLIST.md`](CHECKLIST.md), [`MODULOS.md`](MODULOS.md), [`FLUXOS.md`](FLUXOS.md) e [`docs/documentacao_centralizada.md`](docs/documentacao_centralizada.md) antes de iniciar qualquer trabalho.
 
-## Princípios para Agentes (CODEX)
-
 - Buscar a solução mais robusta, escalável e alinhada às práticas modernas
 - Reutilizar código e componentes sempre que possível
 - Evitar mocks ou dados simulados em produção. Utilize apenas em testes/dev
@@ -27,8 +25,6 @@ Todos os agentes devem consultar também [`README.md`](README.md), [`CHECKLIST.m
 
 ## Checklist para Tarefas/Commits do CODEX
 
-- [ ] O código segue os padrões e arquitetura definidos neste repositório?
-- [ ] Não há mocks ou dados simulados em produção?
 - [ ] A alteração está restrita a um único módulo ou funcionalidade?
 - [ ] O commit é pequeno, atômico e de fácil revisão?
 - [ ] Todos os testes, lint e build foram executados e passaram (`npm test`, `npm run lint`, `npx next build`)?
@@ -52,10 +48,6 @@ Todos os agentes devem consultar também [`README.md`](README.md), [`CHECKLIST.m
 
 ## Automação e Scripts
 
-- Identificar padrões repetitivos e sugerir ou criar scripts (lint, fix, doc, test)
-- Gerar documentação automática quando possível (Typedoc/JSDoc)
-- Propor melhorias para o pipeline CI/CD
-- Validar periodicamente se scripts estão alinhados aos requisitos
 
 ## Pequenos Ciclos e Commits
 
