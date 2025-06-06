@@ -1,50 +1,60 @@
-# AGENTS.md
+# AGENTS.md – Diretrizes para o Agente CODEX e Automação do Projeto Olie ERP
 
-## Contexto do Projeto
+1. **Contexto do Projeto**
+Este repositório centraliza o desenvolvimento do Olie ERP — sistema modular, escalável e altamente automatizado para gestão de ateliês criativos, com stack Next.js + TypeScript + Supabase.
+O agente CODEX é o principal executor de código, refatoração e automação, respondendo por:
+- Execução de testes, lint e build
+- Refatoração automática (com sugestões e aplicação de padrões)
+- Geração e atualização de documentação técnica
+- Sinalização de inconsistências ou pontos de melhoria
+- Proposição de scripts e automações adicionais quando detectar padrões recorrentes
 
-Este repositório concentra o ERP Olie, um projeto baseado em Next.js, TypeScript e scripts SQL. O objetivo deste documento é padronizar as diretrizes para quaisquer agentes, automações e desenvolvedores que atuem aqui, garantindo refatorações seguras e código consistente.
+2. **Princípios para Agentes (CODEX)**
+- Sempre buscar a solução mais robusta, escalável e alinhada com as práticas modernas.
+- Reutilizar código e componentes ao máximo, evitando duplicidade.
+- Evitar mocks ou dados simulados em produção. Use apenas em ambiente de testes/dev.
+- Dividir grandes mudanças em tarefas pequenas e commits atômicos.
+- Priorizar performance, legibilidade, tipagem forte (TypeScript) e manutenibilidade.
+- Documentar decisões importantes neste arquivo ou no PR.
+- Propor melhorias de automação, scripts de build/test/doc ao identificar demandas.
+- Sinalizar problemas de arquitetura, dependências desatualizadas e más práticas.
 
-## Princípios para Agentes/Refatoração Automática
+3. **Checklist para Tarefas/Commits do CODEX**
+- O código segue os padrões e arquitetura definidos neste repositório?
+- Não há mocks ou dados simulados em produção?
+- A alteração está restrita a um único módulo ou funcionalidade?
+- O commit é pequeno, atômico e de fácil revisão?
+- Todos os testes, lint e build foram executados e passaram (`npm test`, `npm run lint`, `npx next build`)?
+- Conflitos foram resolvidos buscando a versão mais moderna e funcional?
+- A documentação foi atualizada se necessário?
+- Logs de ações críticas e rastreabilidade mantidos?
+- Scripts e automações (test, build, doc) sugeridos ou otimizados quando possível?
 
-- Sempre buscar a solução mais robusta, reutilizável e escalável.
-- Evitar uso de mocks ou dados simulados em produção, a menos que solicitado explicitamente.
-- Dividir grandes mudanças em tarefas menores e commits atômicos.
-- Resolver conflitos escolhendo a versão mais moderna e funcional do código.
-- Priorizar performance, legibilidade e manutenção.
-- Documentar decisões importantes no PR ou neste arquivo.
+4. **Resolução de Conflitos**
+- Sempre prefira a versão mais recente e funcional do código.
+- Em caso de dúvida de padrão, siga o que já está mais consolidado no projeto.
+- Se persistir dúvida, registre no PR ou peça análise do mantenedor/líder do projeto.
+- Documente decisões de conflito neste arquivo (histórico) se relevante.
 
-## Checklist para Abertura de Tarefas
+5. **Política para Mocks, Dados de Teste e Produção**
+- Não incluir mocks em ambiente de produção.
+- Permitir uso de mocks apenas em ambiente de testes ou se especificado explicitamente na tarefa.
+- Limpar dependências falsas e simulações antes do merge/deploy.
 
-- [ ] O código segue padrões de robustez do projeto?
-- [ ] Não há dados mockados no produto final?
-- [ ] A alteração está restrita a um único módulo ou funcionalidade?
-- [ ] O commit/merge é pequeno e atômico?
-- [ ] Conflitos foram resolvidos buscando a versão mais moderna e funcional?
-- [ ] As decisões técnicas relevantes estão documentadas?
-- [ ] Se necessário, este AGENTS.md foi atualizado?
-- [ ] Todos os testes foram executados com `npm test` e passaram?
+6. **Automação e Scripts**
+- Sempre que identificar padrões de repetição, sugerir ou criar scripts automatizados (lint, fix, doc, test).
+- Geração automática de documentação técnica quando possível (Typedoc/JSDoc).
+- Propor melhorias para pipeline CI/CD.
+- Validar periodicamente se os scripts estão alinhados com os requisitos do projeto.
 
-## Orientação sobre Resolução de Conflitos
+7. **Pequenos Ciclos e Commits**
+- Priorizar ciclos curtos de desenvolvimento, com entregas incrementais.
+- Realizar commits menores, atômicos e de fácil rastreio.
+- Reforçar revisões frequentes via PR para facilitar integração contínua.
 
-Ao encontrar conflitos de merge, mantenha o lado mais atualizado e funcional. Se houver divergência de estilo ou implementação, prefira o padrão já estabelecido no repositório. Quando persistir dúvida, registre a questão no PR e consulte o mantenedor.
+8. **Histórico de Atualizações**
+Data | Autor | Descrição
+---- | ----- | ---------
+2025-06-06 | Renan/CODEX | Versão inicial, adaptada para priorizar automação, robustez e refino contínuo pelo agente CODEX.
 
-## Política para Mock vs. Produção
-
-- Evite incluir mocks ou simulações em ambientes finais.
-- Utilize mocks apenas em testes ou quando explicitamente especificado na tarefa.
-- Certifique-se de que dependências falsas não acompanhem o código de produção.
-
-## Pequenos Ciclos e Commits
-
-- Priorize ciclos curtos de desenvolvimento.
-- Realize commits menores e focados em uma única funcionalidade.
-- Revise o PR com freqüência para facilitar integrações.
-
-## Atualização Futuras deste Arquivo
-
-Sempre que um novo padrão, regra ou decisão deva ser adotado por todos os agentes ou desenvolvedores, registre a alteração na seção "Histórico de Atualizações" abaixo, indicando data e autor.
-
-## Histórico de Atualizações
-
-- 2025-06-03 Manus AI: criação inicial do AGENTS.md com diretrizes gerais.
-
+**Observação:** Este arquivo AGENTS.md deve ser consultado e atualizado sempre que um novo padrão, regra, dependência crítica ou decisão estrutural for adotada no projeto.
