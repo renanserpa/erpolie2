@@ -6,7 +6,6 @@ import { PlusCircle } from "lucide-react";
 import { DataTable } from "@/components/ui/data-table";
 import { groupColumns, type StockGroup } from "./_components/GroupColumns"; // Import real columns and type
 import { GroupForm } from "./_components/GroupForm"; // Import real form
-import { createSupabaseServerClientAlternative } from "@/lib/supabase/server-alternative"; // Keep for potential server-side fetches
 import {
   Dialog,
   DialogContent,
@@ -73,12 +72,12 @@ export default function GruposEstoquePage() {
     // TODO: Add toast notification for success
   };
 
-  const handleEdit = (group: StockGroup) => {
+  const handleEdit = React.useCallback((group: StockGroup) => {
     setEditingGroup(group);
     setIsFormOpen(true);
-  };
+  }, []);
 
-  const handleDelete = async (groupId: string, groupName: string) => {
+  const handleDelete = React.useCallback(async (groupId: string, groupName: string) => {
     if (window.confirm(`Tem certeza que deseja excluir o grupo "${groupName}"? Esta ação pode afetar itens de estoque associados.`)) {
       try {
         await deleteGroupAPI(groupId);
@@ -92,7 +91,7 @@ export default function GruposEstoquePage() {
         // TODO: Add toast notification for error
       }
     }
-  };
+  }, []);
 
   // Memoize columns
   const columns = React.useMemo(() => groupColumns(handleEdit, handleDelete), [handleEdit, handleDelete]);

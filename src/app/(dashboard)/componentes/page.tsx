@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -16,16 +16,17 @@ import { saveAs } from 'file-saver';
 import { toast } from "sonner";
 import { ComponentForm } from "./_components/ComponentForm";
 import { getComponents, useSupabaseData } from "@/lib/data-hooks";
+import type { Component } from "@/types/schema";
 
 export default function ComponentesPage() {
   const router = useRouter();
   const [searchQuery, setSearchQuery] = useState("");
   const [isLoading, setIsLoading] = useState(true);
-  const [components, setComponents] = useState<any[]>([]);
+  const [components, setComponents] = useState<Component[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
   const [isFiltersOpen, setIsFiltersOpen] = useState(false);
-  const [activeFilters, setActiveFilters] = useState<Record<string, any>>({});
+  const [activeFilters, setActiveFilters] = useState<Record<string, unknown>>({});
   const [visibleColumns, setVisibleColumns] = useState<string[]>([
     "name", "code", "category_id", "price", "is_active", "actions"
   ]);
@@ -59,13 +60,13 @@ export default function ComponentesPage() {
   ];
 
   // Carregar dados dos componentes
-  const fetchComponents = async () => {
+  const fetchComponents = useCallback(async () => {
     try {
       setIsLoading(true);
       setError(null);
       
       // Construir query com filtros
-      const query: Record<string, any> = {};
+      const query: Record<string, unknown> = {};
       
       if (debouncedSearchQuery) {
         query.name = `ilike.%${debouncedSearchQuery}%`;
@@ -118,18 +119,22 @@ export default function ComponentesPage() {
         ]);
         console.warn('Usando dados mockados para componentes');
       }
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error('Error fetching components:', err);
-      setError(err.message || 'Erro ao carregar componentes');
+      if (err instanceof Error) {
+        setError(err.message);
+      } else {
+        setError('Erro ao carregar componentes');
+      }
       toast.error('Erro ao carregar lista de componentes.');
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [debouncedSearchQuery, activeFilters]);
 
   useEffect(() => {
     fetchComponents();
-  }, [debouncedSearchQuery, activeFilters]);
+  }, [fetchComponents]);
 
   // Função para exportar componentes para CSV
   const exportToCSV = () => {

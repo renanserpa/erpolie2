@@ -16,10 +16,10 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { InputNumber } from "@/components/ui/input-number";
-import { createRecord, updateRecord, useSupabaseData } from "@/lib/data-hooks";
+import { createRecord, updateRecord } from "@/lib/data-hooks";
 import { toast } from "sonner";
+import type { Location } from "./LocationColumns";
 
 // Define Zod schema para validação do formulário
 const locationFormSchema = z.object({
@@ -32,7 +32,7 @@ const locationFormSchema = z.object({
 type LocationFormValues = z.infer<typeof locationFormSchema>;
 
 interface LocationFormProps {
-  initialData?: any;
+  initialData?: Partial<Location>;
   onSuccess?: () => void;
 }
 

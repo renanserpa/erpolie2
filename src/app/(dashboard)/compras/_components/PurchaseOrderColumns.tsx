@@ -4,35 +4,42 @@ import { ColumnDef } from "@tanstack/react-table";
 import { ArrowUpDown, MoreHorizontal } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { Badge } from "@/components/ui/badge";
-// TODO: Import forms/alerts for actions
 
-// Define the data structure for a Purchase Order based on Mapeamento de Dados
+// Tipagem da ordem de compra
 export type PurchaseOrder = {
-  id: string; // UUID
-  supplier_id: string; // UUID, needs join to get supplier name
-  supplier_name?: string; // Added for display
-  date: string; // Date/Timestamp
-  status_id: string; // UUID, needs join to get status name
-  status_name?: string; // Added for display
-  status_color?: string; // Added for badge color
+  id: string;
+  supplier_id: string;
+  supplier_name?: string;
+  date: string;
+  status_id: string;
+  status_name?: string;
+  status_color?: string;
   payment_terms?: string;
-  delivery_date?: string; // Date/Timestamp
-  total_amount?: number; // Likely calculated from items
+  delivery_date?: string;
+  total_amount?: number;
   created_at: string;
-  // Add other relevant fields like linked request, items, etc.
 };
 
+// Utilitário para formatar datas
 const formatDate = (dateString: string | null | undefined) => {
   if (!dateString) return "-";
   try {
     return new Date(dateString).toLocaleDateString("pt-BR");
-  } catch (e) {
+  } catch {
     return "Data inválida";
   }
 };
 
+// Utilitário para formatar valores
 const formatCurrency = (amount: number | null | undefined) => {
   if (amount === null || amount === undefined) return "-";
   return new Intl.NumberFormat("pt-BR", {
@@ -63,18 +70,20 @@ export const orderColumns: ColumnDef<PurchaseOrder>[] = [
   },
   {
     accessorKey: "id",
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Ordem #
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
-      );
-    },
-    cell: ({ row }) => <div className="lowercase">{row.getValue("id").substring(0, 8)}...</div>,
+    header: ({ column }) => (
+      <Button
+        variant="ghost"
+        onClick={() =>
+          column.toggleSorting(column.getIsSorted() === "asc")
+        }
+      >
+        Ordem #
+        <ArrowUpDown className="ml-2 h-4 w-4" />
+      </Button>
+    ),
+    cell: ({ row }) => (
+      <div className="lowercase">{row.getValue("id").substring(0, 8)}...</div>
+    ),
   },
   {
     accessorKey: "date",
@@ -94,26 +103,39 @@ export const orderColumns: ColumnDef<PurchaseOrder>[] = [
   {
     accessorKey: "total_amount",
     header: () => <div className="text-right">Valor Total</div>,
-    cell: ({ row }) => <div className="text-right font-medium">{formatCurrency(row.original.total_amount)}</div>,
+    cell: ({ row }) => (
+      <div className="text-right font-medium">
+        {formatCurrency(row.original.total_amount)}
+      </div>
+    ),
   },
   {
     accessorKey: "status_name",
     header: "Status",
     cell: ({ row }) => {
       const statusName = row.original.status_name || "-";
-      // TODO: Get color from status_color and apply to Badge
-      return <Badge variant="outline">{statusName}</Badge>;
+      const statusColor = row.original.status_color;
+      // Se vier uma cor (ex: "#00c49f"), aplica no badge, senão usa outline
+      return (
+        <Badge
+          variant={statusColor ? "default" : "outline"}
+          style={
+            statusColor
+              ? { background: statusColor, color: "#fff", border: "none" }
+              : undefined
+          }
+        >
+          {statusName}
+        </Badge>
+      );
     },
-    filterFn: (row, id, value) => {
-      return value.includes(row.getValue(id));
-    },
+    filterFn: (row, id, value) => value.includes(row.getValue(id)),
   },
   {
     id: "actions",
     enableHiding: false,
     cell: ({ row }) => {
       const order = row.original;
-
       return (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
@@ -124,26 +146,21 @@ export const orderColumns: ColumnDef<PurchaseOrder>[] = [
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Ações</DropdownMenuLabel>
-            <DropdownMenuItem
-              onClick={() => navigator.clipboard.writeText(order.id)}
-            >
+            <DropdownMenuItem onClick={() => navigator.clipboard.writeText(order.id)}>
               Copiar ID da Ordem
             </DropdownMenuItem>
             <DropdownMenuSeparator />
-            {/* TODO: Add Edit action */}
             <DropdownMenuItem disabled>Editar Ordem</DropdownMenuItem>
-            {/* TODO: Add View Details action */}
             <DropdownMenuItem disabled>Ver Detalhes</DropdownMenuItem>
-            {/* TODO: Add action like "Receive Items", "Mark as Paid" */}
             <DropdownMenuItem disabled>Receber Itens</DropdownMenuItem>
             <DropdownMenuItem disabled>Marcar como Pago</DropdownMenuItem>
             <DropdownMenuSeparator />
-            {/* TODO: Add Delete action */}
-            <DropdownMenuItem disabled className="text-red-600">Excluir Ordem</DropdownMenuItem>
+            <DropdownMenuItem disabled className="text-red-600">
+              Excluir Ordem
+            </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       );
     },
   },
 ];
-

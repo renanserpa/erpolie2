@@ -6,7 +6,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { createSupabaseClient } from "@/lib/supabase/client";
-import { ArrowLeft, Edit, Trash2, Package, Truck, FileText, ShoppingBag, AlertTriangle } from "lucide-react";
+import { ArrowLeft, Edit, Trash2, Package, Truck, ShoppingBag, AlertTriangle } from "lucide-react";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { useToast } from "@/components/ui/use-toast";

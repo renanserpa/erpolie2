@@ -6,7 +6,6 @@ import { PlusCircle } from "lucide-react";
 import { DataTable } from "@/components/ui/data-table";
 import { locationColumns, type StockLocation } from "./_components/LocationColumns"; // Import real columns and type
 import { LocationForm } from "./_components/LocationForm"; // Import real form
-import { createSupabaseServerClientAlternative } from "@/lib/supabase/server-alternative"; // Keep for potential server-side fetches
 import {
   Dialog,
   DialogContent,
@@ -74,12 +73,12 @@ export default function LocalizacoesEstoquePage() {
     // TODO: Add toast notification for success
   };
 
-  const handleEdit = (location: StockLocation) => {
+  const handleEdit = React.useCallback((location: StockLocation) => {
     setEditingLocation(location);
     setIsFormOpen(true);
-  };
+  }, []);
 
-  const handleDelete = async (locationId: string, locationName: string) => {
+  const handleDelete = React.useCallback(async (locationId: string, locationName: string) => {
     if (window.confirm(`Tem certeza que deseja excluir a localização "${locationName}"? Esta ação pode afetar itens de estoque associados.`)) {
       try {
         await deleteLocationAPI(locationId);
@@ -93,7 +92,7 @@ export default function LocalizacoesEstoquePage() {
         // TODO: Add toast notification for error
       }
     }
-  };
+  }, []);
 
   // Memoize columns
   const columns = React.useMemo(() => locationColumns(handleEdit, handleDelete), [handleEdit, handleDelete]);

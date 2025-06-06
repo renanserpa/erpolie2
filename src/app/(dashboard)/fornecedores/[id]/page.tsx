@@ -7,11 +7,12 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { ArrowLeft, Pencil, Trash2, Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
 import { getRecordById, deleteRecord } from '@/lib/data-hooks';
+import type { Supplier } from '@/types/schema';
 
 export default function SupplierDetailsPage() {
   const params = useParams();
   const router = useRouter();
-  const [supplier, setSupplier] = useState<any>(null);
+  const [supplier, setSupplier] = useState<Supplier | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [deleting, setDeleting] = useState(false);
@@ -31,7 +32,7 @@ export default function SupplierDetailsPage() {
           id: params.id,
           name: 'Fornecedor Exemplo',
           fantasy_name: 'Exemplo Ltda',
-          cnpj: '12.345.678/0001-90',
+          document: '12.345.678/0001-90',
           email: 'contato@exemplo.com',
           phone: '(11) 98765-4321',
           address: 'Rua Exemplo, 123',
@@ -44,16 +45,20 @@ export default function SupplierDetailsPage() {
         
         console.warn('Usando dados mockados para fornecedor');
       }
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error('Error fetching supplier details:', err);
-      setError(err.message || 'Erro ao carregar detalhes do fornecedor');
+      if (err instanceof Error) {
+        setError(err.message);
+      } else {
+        setError('Erro ao carregar detalhes do fornecedor');
+      }
       
       // Criar um fornecedor mockado para demonstração
       setSupplier({
         id: params.id,
         name: 'Fornecedor Exemplo',
         fantasy_name: 'Exemplo Ltda',
-        cnpj: '12.345.678/0001-90',
+        document: '12.345.678/0001-90',
         email: 'contato@exemplo.com',
         phone: '(11) 98765-4321',
         address: 'Rua Exemplo, 123',
@@ -89,9 +94,13 @@ export default function SupplierDetailsPage() {
       } else {
         throw new Error('Erro ao excluir fornecedor');
       }
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error('Error deleting supplier:', err);
-      toast.error(err.message || 'Erro ao excluir fornecedor');
+      if (err instanceof Error) {
+        toast.error(err.message);
+      } else {
+        toast.error('Erro ao excluir fornecedor');
+      }
     } finally {
       setDeleting(false);
     }
@@ -174,7 +183,7 @@ export default function SupplierDetailsPage() {
               </div>
               <div>
                 <p className="text-sm font-medium text-gray-500">CNPJ</p>
-                <p className="text-lg">{supplier.cnpj || 'Não informado'}</p>
+                <p className="text-lg">{supplier.document || 'Não informado'}</p>
               </div>
               <div>
                 <p className="text-sm font-medium text-gray-500">Email</p>
