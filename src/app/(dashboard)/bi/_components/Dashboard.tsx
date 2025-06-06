@@ -7,26 +7,24 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { DateRangePicker } from "@/components/ui/date-range-picker";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { toast } from "sonner";
-import { Loader2, TrendingUp, TrendingDown, DollarSign, ShoppingCart, Package, Truck, Users } from "lucide-react";
+import { TrendingUp, TrendingDown } from "lucide-react";
 import { format, subDays, startOfMonth, endOfMonth } from "date-fns";
 import { ptBR } from "date-fns/locale";
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, PieChart, Pie, Cell, LineChart, Line } from 'recharts';
-import { ReportExporter } from "../../financeiro/_components/ReportExporter";
+// Importe gráficos se necessário
+// import { BarChart, Bar, ... } from 'recharts';
 
-// Tipagem dos dados
 interface DashboardProps { className?: string }
 interface KpiData {
   totalRevenue: number; totalExpenses: number; totalOrders: number; totalProducts: number;
   totalDeliveries: number; totalCustomers: number; revenueChange: number; ordersChange: number;
 }
 interface ChartData {
-  salesByCategory: Array<{name: string; value: number}>;
-  salesByMonth: Array<{name: string; receitas: number; despesas: number}>;
-  topProducts: Array<{name: string; value: number}>;
-  deliveryStatus: Array<{name: string; value: number}>;
-  salesByDivision: Array<{name: string; value: number}>;
+  salesByCategory: Array<{ name: string; value: number }>;
+  salesByMonth: Array<{ name: string; receitas: number; despesas: number }>;
+  topProducts: Array<{ name: string; value: number }>;
+  deliveryStatus: Array<{ name: string; value: number }>;
+  salesByDivision: Array<{ name: string; value: number }>;
 }
 
 export function Dashboard({ className }: DashboardProps) {
@@ -44,12 +42,12 @@ export function Dashboard({ className }: DashboardProps) {
   const [chartData, setChartData] = useState<ChartData>({
     salesByCategory: [], salesByMonth: [], topProducts: [], deliveryStatus: [], salesByDivision: []
   });
-  const [divisions, setDivisions] = useState<Array<{id: string; name: string}>>([]);
-  const [activeTab, setActiveTab] = useState<string>("overview");
+  const [divisions, setDivisions] = useState<Array<{ id: string; name: string }>>([]);
+  // const [activeTab, setActiveTab] = useState<string>("overview"); // se usar abas
 
-  // --- FUNÇÕES DE FETCH (COLE SUAS LÓGICAS COMPLETAS AQUI) ---
+  // --- Fetch Functions (cole aqui suas lógicas reais) ---
   const fetchKpiData = useCallback(async (fromDate: string, toDate: string, divisionId: string | null): Promise<KpiData> => {
-    // ...Sua lógica de KPI (já tipada, sem any)
+    // ...lógica real aqui
     return {
       totalRevenue: 0, totalExpenses: 0, totalOrders: 0, totalProducts: 0,
       totalDeliveries: 0, totalCustomers: 0, revenueChange: 0, ordersChange: 0
@@ -57,7 +55,7 @@ export function Dashboard({ className }: DashboardProps) {
   }, []);
 
   const fetchChartData = useCallback(async (fromDate: string, toDate: string, divisionId: string | null): Promise<ChartData> => {
-    // ...Sua lógica de gráficos (já tipada, sem any)
+    // ...lógica real aqui
     return {
       salesByCategory: [], salesByMonth: [], topProducts: [], deliveryStatus: [], salesByDivision: []
     };
@@ -78,7 +76,9 @@ export function Dashboard({ className }: DashboardProps) {
       console.error("Erro ao buscar dados do dashboard:", error);
       if (error instanceof Error) toast.error(`Erro ao carregar dashboard: ${error.message}`);
       else toast.error("Erro desconhecido ao carregar dashboard");
-    } finally { setIsLoading(false); }
+    } finally {
+      setIsLoading(false);
+    }
   }, [dateRange, divisionFilter, fetchKpiData, fetchChartData]);
 
   const fetchInitialData = useCallback(async () => {
@@ -130,29 +130,65 @@ export function Dashboard({ className }: DashboardProps) {
     setTimeout(() => { fetchDashboardData(); }, 0);
   };
 
-  // Formatadores
-  const formatCurrency = (value: number) => new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(value);
-  const formatPercentage = (value: number) => new Intl.NumberFormat('pt-BR', { style: 'percent', minimumFractionDigits: 1, maximumFractionDigits: 1 }).format(value / 100);
+  // Helpers
+  const formatCurrency = (value: number) =>
+    new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(value);
+
+  const formatPercentage = (value: number) =>
+    new Intl.NumberFormat('pt-BR', { style: 'percent', minimumFractionDigits: 1, maximumFractionDigits: 1 }).format(value / 100);
+
   const renderTrend = (value: number) => {
-    if (value > 0) return (
-      <div className="flex items-center text-green-500">
-        <TrendingUp className="h-4 w-4 mr-1" />
-        <span>{formatPercentage(value)}</span>
-      </div>
-    );
-    if (value < 0) return (
-      <div className="flex items-center text-red-500">
-        <TrendingDown className="h-4 w-4 mr-1" />
-        <span>{formatPercentage(Math.abs(value))}</span>
-      </div>
-    );
+    if (value > 0)
+      return <div className="flex items-center text-green-500"><TrendingUp className="h-4 w-4 mr-1" /> <span>{formatPercentage(value)}</span></div>;
+    if (value < 0)
+      return <div className="flex items-center text-red-500"><TrendingDown className="h-4 w-4 mr-1" /> <span>{formatPercentage(Math.abs(value))}</span></div>;
     return <div className="flex items-center text-gray-500"><span>0%</span></div>;
   };
 
-  // JSX (cole abaixo o seu dashboard visual normalmente)
+  // --- JSX ---
   return (
     <div className={`space-y-6 ${className ?? ''}`}>
-      {/* Seu JSX do dashboard vai aqui */}
+      <div className="flex flex-col md:flex-row justify-between gap-4">
+        <h2 className="text-3xl font-bold tracking-tight">Dashboard</h2>
+        <div className="flex flex-col md:flex-row gap-2">
+          <DateRangePicker
+            date={dateRange}
+            onDateChange={handleDateChange}
+            className="w-full md:w-auto"
+          />
+          <Select value={divisionFilter} onValueChange={setDivisionFilter}>
+            <SelectTrigger className="w-full md:w-[180px]">
+              <SelectValue placeholder="Todas as divisões" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">Todas as divisões</SelectItem>
+              {divisions.map((division) => (
+                <SelectItem key={division.id} value={division.id}>{division.name}</SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+          <Button onClick={handleApplyFilters}>Aplicar</Button>
+          <Button variant="outline" onClick={handleResetFilters}>Resetar</Button>
+        </div>
+      </div>
+      <div className="flex flex-wrap gap-2">
+        <Button variant="outline" size="sm" onClick={() => handlePredefinedPeriod("today")}>Hoje</Button>
+        <Button variant="outline" size="sm" onClick={() => handlePredefinedPeriod("yesterday")}>Ontem</Button>
+        <Button variant="outline" size="sm" onClick={() => handlePredefinedPeriod("last7days")}>Últimos 7 dias</Button>
+        <Button variant="outline" size="sm" onClick={() => handlePredefinedPeriod("last30days")}>Últimos 30 dias</Button>
+        <Button variant="outline" size="sm" onClick={() => handlePredefinedPeriod("thisMonth")}>Este mês</Button>
+      </div>
+      {/* 
+        Coloque aqui seus cards, gráficos, KPIs, etc.
+        Exemplo de uso dos helpers:
+        <Card>
+          <CardContent>
+            <div>Total de Receitas: {formatCurrency(kpiData.totalRevenue)}</div>
+            <div>Variação: {renderTrend(kpiData.revenueChange)}</div>
+          </CardContent>
+        </Card>
+      */}
+      {/* ...restante do dashboard */}
     </div>
   );
 }

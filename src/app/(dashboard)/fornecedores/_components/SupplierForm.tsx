@@ -20,6 +20,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { toast } from "sonner";
 import { createRecord, updateRecord } from "@/lib/utils/data-hooks";
 import { Switch } from "@/components/ui/switch";
+import type { Supplier } from "@/types/schema";
 
 // Define Zod schema para validação do formulário de fornecedor
 const supplierFormSchema = z.object({
@@ -39,13 +40,13 @@ const supplierFormSchema = z.object({
 type SupplierFormValues = z.infer<typeof supplierFormSchema>;
 
 interface SupplierFormProps {
-  initialData?: any; // Para edição
+  initialData?: Partial<Supplier>; // Para edição
   onSuccess?: () => void; // Callback após submissão bem-sucedida
 }
 
 export function SupplierForm({ initialData, onSuccess }: SupplierFormProps) {
   const form = useForm<SupplierFormValues>({
-    resolver: zodResolver(supplierFormSchema) as any,
+    resolver: zodResolver(supplierFormSchema),
     defaultValues: {
       name: initialData?.name || "",
       email: initialData?.email || "",
