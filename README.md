@@ -15,6 +15,7 @@ Este repositório reúne o frontend, backend (via Supabase) e documentação té
 - [`MODULOS.md`](MODULOS.md) – descrição funcional de cada módulo do ERP
 - [`ARQUITETURA.md`](ARQUITETURA.md) – visão de arquitetura e integrações
 
+
 O conteúdo a seguir mantém o histórico do **Pacote de Correções Finais** utilizado na fase anterior do projeto.
 
 # ERP Olie - Pacote de Correções Finais
