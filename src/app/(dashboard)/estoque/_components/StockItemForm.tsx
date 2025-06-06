@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
@@ -34,8 +34,10 @@ const stockItemFormSchema = z.object({
 
 type StockItemFormValues = z.infer<typeof stockItemFormSchema>;
 
+import type { StockItem } from "@/types/schema";
+
 interface StockItemFormProps {
-  initialData?: any;
+  initialData?: Partial<StockItem>;
   onSuccess?: () => void;
 }
 
@@ -45,12 +47,6 @@ export function StockItemForm({ initialData, onSuccess }: StockItemFormProps) {
   const { data: locations } = useSupabaseData('locations', 'name');
   const { data: units } = useSupabaseData('unit_of_measurement', 'name');
   
-  // Status possíveis
-  const statuses = [
-    { value: true, label: "Ativo" },
-    { value: false, label: "Inativo" }
-  ];
-
   // Preparar valores iniciais para o formulário
   const defaultValues = initialData ? {
     name: initialData.name || "",

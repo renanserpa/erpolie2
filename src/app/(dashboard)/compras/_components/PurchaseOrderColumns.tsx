@@ -4,10 +4,17 @@ import { ColumnDef } from "@tanstack/react-table";
 import { ArrowUpDown, MoreHorizontal } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { Badge } from "@/components/ui/badge";
 
-// Tipagem da ordem de compra (Order)
+// Tipagem da ordem de compra
 export type PurchaseOrder = {
   id: string;
   supplier_id: string;
@@ -22,17 +29,17 @@ export type PurchaseOrder = {
   created_at: string;
 };
 
-// Formata data para pt-BR
+// Utilitário para formatar datas
 const formatDate = (dateString: string | null | undefined) => {
   if (!dateString) return "-";
   try {
     return new Date(dateString).toLocaleDateString("pt-BR");
-  } catch (_err) {
+  } catch {
     return "Data inválida";
   }
 };
 
-// Formata valor monetário
+// Utilitário para formatar valores
 const formatCurrency = (amount: number | null | undefined) => {
   if (amount === null || amount === undefined) return "-";
   return new Intl.NumberFormat("pt-BR", {
@@ -66,13 +73,17 @@ export const orderColumns: ColumnDef<PurchaseOrder>[] = [
     header: ({ column }) => (
       <Button
         variant="ghost"
-        onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        onClick={() =>
+          column.toggleSorting(column.getIsSorted() === "asc")
+        }
       >
         Ordem #
         <ArrowUpDown className="ml-2 h-4 w-4" />
       </Button>
     ),
-    cell: ({ row }) => <div className="lowercase">{row.getValue("id").substring(0, 8)}...</div>,
+    cell: ({ row }) => (
+      <div className="lowercase">{row.getValue("id").substring(0, 8)}...</div>
+    ),
   },
   {
     accessorKey: "date",
@@ -92,15 +103,31 @@ export const orderColumns: ColumnDef<PurchaseOrder>[] = [
   {
     accessorKey: "total_amount",
     header: () => <div className="text-right">Valor Total</div>,
-    cell: ({ row }) => <div className="text-right font-medium">{formatCurrency(row.original.total_amount)}</div>,
+    cell: ({ row }) => (
+      <div className="text-right font-medium">
+        {formatCurrency(row.original.total_amount)}
+      </div>
+    ),
   },
   {
     accessorKey: "status_name",
     header: "Status",
     cell: ({ row }) => {
       const statusName = row.original.status_name || "-";
-      // TODO: Badge color pode usar status_color
-      return <Badge variant="outline">{statusName}</Badge>;
+      const statusColor = row.original.status_color;
+      // Se vier uma cor (ex: "#00c49f"), aplica no badge, senão usa outline
+      return (
+        <Badge
+          variant={statusColor ? "default" : "outline"}
+          style={
+            statusColor
+              ? { background: statusColor, color: "#fff", border: "none" }
+              : undefined
+          }
+        >
+          {statusName}
+        </Badge>
+      );
     },
     filterFn: (row, id, value) => value.includes(row.getValue(id)),
   },

@@ -47,43 +47,22 @@ export function Dashboard({ className }: DashboardProps) {
   const [divisions, setDivisions] = useState<Array<{id: string; name: string}>>([]);
   const [activeTab, setActiveTab] = useState<string>("overview");
 
-  // Cores
-  const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884d8', '#82ca9d'];
-  const DIVISION_COLORS = {
-    'Ateliê': '#F0FFBE', 'Casa': '#A5854E', 'Pet': '#6B7280',
-    'Music': '#8B5CF6', 'Wood': '#D97706', 'Brand': '#10B981'
-  };
-
-  // --- FUNÇÕES DE FETCH ---
-  // KPIs
+  // --- FUNÇÕES DE FETCH (COLE SUAS LÓGICAS COMPLETAS AQUI) ---
   const fetchKpiData = useCallback(async (fromDate: string, toDate: string, divisionId: string | null): Promise<KpiData> => {
-    try {
-      // ... [aqui entra o seu código de KPIs, sem "any", igual ao anterior]
-      // Não repito aqui pelo tamanho, mas pode manter igual ao seu, já está tipado
-      // (só não coloque supabase como dependência)
-      // ...
-      // return { ... } // igual ao seu
-      // ...
-      // [CÓDIGO OMITIDO]
-      return {
-        totalRevenue: 0, totalExpenses: 0, totalOrders: 0, totalProducts: 0,
-        totalDeliveries: 0, totalCustomers: 0, revenueChange: 0, ordersChange: 0
-      }; // remover após copiar o seu código real
-    } catch (error) { throw error; }
+    // ...Sua lógica de KPI (já tipada, sem any)
+    return {
+      totalRevenue: 0, totalExpenses: 0, totalOrders: 0, totalProducts: 0,
+      totalDeliveries: 0, totalCustomers: 0, revenueChange: 0, ordersChange: 0
+    };
   }, []);
 
-  // Chart Data
   const fetchChartData = useCallback(async (fromDate: string, toDate: string, divisionId: string | null): Promise<ChartData> => {
-    try {
-      // ... [sua lógica dos gráficos, igual ao anterior, sem "any"]
-      // [CÓDIGO OMITIDO]
-      return {
-        salesByCategory: [], salesByMonth: [], topProducts: [], deliveryStatus: [], salesByDivision: []
-      }; // remover após copiar o seu código real
-    } catch (error) { throw error; }
+    // ...Sua lógica de gráficos (já tipada, sem any)
+    return {
+      salesByCategory: [], salesByMonth: [], topProducts: [], deliveryStatus: [], salesByDivision: []
+    };
   }, []);
 
-  // Dashboard Data (junta as duas)
   const fetchDashboardData = useCallback(async () => {
     setIsLoading(true);
     try {
@@ -102,7 +81,6 @@ export function Dashboard({ className }: DashboardProps) {
     } finally { setIsLoading(false); }
   }, [dateRange, divisionFilter, fetchKpiData, fetchChartData]);
 
-  // Fetch inicial (carrega divisões e chama o dashboard)
   const fetchInitialData = useCallback(async () => {
     try {
       const { data: divisionsData, error: divisionsError } = await supabase
@@ -127,12 +105,10 @@ export function Dashboard({ className }: DashboardProps) {
     return () => clearInterval(intervalId);
   }, [fetchDashboardData, fetchInitialData]);
 
-  // Filtro de datas
+  // Filtros
   const handleDateChange = (range: DateRange) => {
     if (range?.from && range?.to) setDateRange({ from: range.from, to: range.to });
   };
-
-  // Filtros e períodos predefinidos (igual ao seu)
   const handleApplyFilters = () => { fetchDashboardData(); };
   const handleResetFilters = () => {
     setDateRange({ from: startOfMonth(new Date()), to: endOfMonth(new Date()) });
@@ -173,10 +149,10 @@ export function Dashboard({ className }: DashboardProps) {
     return <div className="flex items-center text-gray-500"><span>0%</span></div>;
   };
 
-  // --- JSX (todo igual ao seu, apenas padronizado, pode colar daqui para baixo) ---
+  // JSX (cole abaixo o seu dashboard visual normalmente)
   return (
     <div className={`space-y-6 ${className ?? ''}`}>
-      {/* ...cole aqui o JSX do dashboard igual ao seu código... */}
+      {/* Seu JSX do dashboard vai aqui */}
     </div>
   );
 }

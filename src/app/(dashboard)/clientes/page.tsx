@@ -8,7 +8,13 @@ import { Input } from "@/components/ui/input";
 import { DataTable } from "@/components/ui/data-table";
 import { clientColumns } from "./_components/ClientColumns";
 import { Plus, FileDown, FileUp, Filter } from "lucide-react";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import { useDebounce } from "@/hooks/use-debounce";
 import { AdvancedFilters, type FilterOption } from "@/components/ui/advanced-filters";
 import Papa from "papaparse";
@@ -16,7 +22,7 @@ import { saveAs } from "file-saver";
 import { toast } from "sonner";
 import { ClientForm } from "./_components/ClientForm";
 import { getClients } from "@/lib/data-hooks";
-import type { Client } from "@/types/schema"; // use apenas ESTE, remova o type local duplicado!
+import type { Client } from "@/types/schema";
 
 export default function ClientesPage() {
   const router = useRouter();
@@ -30,7 +36,7 @@ export default function ClientesPage() {
 
   const debouncedSearchQuery = useDebounce(searchQuery, 500);
 
-  // Opções de filtro para clientes
+  // Filtros para clientes
   const filterOptions: FilterOption[] = [
     {
       id: "is_active",
@@ -46,20 +52,18 @@ export default function ClientesPage() {
     { id: "created_at", label: "Data de Cadastro", type: "date" },
   ];
 
-  // Carregar dados dos clientes
+  // Carregar clientes com busca e filtros
   const fetchClients = useCallback(async () => {
     try {
       setIsLoading(true);
       setError(null);
 
-      // Construir query com filtros
       const query: Record<string, unknown> = {};
 
       if (debouncedSearchQuery) {
         query.name = `ilike.%${debouncedSearchQuery}%`;
       }
 
-      // Adicionar filtros ativos à query
       Object.entries(activeFilters).forEach(([key, value]) => {
         if (value !== undefined && value !== null && value !== "") {
           if (key === "created_at" && typeof value === "string") {
@@ -116,7 +120,7 @@ export default function ClientesPage() {
     fetchClients();
   }, [fetchClients]);
 
-  // Função para exportar clientes para CSV
+  // Exporta clientes para CSV
   const exportToCSV = () => {
     try {
       const dataToExport = clients.map((client) => ({
@@ -141,7 +145,7 @@ export default function ClientesPage() {
     }
   };
 
-  // Função para importar clientes de CSV
+  // Importa clientes de CSV (apenas simula, não salva no banco!)
   const importFromCSV = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (!file) return;

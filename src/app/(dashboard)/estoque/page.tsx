@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -16,16 +16,17 @@ import { saveAs } from 'file-saver';
 import { toast } from "sonner";
 import { StockItemForm } from "./_components/StockItemForm";
 import { getStockItems, useSupabaseData } from "@/lib/data-hooks";
+import type { StockItem } from "@/types/schema";
 
 export default function EstoquePage() {
   const router = useRouter();
   const [searchQuery, setSearchQuery] = useState("");
   const [isLoading, setIsLoading] = useState(true);
-  const [stockItems, setStockItems] = useState<any[]>([]);
+  const [stockItems, setStockItems] = useState<StockItem[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
   const [isFiltersOpen, setIsFiltersOpen] = useState(false);
-  const [activeFilters, setActiveFilters] = useState<Record<string, any>>({});
+  const [activeFilters, setActiveFilters] = useState<Record<string, string | boolean>>({});
   const [visibleColumns, setVisibleColumns] = useState<string[]>([
     "name", "sku", "quantity", "min_quantity", "group_id", "location_id", "is_active", "actions"
   ]);
@@ -64,13 +65,13 @@ export default function EstoquePage() {
   ];
 
   // Carregar dados dos itens de estoque
-  const fetchStockItems = async () => {
+  const fetchStockItems = useCallback(async () => {
     try {
       setIsLoading(true);
       setError(null);
       
       // Construir query com filtros
-      const query: Record<string, any> = {};
+      const query: Record<string, string | boolean> = {};
       
       if (debouncedSearchQuery) {
         query.name = `ilike.%${debouncedSearchQuery}%`;
@@ -128,18 +129,19 @@ export default function EstoquePage() {
         ]);
         console.warn('Usando dados mockados para itens de estoque');
       }
-    } catch (err: any) {
-      console.error('Error fetching stock items:', err);
-      setError(err.message || 'Erro ao carregar itens de estoque');
+    } catch (err: unknown) {
+      const error = err instanceof Error ? err : new Error('Unknown error');
+      console.error('Error fetching stock items:', error);
+      setError(error.message || 'Erro ao carregar itens de estoque');
       toast.error('Erro ao carregar lista de itens de estoque.');
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [debouncedSearchQuery, activeFilters]);
 
   useEffect(() => {
     fetchStockItems();
-  }, [debouncedSearchQuery, activeFilters]);
+  }, [fetchStockItems]);
 
   // Função para exportar itens de estoque para CSV
   const exportToCSV = () => {
