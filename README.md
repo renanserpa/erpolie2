@@ -14,7 +14,7 @@ Este repositório reúne o frontend, backend (via Supabase) e documentação té
 - [`CHECKLIST.md`](CHECKLIST.md) – passos obrigatórios de revisão e deploy
 - [`MODULOS.md`](MODULOS.md) – descrição funcional de cada módulo do ERP
 - [`ARQUITETURA.md`](ARQUITETURA.md) – visão de arquitetura e integrações
-- [`docs/documentacao_centralizada.md`](docs/documentacao_centralizada.md) – guia completo do sistema
+
 
 O conteúdo a seguir mantém o histórico do **Pacote de Correções Finais** utilizado na fase anterior do projeto.
 

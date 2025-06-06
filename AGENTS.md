@@ -13,7 +13,7 @@ O agente **CODEX** é o executor oficial de código e automações, responsável
 - Sinalização de inconsistências e pontos de melhoria
 - Proposição de scripts e automações adicionais quando padrões recorrentes forem identificados
 
-Todos os agentes devem consultar também [`README.md`](README.md), [`CHECKLIST.md`](CHECKLIST.md), [`MODULOS.md`](MODULOS.md), [`FLUXOS.md`](FLUXOS.md) e [`docs/documentacao_centralizada.md`](docs/documentacao_centralizada.md) antes de iniciar qualquer trabalho.
+
 
 - Buscar a solução mais robusta, escalável e alinhada às práticas modernas
 - Reutilizar código e componentes sempre que possível
@@ -24,6 +24,7 @@ Todos os agentes devem consultar também [`README.md`](README.md), [`CHECKLIST.m
 - Sinalizar dependências desatualizadas e más práticas
 
 ## Checklist para Tarefas/Commits do CODEX
+
 
 - [ ] A alteração está restrita a um único módulo ou funcionalidade?
 - [ ] O commit é pequeno, atômico e de fácil revisão?
@@ -47,6 +48,7 @@ Todos os agentes devem consultar também [`README.md`](README.md), [`CHECKLIST.m
 - Limpar dependências falsas e simulações antes do merge/deploy
 
 ## Automação e Scripts
+
 
 
 ## Pequenos Ciclos e Commits
