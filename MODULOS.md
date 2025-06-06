@@ -1,9 +1,6 @@
-# MODULOS.md
-
-## Visao Geral
+# Visao Geral
 Este documento lista e descreve todos os modulos principais do Olie ERP. Cada modulo possui seu proprio arquivo detalhado com campos, fluxos, APIs e wireframes (ver pasta `/MODULOS`).
 
----
 ## 1. CLIENTES
 - **Descricao**: Cadastro completo de clientes PF/PJ, com campos obrigatorios e opcionais, historico de pedidos, contatos e segmentacao.
 - **Funcionalidades**:
@@ -15,7 +12,6 @@ Este documento lista e descreve todos os modulos principais do Olie ERP. Cada mo
   - Cadastro de novo cliente
   - Visualizacao do historico de pedidos
 
----
 ## 2. FORNECEDORES
 - **Descricao**: Cadastro de fornecedores, relacao de insumos fornecidos, avaliacao e historico de compras.
 - **Funcionalidades**:
@@ -27,7 +23,6 @@ Este documento lista e descreve todos os modulos principais do Olie ERP. Cada mo
   - Cadastro de novo fornecedor
   - Geracao de ordem de compra
 
----
 ## 3. ESTOQUE
 - **Descricao**: Controle de insumos e produtos acabados, movimentacoes, inventario, saldo minimo e rastreio por lote.
 - **Funcionalidades**:
@@ -40,7 +35,6 @@ Este documento lista e descreve todos os modulos principais do Olie ERP. Cada mo
   - Entrada e baixa automatica via ordem de producao
   - Inventario e ajustes manuais
 
----
 ## 4. PRODUTOS
 - **Descricao**: Cadastro de produtos, variacoes, componentes e personalizacoes (bordado, hotstamping, cor, tecido, ziper etc.).
 - **Funcionalidades**:
@@ -52,7 +46,6 @@ Este documento lista e descreve todos os modulos principais do Olie ERP. Cada mo
   - Criacao de novo produto com componentes
   - Atualizacao de catalogo
 
----
 ## 5. PEDIDOS
 - **Descricao**: Gestao de pedidos de venda com multiplos itens e personalizacoes. Status Kanban (rascunho, producao, pronto, enviado).
 - **Funcionalidades**:
@@ -65,7 +58,6 @@ Este documento lista e descreve todos os modulos principais do Olie ERP. Cada mo
   - Criacao de pedido com multiplos itens
   - Transicao de status do pedido
 
----
 ## 6. COMPRAS
 - **Descricao**: Solicitacao e controle de ordens de compra, recebimento parcial/total e atualizacao automatica de estoque.
 - **Funcionalidades**:
@@ -77,7 +69,6 @@ Este documento lista e descreve todos os modulos principais do Olie ERP. Cada mo
   - Pedido de compra automatico por estoque minimo
   - Entrada no estoque via recebimento
 
----
 ## 7. PRODUCAO
 - **Descricao**: Painel Kanban de ordens de producao com etapas personalizaveis (preparo, corte, costura, acabamento). Historico de execucao e priorizacao automatica.
 - **Funcionalidades**:
@@ -90,7 +81,6 @@ Este documento lista e descreve todos os modulos principais do Olie ERP. Cada mo
   - Geracao automatica da ordem via pedido
   - Reserva e baixa de insumos conforme etapa
 
----
 ## 8. FINANCEIRO
 - **Descricao**: Controle de receitas, despesas, centro de custo e integracao com pedidos, compras e caixa.
 - **Funcionalidades**:
@@ -102,7 +92,6 @@ Este documento lista e descreve todos os modulos principais do Olie ERP. Cada mo
   - Lancamento de receita e baixa automatica na venda
   - Controle de pagamento/recebimento
 
----
 ## 9. LOGISTICA
 - **Descricao**: Gestao de entregas, rotas e status de envio com painel Kanban.
 - **Funcionalidades**:
@@ -114,7 +103,6 @@ Este documento lista e descreve todos os modulos principais do Olie ERP. Cada mo
   - Atualizacao de status de entrega
   - Geracao de etiqueta automatica
 
----
 ## 10. RH
 - **Descricao**: Cadastro de colaboradores, gestao de cargos, ponto, ferias e historico funcional.
 - **Funcionalidades**:
@@ -126,7 +114,6 @@ Este documento lista e descreve todos os modulos principais do Olie ERP. Cada mo
   - Apontamento de producao por colaborador
   - Ferias e movimentacao de pessoal
 
----
 ## 11. ADMINISTRACAO / CONFIGURACOES
 - **Descricao**: Permissoes de usuario, logs e parametros globais, com integracoes futuras.
 - **Funcionalidades**:
@@ -138,7 +125,6 @@ Este documento lista e descreve todos os modulos principais do Olie ERP. Cada mo
   - Atualizacao de parametros do sistema
   - Controle e revisao de logs
 
----
 ## 12. BUSINESS INTELLIGENCE (BI)
 - **Descricao**: Paineis de indicadores e relatorios analiticos por area.
 - **Funcionalidades**:
@@ -149,7 +135,6 @@ Este documento lista e descreve todos os modulos principais do Olie ERP. Cada mo
   - Visualizacao e analise de KPIs
   - Exportacao para tomada de decisao
 
----
 ## 13. UNIVERSIDADE / ONBOARDING
 - **Descricao**: Trilhas de treinamento, controle de progresso e certificacao interna.
 - **Funcionalidades**:
@@ -161,5 +146,21 @@ Este documento lista e descreve todos os modulos principais do Olie ERP. Cada mo
   - Onboarding de novo colaborador
   - Validacao de treinamento obrigatorio
 
----
-**Para detalhamento completo de cada modulo, consulte os arquivos especificos na pasta `/MODULOS`.**
+Este documento descreve resumidamente os módulos que compõem o **Olie ERP** e suas principais funções.
+
+## Índice
+1. [Login](#login)
+2. [Dashboard](#dashboard)
+3. [Clientes](#clientes)
+4. [Fornecedores](#fornecedores)
+5. [Estoque](#estoque)
+6. [Produtos](#produtos)
+7. [Pedidos](#pedidos)
+8. [Compras](#compras)
+9. [Produção](#produção)
+10. [Logística](#logística)
+11. [Financeiro](#financeiro)
+12. [RH](#rh)
+13. [BI](#bi)
+14. [Configurações](#configurações)
+15. [Universidade/Onboarding](#universidadeonboarding)
