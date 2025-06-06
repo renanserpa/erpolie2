@@ -1,22 +1,23 @@
 "use client";
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { ArrowLeft, Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
 import { getRecordById } from '@/lib/data-hooks';
+import type { Component } from '@/types/schema';
 import { ComponentForm } from '../../_components/ComponentForm';
 
 export default function EditComponentPage() {
   const params = useParams();
   const router = useRouter();
-  const [component, setComponent] = useState<any>(null);
+  const [component, setComponent] = useState<Component | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  const fetchComponent = async () => {
+  const fetchComponent = useCallback(async () => {
     try {
       setLoading(true);
       setError(null);
@@ -39,18 +40,22 @@ export default function EditComponentPage() {
         
         console.warn('Usando dados mockados para componente');
       }
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error('Error fetching component details:', err);
-      setError(err.message || 'Erro ao carregar detalhes do componente');
+      if (err instanceof Error) {
+        setError(err.message);
+      } else {
+        setError('Erro ao carregar detalhes do componente');
+      }
       toast.error('Erro ao carregar detalhes do componente.');
     } finally {
       setLoading(false);
     }
-  };
+  }, [params.id]);
 
   useEffect(() => {
     fetchComponent();
-  }, [params.id]);
+  }, [fetchComponent]);
 
   const handleSuccess = () => {
     toast.success('Componente atualizado com sucesso');

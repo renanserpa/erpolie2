@@ -1,22 +1,23 @@
 "use client";
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { ArrowLeft, Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
 import { getRecordById } from '@/lib/data-hooks';
+import type { Client } from '@/types/schema';
 import { ClientForm } from '../../_components/ClientForm';
 
 export default function EditClientPage() {
   const params = useParams();
   const router = useRouter();
-  const [client, setClient] = useState<any>(null);
+  const [client, setClient] = useState<Client | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  const fetchClient = async () => {
+  const fetchClient = useCallback(async () => {
     try {
       setLoading(true);
       setError(null);
@@ -44,18 +45,22 @@ export default function EditClientPage() {
         
         console.warn('Usando dados mockados para cliente');
       }
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error('Error fetching client details:', err);
-      setError(err.message || 'Erro ao carregar detalhes do cliente');
+      if (err instanceof Error) {
+        setError(err.message);
+      } else {
+        setError('Erro ao carregar detalhes do cliente');
+      }
       toast.error('Erro ao carregar detalhes do cliente.');
     } finally {
       setLoading(false);
     }
-  };
+  }, [params.id]);
 
   useEffect(() => {
     fetchClient();
-  }, [params.id]);
+  }, [fetchClient]);
 
   const handleSuccess = () => {
     toast.success('Cliente atualizado com sucesso');
@@ -99,10 +104,9 @@ export default function EditClientPage() {
         </CardHeader>
         <CardContent>
           {client && (
-            <ClientForm 
-              initialData={client} 
+            <ClientForm
+              initialData={client}
               onSuccess={handleSuccess}
-              isEditing={true}
             />
           )}
         </CardContent>

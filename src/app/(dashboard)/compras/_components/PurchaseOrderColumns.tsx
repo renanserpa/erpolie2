@@ -24,14 +24,14 @@ export type PurchaseOrder = {
   // Add other relevant fields like linked request, items, etc.
 };
 
-const formatDate = (dateString: string | null | undefined) => {
-  if (!dateString) return "-";
-  try {
-    return new Date(dateString).toLocaleDateString("pt-BR");
-  } catch (e) {
-    return "Data inválida";
-  }
-};
+  const formatDate = (dateString: string | null | undefined) => {
+    if (!dateString) return "-";
+    try {
+      return new Date(dateString).toLocaleDateString("pt-BR");
+    } catch {
+      return "Data inválida";
+    }
+  };
 
 const formatCurrency = (amount: number | null | undefined) => {
   if (amount === null || amount === undefined) return "-";

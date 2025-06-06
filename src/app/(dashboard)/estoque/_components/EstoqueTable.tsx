@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { 
   Table, 
   TableBody, 
@@ -22,21 +22,21 @@ import {
   MoreHorizontal, 
   Edit, 
   Trash2, 
-  Eye,
-  Package
-} from "lucide-react";
-import { useSupabaseData, getRecordById, deleteRecord } from "@/lib/data-hooks";
+  Eye
+  } from "lucide-react";
+import { useSupabaseData, deleteRecord } from "@/lib/data-hooks";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { StockItemForm } from "./StockItemForm";
+import type { StockItem } from "@/types/schema";
 
 export default function EstoqueTable() {
   const router = useRouter();
   const [searchTerm, setSearchTerm] = useState("");
   const [isFormDialogOpen, setIsFormDialogOpen] = useState(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
-  const [currentItem, setCurrentItem] = useState<any>(null);
+  const [currentItem, setCurrentItem] = useState<StockItem | null>(null);
   
   // Usar o hook genérico para buscar dados do estoque
   const { 
@@ -96,12 +96,12 @@ export default function EstoqueTable() {
     }
   };
 
-  const handleOpenFormDialog = (item?: any) => {
+  const handleOpenFormDialog = (item?: StockItem) => {
     setCurrentItem(item || null);
     setIsFormDialogOpen(true);
   };
 
-  const handleOpenDeleteDialog = (item: any) => {
+  const handleOpenDeleteDialog = (item: StockItem) => {
     setCurrentItem(item);
     setIsDeleteDialogOpen(true);
   };
@@ -263,7 +263,7 @@ export default function EstoqueTable() {
             <DialogTitle>Confirmar Exclusão</DialogTitle>
           </DialogHeader>
           <div className="py-4">
-            <p>Tem certeza que deseja excluir o item "{currentItem?.name}"?</p>
+            <p>Tem certeza que deseja excluir o item &quot;{currentItem?.name}&quot;?</p>
             <p className="text-sm text-gray-500 mt-2">Esta ação não pode ser desfeita.</p>
           </div>
           <DialogFooter>
