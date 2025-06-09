@@ -2,6 +2,7 @@
 
 import React from 'react';
 import BIDashboardTable from './_components/BIDashboardTable';
+import BIPanelPage from '@/modules/bi/BIPanelPage';
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink } from "@/components/ui/breadcrumb";
 import { Home } from 'lucide-react';
 
@@ -20,6 +21,7 @@ export default function BIPage() {
       </Breadcrumb>
       
       <div className="grid gap-6">
+        <BIPanelPage />
         <BIDashboardTable />
       </div>
     </div>
