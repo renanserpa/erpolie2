@@ -10,6 +10,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Loader2 } from "lucide-react";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import type { SupabaseAuthError } from "@/types/auth";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
@@ -30,7 +31,7 @@ export default function LoginPage() {
 
     // TODO: aplicar proteção contra brute-force, ex.: @supabase/auth-rate-limit
 
-    const { error } = await supabase.auth.signInWithPassword({
+    const { error }: { data: unknown; error: SupabaseAuthError | null } = await supabase.auth.signInWithPassword({
       email: sanitizedEmail,
       password: sanitizedPassword,
     });

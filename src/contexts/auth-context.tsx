@@ -3,7 +3,7 @@
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { createClient } from "@/lib/supabase/client";
 import { toast } from "sonner";
-import type { AuthUser, UserProfile } from "@/types/auth";
+import type { AuthUser, AuthSession, SupabaseAuthError, UserProfile } from "@/types/auth";
 
 // Tipos para o sistema de permissões
 export type Permission = {
@@ -72,7 +72,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       setIsLoading(true);
       try {
         // Verificar sessão atual
-        const { data: { session }, error: sessionError } = await supabase.auth.getSession();
+        const { data: { session }, error: sessionError }: { data: { session: AuthSession | null }; error: SupabaseAuthError | null } = await supabase.auth.getSession();
         
         if (sessionError) {
           console.error("Erro ao obter sessão:", sessionError);
@@ -364,14 +364,14 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const logout = async (): Promise<void> => {
     try {
       setIsLoading(true);
-      const { error } = await supabase.auth.signOut();
+      const { error }: { error: SupabaseAuthError | null } = await supabase.auth.signOut();
       if (error) {
         console.error("Erro ao fazer logout:", error);
         toast.error("Erro ao fazer logout. Tente novamente.");
       } else {
         toast.success("Logout realizado com sucesso");
       }
-    } catch (error) {
+    } catch (error: unknown) {
       console.error("Erro ao fazer logout:", error);
       toast.error("Erro ao fazer logout. Tente novamente.");
     } finally {
