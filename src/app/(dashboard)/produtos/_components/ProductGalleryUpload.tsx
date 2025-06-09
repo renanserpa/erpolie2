@@ -392,11 +392,11 @@ export function ProductGalleryUpload({ productId, initialImages = [], onSuccess 
   };
 
   const handleAddImage = () => {
-    // Simular clique no input file
     const fileInput = document.createElement('input');
     fileInput.type = 'file';
     fileInput.accept = 'image/*';
-    fileInput.onchange = (e) => handleImageUpload(e as React.ChangeEvent<HTMLInputElement>);
+    fileInput.onchange = (e) =>
+      handleImageUpload(e as unknown as React.ChangeEvent<HTMLInputElement>);
     fileInput.click();
   };
 
