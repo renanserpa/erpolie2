@@ -74,3 +74,4 @@ Data | Autor | Descrição
 2025-06-10 | CODEX | Módulo de pedidos validado com tipagem e integração.
 2025-06-10 | CODEX | Módulo de produção validado com Kanban e rastreabilidade.
 2025-06-10 | CODEX | Módulo de compras validado com integração estoque/financeiro.
+2025-06-10 | CODEX | Módulo financeiro criado com integração de receitas e despesas.
