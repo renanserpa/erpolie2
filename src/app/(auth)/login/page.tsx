@@ -31,7 +31,7 @@ export default function LoginPage() {
 
     // TODO: aplicar proteção contra brute-force, ex.: @supabase/auth-rate-limit
 
-    const { error }: { data: unknown; error: SupabaseAuthError | null } = await supabase.auth.signInWithPassword({
+    const { data, error }: { data: any; error: SupabaseAuthError | null } = await supabase.auth.signInWithPassword({
       email: sanitizedEmail,
       password: sanitizedPassword,
     });
@@ -42,6 +42,21 @@ export default function LoginPage() {
       console.error("Login error:", error.message);
       setError("Falha no login. Verifique seu e-mail e senha.");
     } else {
+      // Armazena o perfil em user_metadata para facilitar o middleware
+      try {
+        const { data: roleData } = await supabase
+          .from('user_roles')
+          .select('role:roles(name)')
+          .eq('user_id', data.user.id)
+          .single();
+
+        const roleName = roleData?.role?.name;
+        if (roleName) {
+          await supabase.auth.updateUser({ data: { role: roleName } });
+        }
+      } catch (e) {
+        console.error('Erro ao atribuir role na sessão:', e);
+      }
       // Redirect to dashboard or intended page after successful login
       // The middleware should handle session refresh and route protection
       router.push("/"); // Redirect to dashboard root
