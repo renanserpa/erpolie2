@@ -1,16 +1,17 @@
 "use client";
 
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import { createClient } from "@/lib/supabase/client";
 import { handleSupabaseError } from "@/lib/data-hooks";
 import { toast } from "sonner";
-import { useRouter } from 'next/navigation';
+import type { AuthUser } from "@/types/auth";
 
 // Hook para gerenciar autenticação
 export const useAuth = () => {
   const supabase = createClient();
   const router = useRouter();
-  const [user, setUser] = useState<any>(null);
+  const [user, setUser] = useState<AuthUser | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -30,9 +31,10 @@ export const useAuth = () => {
         } else {
           setUser(null);
         }
-      } catch (err: any) {
-        console.error("Erro ao verificar autenticação:", err);
-        setError(err.message);
+      } catch (err: unknown) {
+        const message = err instanceof Error ? err.message : String(err);
+        console.error("Erro ao verificar autenticação:", message);
+        setError(message);
         setUser(null);
       } finally {
         setLoading(false);
@@ -79,7 +81,7 @@ export const useAuth = () => {
         toast.success("Login realizado com sucesso!");
         return { success: true };
       }
-    } catch (err: any) {
+    } catch (err: unknown) {
       const errorMsg = handleSupabaseError(err, "Falha ao realizar login");
       setError(errorMsg);
       return { success: false, error: errorMsg };
@@ -102,7 +104,7 @@ export const useAuth = () => {
       router.push('/login');
       toast.success("Logout realizado com sucesso!");
       return { success: true };
-    } catch (err: any) {
+    } catch (err: unknown) {
       const errorMsg = handleSupabaseError(err, "Falha ao realizar logout");
       setError(errorMsg);
       return { success: false, error: errorMsg };
@@ -126,7 +128,7 @@ export const useAuth = () => {
       
       toast.success("Email de recuperação enviado com sucesso!");
       return { success: true };
-    } catch (err: any) {
+    } catch (err: unknown) {
       const errorMsg = handleSupabaseError(err, "Falha ao enviar email de recuperação");
       setError(errorMsg);
       return { success: false, error: errorMsg };
@@ -150,7 +152,7 @@ export const useAuth = () => {
       
       toast.success("Senha atualizada com sucesso!");
       return { success: true };
-    } catch (err: any) {
+    } catch (err: unknown) {
       const errorMsg = handleSupabaseError(err, "Falha ao atualizar senha");
       setError(errorMsg);
       return { success: false, error: errorMsg };
