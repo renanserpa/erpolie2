@@ -1,6 +1,6 @@
 "use client";
 
-import { toast } from "@/components/ui/use-toast";
+import { toast } from "sonner";
 
 /**
  * Manipulador de erros centralizado para o sistema ERP Olie
@@ -56,11 +56,7 @@ export class ErrorHandler {
     }
     
     // Exibir toast com o erro
-    toast({
-      title: "Erro",
-      description: message,
-      variant: "destructive",
-    });
+    toast.error(message);
     
     return message;
   }
@@ -84,11 +80,7 @@ export class ErrorHandler {
     }
     
     // Exibir toast com o erro
-    toast({
-      title: "Erro",
-      description: message,
-      variant: "destructive",
-    });
+    toast.error(message);
     
     return message;
   }
@@ -108,11 +100,7 @@ export class ErrorHandler {
     const message = errorMessages.join(". ");
     
     // Exibir toast com o erro
-    toast({
-      title: "Erro de validação",
-      description: message,
-      variant: "destructive",
-    });
+    toast.error(message);
     
     return message;
   }

@@ -470,7 +470,7 @@ export default function KitsTable() {
             <DialogTitle>Confirmar Exclusão</DialogTitle>
           </DialogHeader>
           <div className="py-4">
-            <p>Tem certeza que deseja excluir o kit "{currentItem?.name}"?</p>
+            <p>Tem certeza que deseja excluir o kit &quot;{currentItem?.name}&quot;?</p>
             <p className="text-sm text-muted-foreground mt-2">Esta ação não pode ser desfeita.</p>
           </div>
           <DialogFooter>

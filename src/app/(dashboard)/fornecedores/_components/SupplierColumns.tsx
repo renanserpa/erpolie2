@@ -45,6 +45,51 @@ const handleDeleteSupplier = async (
   onDelete(supplierId, supplierName);
 };
 
+// Componente para renderizar ações na tabela
+function SupplierActionsCell({
+  row,
+  onEdit,
+  onDelete,
+}: {
+  row: any;
+  onEdit: (supplier: Supplier) => void;
+  onDelete: (supplierId: string, supplierName: string) => void;
+}) {
+  const supplier = row.original as Supplier;
+  const router = useRouter();
+
+  return (
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <Button variant="ghost" className="h-8 w-8 p-0">
+          <span className="sr-only">Abrir menu</span>
+          <MoreHorizontal className="h-4 w-4" />
+        </Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent align="end">
+        <DropdownMenuLabel>Ações</DropdownMenuLabel>
+        <DropdownMenuItem onClick={() => navigator.clipboard.writeText(supplier.id)}>
+          Copiar ID Fornecedor
+        </DropdownMenuItem>
+        <DropdownMenuSeparator />
+        <DropdownMenuItem onClick={() => onEdit(supplier)}>
+          <Edit className="mr-2 h-4 w-4" /> Editar Fornecedor
+        </DropdownMenuItem>
+        <DropdownMenuItem onClick={() => router.push(`/fornecedores/${supplier.id}`)}>
+          <Eye className="mr-2 h-4 w-4" /> Ver Detalhes
+        </DropdownMenuItem>
+        <DropdownMenuSeparator />
+        <DropdownMenuItem
+          className="text-red-600 focus:text-red-700 focus:bg-red-100/50"
+          onClick={() => handleDeleteSupplier(supplier.id, supplier.name, onDelete)}
+        >
+          <Trash2 className="mr-2 h-4 w-4" /> Excluir Fornecedor
+        </DropdownMenuItem>
+      </DropdownMenuContent>
+    </DropdownMenu>
+  );
+}
+
 export const supplierColumns = (
   onEdit: (supplier: Supplier) => void,
   onDelete: (supplierId: string, supplierName: string) => void
@@ -140,42 +185,9 @@ export const supplierColumns = (
   {
     id: "actions",
     enableHiding: false,
-    cell: ({ row }) => {
-      const supplier = row.original;
-      const router = useRouter();
-      return (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="h-8 w-8 p-0">
-              <span className="sr-only">Abrir menu</span>
-              <MoreHorizontal className="h-4 w-4" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuLabel>Ações</DropdownMenuLabel>
-            <DropdownMenuItem onClick={() => navigator.clipboard.writeText(supplier.id)}>
-              Copiar ID Fornecedor
-            </DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem onClick={() => onEdit(supplier)}>
-              <Edit className="mr-2 h-4 w-4" /> Editar Fornecedor
-            </DropdownMenuItem>
-            <DropdownMenuItem
-              onClick={() => router.push(`/fornecedores/${supplier.id}`)}
-            >
-              <Eye className="mr-2 h-4 w-4" /> Ver Detalhes
-            </DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem
-              className="text-red-600 focus:text-red-700 focus:bg-red-100/50"
-              onClick={() => handleDeleteSupplier(supplier.id, supplier.name, onDelete)}
-            >
-              <Trash2 className="mr-2 h-4 w-4" /> Excluir Fornecedor
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-      );
-    },
+    cell: ({ row }) => (
+      <SupplierActionsCell row={row} onEdit={onEdit} onDelete={onDelete} />
+    ),
   },
 ];
 

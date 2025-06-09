@@ -327,7 +327,7 @@ export default function InsumosTable() {
             <DialogTitle>Confirmar Exclusão</DialogTitle>
           </DialogHeader>
           <div className="py-4">
-            <p>Tem certeza que deseja excluir o insumo "{currentItem?.name}"?</p>
+            <p>Tem certeza que deseja excluir o insumo &quot;{currentItem?.name}&quot;?</p>
             <p className="text-sm text-muted-foreground mt-2">Esta ação não pode ser desfeita.</p>
           </div>
           <DialogFooter>

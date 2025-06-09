@@ -113,7 +113,7 @@ export const useLowStockAlerts = () => {
       const { data, error } = await supabase
         .from('stock_items')
         .select('id, name, current_quantity, min_quantity, unit_of_measure')
-        .lte('current_quantity', supabase.sql('min_quantity')) // Filter where current <= min
+        .lte('current_quantity', 'min_quantity' as any) // Filter where current <= min
         .not('min_quantity', 'is', null) // Ensure min_quantity is set
         .order('name', { ascending: true });
       

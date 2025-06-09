@@ -389,7 +389,7 @@ export default function OrdensProducaoTable() {
             {searchTerm || statusFilter ? (
               <p>Nenhuma ordem de produção encontrada com os filtros aplicados</p>
             ) : (
-              <p>Nenhuma ordem de produção cadastrada. Clique em "Nova Ordem" para começar.</p>
+              <p>Nenhuma ordem de produção cadastrada. Clique em &quot;Nova Ordem&quot; para começar.</p>
             )}
           </div>
         ) : (
