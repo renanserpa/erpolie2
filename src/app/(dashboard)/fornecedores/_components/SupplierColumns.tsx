@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { ColumnDef } from "@tanstack/react-table";
+import { ColumnDef, Row } from "@tanstack/react-table";
 import { ArrowUpDown, MoreHorizontal, Trash2, Edit, Eye } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -51,7 +51,7 @@ function SupplierActionsCell({
   onEdit,
   onDelete,
 }: {
-  row: any;
+  row: Row<Supplier>;
   onEdit: (supplier: Supplier) => void;
   onDelete: (supplierId: string, supplierName: string) => void;
 }) {

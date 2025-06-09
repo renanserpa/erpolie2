@@ -20,6 +20,7 @@ export interface Client {
 export interface Supplier {
   id: string;
   name: string;
+  fantasy_name?: string | null;
   email?: string | null;
   phone?: string | null;
   document?: string | null;
