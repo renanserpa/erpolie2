@@ -27,22 +27,7 @@ export default function ClientDetailsPage() {
       if (result.success) {
         setClient(result.data);
       } else {
-        // Criar um cliente mockado para demonstração
-        setClient({
-          id: params.id,
-          name: 'Cliente Exemplo',
-          email: 'cliente@exemplo.com',
-          phone: '(11) 98765-4321',
-          document: '123.456.789-00',
-          address: 'Rua Exemplo, 123',
-          city: 'São Paulo',
-          state: 'SP',
-          postal_code: '01234-567',
-          notes: 'Este é um cliente de demonstração.',
-          created_at: new Date().toISOString()
-        });
-        
-        console.warn('Usando dados mockados para cliente');
+        setError('Cliente não encontrado.');
       }
     } catch (err: unknown) {
       console.error('Error fetching client details:', err);
@@ -52,22 +37,7 @@ export default function ClientDetailsPage() {
         setError('Erro ao carregar detalhes do cliente');
       }
       
-      // Criar um cliente mockado para demonstração
-      setClient({
-        id: params.id,
-        name: 'Cliente Exemplo',
-        email: 'cliente@exemplo.com',
-        phone: '(11) 98765-4321',
-        document: '123.456.789-00',
-        address: 'Rua Exemplo, 123',
-        city: 'São Paulo',
-        state: 'SP',
-        postal_code: '01234-567',
-        notes: 'Este é um cliente de demonstração.',
-        created_at: new Date().toISOString()
-      });
-      
-      toast.error('Erro ao carregar detalhes do cliente. Exibindo dados de demonstração.');
+      toast.error('Erro ao carregar detalhes do cliente.');
     } finally {
       setLoading(false);
     }
