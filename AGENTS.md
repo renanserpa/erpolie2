@@ -65,3 +65,4 @@ Data | Autor | Descrição
 2025-06-07 | CODEX | Ajustada segurança do Supabase via variáveis de ambiente e criado fluxo de confirmação de cadastro. Build ainda falha por erros em módulos externos.
 2025-06-08 | CODEX | Tipagem forte aplicada ao módulo de autenticação, removendo any e utilizando tipos do Supabase.
 2025-06-09 | CODEX | Implementado controle de acesso baseado em perfil no middleware.
+2025-06-09 | CODEX | Refatorado MovimentacoesEstoquePage para isolar client components e evitar erros de build.
