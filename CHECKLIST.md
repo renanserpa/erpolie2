@@ -57,3 +57,5 @@ Este arquivo centraliza os checklists de tarefas, validações e revisões para 
 
 
 **Importante:** Este arquivo deve ser revisado e assinado (digitalmente ou via PR) por todos envolvidos a cada release principal, migração de stack ou inclusão de novo agente/IA. Mantém o Olie ERP sempre auditável, seguro e com evolução controlada!
+
+- 2025-06-09: Login module fully validated (CODEX)
