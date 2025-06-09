@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { DataTable } from "@/components/ui/data-table";
-import { columns } from "./_components/StockItemColumns";
+import { columns } from "@/app/(dashboard)/estoque/_components/StockItemColumns";
 import { Plus, FileDown, FileUp, Filter } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { useDebounce } from "@/hooks/use-debounce";
@@ -14,7 +14,7 @@ import { AdvancedFilters, type FilterOption } from "@/components/ui/advanced-fil
 import Papa from 'papaparse';
 import { saveAs } from 'file-saver';
 import { toast } from "sonner";
-import { StockItemForm } from "./_components/StockItemForm";
+import { StockItemForm } from "@/app/(dashboard)/estoque/_components/StockItemForm";
 import { useSupabaseData } from "@/lib/data-hooks";
 import { fetchStockItems } from "./EstoqueService";
 import type { Insumo } from "./estoque.types";
