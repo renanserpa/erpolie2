@@ -72,3 +72,4 @@ Data | Autor | Descrição
 2025-06-10 | CODEX | Módulo de produtos estruturado com serviço e tipagens. Página integra DataTable.
 2025-06-10 | CODEX | Módulo de estoque validado com tipagem e organização.
 2025-06-10 | CODEX | Módulo de pedidos validado com tipagem e integração.
+2025-06-10 | CODEX | Módulo de produção validado com Kanban e rastreabilidade.

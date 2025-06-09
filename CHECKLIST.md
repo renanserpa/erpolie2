@@ -67,3 +67,4 @@ Este arquivo centraliza os checklists de tarefas, validações e revisões para 
 - 2025-06-10: Módulo de produtos revisado e validado (CODEX)
 - 2025-06-10: Módulo de estoque validado (CODEX)
 - 2025-06-10: Módulo de pedidos validado (CODEX)
+- 2025-06-10: Módulo de produção validado com Kanban e rastreabilidade (CODEX)
