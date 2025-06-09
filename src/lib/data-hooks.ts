@@ -37,20 +37,20 @@ export const handleSupabaseError = (error: unknown) => {
 };
 
 // Função para criar um novo registro
-export const createRecord = async <T extends Record<string, unknown>>(
-  table: string, 
+export const createRecord = async <T>(
+  table: string,
   data: Partial<T>
 ): Promise<{ success: boolean; data?: T; error?: string }> => {
   try {
     const supabase = createClient();
     
     // Remover campos undefined ou null para evitar erros de tipo
-    const cleanData = Object.entries(data).reduce((acc, [key, value]) => {
+    const cleanData: Record<string, unknown> = {};
+    Object.entries(data).forEach(([key, value]) => {
       if (value !== undefined && value !== null) {
-        acc[key] = value;
+        cleanData[key] = value;
       }
-      return acc;
-    }, {} as Record<string, unknown>);
+    });
     
     const { data: result, error } = await supabase
       .from(table)
@@ -69,7 +69,7 @@ export const createRecord = async <T extends Record<string, unknown>>(
 };
 
 // Função para atualizar um registro existente
-export const updateRecord = async <T extends Record<string, unknown>>(
+export const updateRecord = async <T>(
   table: string, 
   id: string, 
   data: Partial<T>
@@ -78,12 +78,12 @@ export const updateRecord = async <T extends Record<string, unknown>>(
     const supabase = createClient();
     
     // Remover campos undefined ou null para evitar erros de tipo
-    const cleanData = Object.entries(data).reduce((acc, [key, value]) => {
+    const cleanData: Record<string, unknown> = {};
+    Object.entries(data).forEach(([key, value]) => {
       if (value !== undefined && value !== null) {
-        acc[key] = value;
+        cleanData[key] = value;
       }
-      return acc;
-    }, {} as Record<string, unknown>);
+    });
     
     // Adicionar updated_at automaticamente
     cleanData.updated_at = new Date().toISOString();
@@ -129,7 +129,7 @@ export const deleteRecord = async (
 };
 
 // Função para buscar um registro por ID
-export const getRecordById = async <T extends Record<string, unknown>>(
+export const getRecordById = async <T>(
   table: string, 
   id: string
 ): Promise<{ success: boolean; data?: T; error?: string }> => {
@@ -153,7 +153,7 @@ export const getRecordById = async <T extends Record<string, unknown>>(
 };
 
 // Função para buscar registros com filtros
-export const getRecords = async <T extends Record<string, unknown>>(
+export const getRecords = async <T>(
   table: string, 
   query: Record<string, unknown> = {}
 ): Promise<{ success: boolean; data?: T[]; error?: string }> => {

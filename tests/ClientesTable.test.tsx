@@ -1,6 +1,6 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
-import { describe, test, expect, vi } from 'vitest';
+import { describe, test, expect, vi, type Mock } from 'vitest';
 import ClientesTable from '@/app/(dashboard)/clientes/_components/ClientesTable';
 import { useSupabaseData } from '@/lib/data-hooks';
 
@@ -45,7 +45,7 @@ describe('ClientesTable Component', () => {
 
   test('exibe mensagem quando não há clientes', () => {
     // Sobrescreve o mock para retornar uma lista vazia
-    (useSupabaseData as unknown as vi.Mock).mockImplementation(() => ({
+    (useSupabaseData as unknown as Mock).mockImplementation(() => ({
       data: [],
       loading: false,
       error: null,
