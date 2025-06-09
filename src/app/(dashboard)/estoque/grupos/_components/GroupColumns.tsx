@@ -5,18 +5,13 @@ import { ArrowUpDown, MoreHorizontal, Trash2, Edit } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-
-// Define the data structure for a Group
-export type Group = {
-  id: string;
-  name: string;
-  description?: string | null;
-  created_at: string;
-  updated_at?: string | null;
-};
+import type { GrupoDeInsumo } from "@/modules/estoque/estoque.types";
 
 // Define columns as a function to accept callbacks
-export const groupColumns = (onEdit: (group: Group) => void, onDelete: (group: Group) => void): ColumnDef<Group>[] => [
+export const groupColumns = (
+  onEdit: (group: GrupoDeInsumo) => void,
+  onDelete: (group: GrupoDeInsumo) => void
+): ColumnDef<GrupoDeInsumo>[] => [
   {
     id: "select",
     header: ({ table }) => (

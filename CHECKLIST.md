@@ -65,3 +65,4 @@ Este arquivo centraliza os checklists de tarefas, validações e revisões para 
 - 2025-06-09: Módulo de fornecedores revisado e validado (CODEX)
 
 - 2025-06-10: Módulo de produtos revisado e validado (CODEX)
+- 2025-06-10: Módulo de estoque validado (CODEX)

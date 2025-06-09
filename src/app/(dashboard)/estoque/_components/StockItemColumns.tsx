@@ -8,40 +8,9 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Badge } from "@/components/ui/badge";
 import Link from "next/link";
+import type { Insumo } from "@/modules/estoque/estoque.types";
 
-// Define the data structure for a Stock Item based on the actual database schema
-export type StockItem = {
-  id: string;
-  name: string;
-  sku: string | null;
-  description: string | null;
-  group_id: string | null;
-  location_id: string | null;
-  unit_of_measurement_id: string | null;
-  current_quantity: number;
-  min_quantity: number | null;
-  max_quantity: number | null;
-  cost_price: number | null;
-  is_active: boolean | null;
-  created_at: string;
-  updated_at: string | null;
-  // Relações
-  group?: {
-    id: string;
-    name: string;
-  } | null;
-  location?: {
-    id: string;
-    name: string;
-  } | null;
-  unit_of_measurement?: {
-    id: string;
-    name: string;
-    symbol: string;
-  } | null;
-};
-
-export const stockItemColumns = (onEdit: (item: StockItem) => void, onDelete: (item: StockItem) => void): ColumnDef<StockItem>[] => [
+export const stockItemColumns = (onEdit: (item: Insumo) => void, onDelete: (item: Insumo) => void): ColumnDef<Insumo>[] => [
   {
     id: "select",
     header: ({ table }) => (
@@ -96,11 +65,11 @@ export const stockItemColumns = (onEdit: (item: StockItem) => void, onDelete: (i
     cell: ({ row }) => <div>{row.original.location?.name || "-"}</div>,
   },
   {
-    accessorKey: "current_quantity",
+    accessorKey: "quantity",
     header: () => <div className="text-right">Qtd. Atual</div>,
     cell: ({ row }) => (
       <div className="text-right">
-        {row.original.current_quantity} {row.original.unit_of_measurement?.symbol || ""}
+        {row.original.quantity} {row.original.unit_of_measurement?.symbol || ""}
       </div>
     ),
   },
@@ -122,10 +91,10 @@ export const stockItemColumns = (onEdit: (item: StockItem) => void, onDelete: (i
       if (!isActive) {
         status = "Inativo";
         variant = "secondary";
-      } else if (row.original.min_quantity !== null && row.original.current_quantity <= row.original.min_quantity) {
+      } else if (row.original.min_quantity !== null && row.original.quantity <= row.original.min_quantity) {
         status = "Crítico";
         variant = "destructive";
-      } else if (row.original.min_quantity !== null && row.original.current_quantity <= row.original.min_quantity * 1.5) {
+      } else if (row.original.min_quantity !== null && row.original.quantity <= row.original.min_quantity * 1.5) {
         status = "Baixo";
         variant = "outline";
       }

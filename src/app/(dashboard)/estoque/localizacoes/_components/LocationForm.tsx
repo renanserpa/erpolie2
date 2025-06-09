@@ -19,7 +19,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { InputNumber } from "@/components/ui/input-number";
 import { createRecord, updateRecord } from "@/lib/data-hooks";
 import { toast } from "sonner";
-import type { Location } from "./LocationColumns";
+import type { LocalizacaoEstoque } from "@/modules/estoque/estoque.types";
 
 // Define Zod schema para validação do formulário
 const locationFormSchema = z.object({
@@ -32,7 +32,7 @@ const locationFormSchema = z.object({
 type LocationFormValues = z.infer<typeof locationFormSchema>;
 
 interface LocationFormProps {
-  initialData?: Partial<Location>;
+  initialData?: Partial<LocalizacaoEstoque>;
   onSuccess?: () => void;
 }
 
