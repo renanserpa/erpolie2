@@ -8,6 +8,7 @@ import { createClient } from "@/lib/supabase/client"; // Importação correta
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Loader2 } from "lucide-react";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 
 export default function LoginPage() {
@@ -23,8 +24,11 @@ export default function LoginPage() {
     setError(null);
     setLoading(true);
 
-    const sanitizedEmail = email.trim().replace(/[<>]/g, "");
+    // Sanitização básica para evitar injeção; substitui '<' por '&lt;'.
+    const sanitizedEmail = email.trim().replace(/</g, "&lt;");
     const sanitizedPassword = password.trim();
+
+    // TODO: aplicar proteção contra brute-force, ex.: @supabase/auth-rate-limit
 
     const { error } = await supabase.auth.signInWithPassword({
       email: sanitizedEmail,
@@ -85,6 +89,7 @@ export default function LoginPage() {
           </CardContent>
           <CardFooter>
             <Button type="submit" className="w-full" disabled={loading}>
+              {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
               {loading ? "Entrando..." : "Entrar"}
             </Button>
           </CardFooter>

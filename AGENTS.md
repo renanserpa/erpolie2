@@ -18,6 +18,7 @@ O agente CODEX é o principal executor de código, refatoração e automação, 
 - Documentar decisões importantes neste arquivo ou no PR.
 - Propor melhorias de automação, scripts de build/test/doc ao identificar demandas.
 - Sinalizar problemas de arquitetura, dependências desatualizadas e más práticas.
+- O fluxo de autenticação ainda não possui proteção contra brute-force. Avaliar integrar `@supabase/auth-rate-limit` no futuro.
 
 3. **Checklist para Tarefas/Commits do CODEX**
 - O código segue os padrões e arquitetura definidos neste repositório?
