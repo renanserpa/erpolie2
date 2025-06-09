@@ -27,26 +27,7 @@ export default function EditSupplierPage() {
       if (result.success) {
         setSupplier(result.data);
       } else {
-        // Criar um fornecedor mockado para demonstração
-        setSupplier({
-          id: params.id,
-          company_name: 'Fornecedor Exemplo',
-          trading_name: 'Nome Fantasia Exemplo',
-          cnpj: '12.345.678/0001-90',
-          email: 'contato@fornecedor.com',
-          phone: '(11) 98765-4321',
-          address: 'Rua Exemplo, 123',
-          city: 'São Paulo',
-          state: 'SP',
-          postal_code: '01234-567',
-          contact_name: 'João Silva',
-          contact_phone: '(11) 91234-5678',
-          notes: 'Este é um fornecedor de demonstração.',
-          is_active: true,
-          created_at: new Date().toISOString()
-        });
-        
-        console.warn('Usando dados mockados para fornecedor');
+        setError('Fornecedor não encontrado.');
       }
     } catch (err: unknown) {
       console.error('Error fetching supplier details:', err);
@@ -107,11 +88,7 @@ export default function EditSupplierPage() {
         </CardHeader>
         <CardContent>
           {supplier && (
-            <SupplierForm 
-              initialData={supplier} 
-              onSuccess={handleSuccess}
-              isEditing={true}
-            />
+            <SupplierForm initialData={supplier} onSuccess={handleSuccess} />
           )}
         </CardContent>
       </Card>

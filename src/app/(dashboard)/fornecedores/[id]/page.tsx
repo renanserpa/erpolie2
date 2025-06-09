@@ -21,29 +21,13 @@ export default function SupplierDetailsPage() {
     try {
       setLoading(true);
       setError(null);
-      
+
       const result = await getRecordById('suppliers', params.id as string);
-      
+
       if (result.success) {
         setSupplier(result.data);
       } else {
-        // Criar um fornecedor mockado para demonstração
-        setSupplier({
-          id: params.id,
-          name: 'Fornecedor Exemplo',
-          fantasy_name: 'Exemplo Ltda',
-          document: '12.345.678/0001-90',
-          email: 'contato@exemplo.com',
-          phone: '(11) 98765-4321',
-          address: 'Rua Exemplo, 123',
-          city: 'São Paulo',
-          state: 'SP',
-          postal_code: '01234-567',
-          notes: 'Este é um fornecedor de demonstração.',
-          created_at: new Date().toISOString()
-        });
-        
-        console.warn('Usando dados mockados para fornecedor');
+        setError('Fornecedor não encontrado.');
       }
     } catch (err: unknown) {
       console.error('Error fetching supplier details:', err);
@@ -52,24 +36,7 @@ export default function SupplierDetailsPage() {
       } else {
         setError('Erro ao carregar detalhes do fornecedor');
       }
-      
-      // Criar um fornecedor mockado para demonstração
-      setSupplier({
-        id: params.id,
-        name: 'Fornecedor Exemplo',
-        fantasy_name: 'Exemplo Ltda',
-        document: '12.345.678/0001-90',
-        email: 'contato@exemplo.com',
-        phone: '(11) 98765-4321',
-        address: 'Rua Exemplo, 123',
-        city: 'São Paulo',
-        state: 'SP',
-        postal_code: '01234-567',
-        notes: 'Este é um fornecedor de demonstração.',
-        created_at: new Date().toISOString()
-      });
-      
-      toast.error('Erro ao carregar detalhes do fornecedor. Exibindo dados de demonstração.');
+      toast.error('Erro ao carregar detalhes do fornecedor.');
     } finally {
       setLoading(false);
     }
