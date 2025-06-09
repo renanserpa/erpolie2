@@ -7,6 +7,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { EntregasTable } from './EntregasTable';
 import { EntregaForm } from './EntregaForm';
 import { ResumoLogistica } from './ResumoLogistica';
+import { DataTable } from "@/components/ui/data-table";
 import { deliveryColumns, type Delivery } from "@/app/(dashboard)/logistica/_components/DeliveryColumns";
 import { deliveryRouteColumns, type DeliveryRoute } from "@/app/(dashboard)/logistica/_components/DeliveryRouteColumns";
 import { DeliveryRouteForm } from "@/app/(dashboard)/logistica/_components/DeliveryRouteForm";
