@@ -76,3 +76,4 @@ Data | Autor | Descrição
 2025-06-10 | CODEX | Módulo de compras validado com integração estoque/financeiro.
 2025-06-10 | CODEX | Módulo financeiro criado com integração de receitas e despesas.
 2025-06-10 | CODEX | Módulo de logística validado com rastreamento de entregas.
+2025-06-10 | CODEX | Módulo de BI validado com dashboards por setor.
