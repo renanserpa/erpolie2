@@ -5,20 +5,14 @@ import { ArrowUpDown, MoreHorizontal, Trash2, Edit } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import type { LocalizacaoEstoque } from "@/modules/estoque/estoque.types";
 
-// Define the data structure for a Location
-export type Location = {
-  id: string;
-  name: string;
-  description?: string | null;
-  capacity?: number | null;
-  is_active?: boolean | null;
-  created_at: string;
-  updated_at?: string | null;
-};
 
 // Define columns as a function to accept callbacks
-export const locationColumns = (onEdit: (location: Location) => void, onDelete: (location: Location) => void): ColumnDef<Location>[] => [
+export const locationColumns = (
+  onEdit: (location: LocalizacaoEstoque) => void,
+  onDelete: (location: LocalizacaoEstoque) => void
+): ColumnDef<LocalizacaoEstoque>[] => [
   {
     id: "select",
     header: ({ table }) => (

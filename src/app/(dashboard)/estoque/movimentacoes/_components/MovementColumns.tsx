@@ -14,9 +14,10 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
+import type { MovimentacaoEstoque } from "@/modules/estoque/estoque.types";
 
 // Define the data structure for a Stock Movement
-export type StockMovement = {
+export type StockMovement = MovimentacaoEstoque & {
   id: string; // UUID
   item_id: string; // Foreign key to stock_items
   item_name?: string; // Added for display
