@@ -39,24 +39,7 @@ export default function EditPurchaseRequestPage() {
       if (result.success) {
         setPurchaseRequest(result.data);
       } else {
-        // Criar uma solicitação de compra mockada para demonstração
-        setPurchaseRequest({
-          id: params.id,
-          status_id: null,
-          requester_id: null,
-          approver_id: null,
-          request_date: new Date().toISOString(),
-          approval_date: null,
-          created_at: new Date().toISOString(),
-          updated_at: new Date().toISOString(),
-          purchase_request_statuses: {
-            id: '123',
-            name: 'Pendente',
-            color: 'yellow'
-          }
-        });
-        
-        console.warn('Usando dados mockados para solicitação de compra');
+        setError(result.error || 'Erro ao buscar solicitação de compra');
       }
       } catch (err: unknown) {
         console.error('Error fetching purchase request details:', err);
