@@ -22,6 +22,7 @@ export type Product = {
   stock_quantity?: number; // Could be calculated or stored
   image_url?: string; // URL from Supabase Storage
   status?: string; // e.g., Ativo, Inativo, Rascunho
+  is_active?: boolean;
   created_at: string;
   // Add other relevant fields like variations, components, etc.
 };

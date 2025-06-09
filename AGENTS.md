@@ -68,3 +68,5 @@ Data | Autor | Descrição
 2025-06-09 | CODEX | Refatorado MovimentacoesEstoquePage para isolar client components e evitar erros de build.
 2025-06-10 | CODEX | Validação completa do módulo de clientes com tipagem e organização.
 2025-06-09 | CODEX | Validação completa do módulo de fornecedores com tipagem e organização.
+
+2025-06-10 | CODEX | Módulo de produtos estruturado com serviço e tipagens. Página integra DataTable.

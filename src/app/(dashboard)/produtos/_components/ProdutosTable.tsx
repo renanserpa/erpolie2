@@ -82,7 +82,7 @@ const produtosData = [
 
 export default function ProdutosTable() {
   const [searchTerm, setSearchTerm] = useState("");
-  const [produtos, setProdutos] = useState(produtosData);
+  const [produtos, setProdutos] = useState<typeof produtosData>(produtosData);
 
   // Filtrar produtos com base no termo de pesquisa
   const filteredProdutos = produtos.filter(
@@ -93,12 +93,12 @@ export default function ProdutosTable() {
   );
 
   // Manipular a exclusão de produto
-  const handleDeleteProduto = (id) => {
+  const handleDeleteProduto = (id: string) => {
     setProdutos(produtos.filter((p) => p.id !== id));
   };
 
   // Formatar preço para exibição
-  const formatPrice = (price) => {
+  const formatPrice = (price: number) => {
     return new Intl.NumberFormat('pt-BR', {
       style: 'currency',
       currency: 'BRL'
