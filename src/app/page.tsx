@@ -2,55 +2,26 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { createClient } from "@/lib/supabase/client";
 import { Loader2 } from "lucide-react";
+import { useAuth } from "@/contexts/auth-context";
 
 export default function Home() {
   const router = useRouter();
-  const supabase = createClient();
-  const [isLoading, setIsLoading] = useState(true);
+  const { user, isLoading } = useAuth();
   const [loadingTimeout, setLoadingTimeout] = useState(false);
-  const [error, setError] = useState<string | null>(null);
   
   useEffect(() => {
-    // Definir um timeout para evitar loop infinito
-    const timer = setTimeout(() => {
-      setLoadingTimeout(true);
-    }, 5000); // 5 segundos de timeout
-    
-    const checkUser = async () => {
-      try {
-        const { data: { user }, error } = await supabase.auth.getUser();
+    const timer = setTimeout(() => setLoadingTimeout(true), 5000);
 
-        if (error) {
-          console.error("Erro ao verificar usuário:", error.message);
-          setError("Não foi possível verificar sua sessão. Por favor, faça login novamente.");
-          router.push("/login");
-          return;
-        }
-
-        if (user) {
-          // Se o usuário estiver autenticado, permanece na página principal (dashboard)
-          // Não redireciona, pois esta já é a página do dashboard
-          setIsLoading(false);
-        } else {
-          // Se não estiver autenticado, redireciona para o login
-          router.push("/login");
-        }
-      } catch (error) {
-        console.error("Erro ao verificar autenticação:", error);
-        setError("Ocorreu um erro ao verificar sua autenticação. Por favor, tente novamente.");
+    if (!isLoading) {
+      if (!user) {
         router.push("/login");
-      } finally {
-        setIsLoading(false);
-        clearTimeout(timer);
       }
-    };
-    
-    checkUser();
-    
+      clearTimeout(timer);
+    }
+
     return () => clearTimeout(timer);
-  }, [router, supabase]);
+  }, [isLoading, user, router]);
   
   // Se o timeout for atingido, mostrar botões de ação alternativa
   if (loadingTimeout) {
@@ -78,24 +49,6 @@ export default function Home() {
     );
   }
   
-  if (error) {
-    return (
-      <div className="flex flex-col items-center justify-center min-h-screen">
-        <div className="text-center">
-          <h1 className="text-2xl font-bold mb-4">Olie ERP</h1>
-          <p className="text-red-500 mb-6">{error}</p>
-          <div className="flex flex-col gap-4">
-            <button 
-              onClick={() => router.push("/login")} 
-              className="px-4 py-2 bg-primary text-white rounded-md"
-            >
-              Ir para a página de login
-            </button>
-          </div>
-        </div>
-      </div>
-    );
-  }
   
   if (isLoading) {
     return (

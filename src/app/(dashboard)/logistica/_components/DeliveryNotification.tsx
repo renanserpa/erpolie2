@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { toast } from "sonner";
 import { createClient } from "@/lib/supabase/client";
+import { useAuth } from "@/contexts/auth-context";
 import { Bell, Send, Loader2, CheckCircle, AlertTriangle } from "lucide-react";
 import { 
   Dialog,
@@ -37,6 +38,7 @@ export function DeliveryNotification({
   statusName
 }: DeliveryNotificationProps) {
   const supabase = createClient();
+  const { user } = useAuth();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [isSending, setIsSending] = useState(false);
   const [notificationText, setNotificationText] = useState('');
@@ -126,7 +128,6 @@ export function DeliveryNotification({
     details: Record<string, any>
   ) {
     try {
-      const { data: { user } } = await supabase.auth.getUser();
       const userId = user?.id || null;
 
       const { error } = await supabase
