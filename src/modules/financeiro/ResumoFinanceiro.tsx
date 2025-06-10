@@ -10,8 +10,9 @@ const formatCurrency = (value: number) =>
   new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(value);
 
 export function ResumoFinanceiro({ data }: ResumoFinanceiroProps) {
-  const receitas = data.filter(t => t.is_income).reduce((sum, t) => sum + t.amount, 0);
-  const despesas = data.filter(t => !t.is_income).reduce((sum, t) => sum + t.amount, 0);
+  const safeData = Array.isArray(data) ? data : [];
+  const receitas = safeData.filter(t => t.is_income).reduce((sum, t) => sum + t.amount, 0);
+  const despesas = safeData.filter(t => !t.is_income).reduce((sum, t) => sum + t.amount, 0);
   const saldo = receitas - despesas;
 
   return (

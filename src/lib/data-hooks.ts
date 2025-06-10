@@ -207,7 +207,7 @@ export const getRecords = async <T>(
       return handleSupabaseError(error);
     }
     
-    return { success: true, data: data as T[] };
+    return { success: true, data: Array.isArray(data) ? (data as T[]) : [] };
   } catch (error) {
     return handleSupabaseError(error);
   }
@@ -272,7 +272,7 @@ export const getStockItems = async (query: Record<string, unknown> = {}) => {
         return handleSupabaseError(error);
       }
       
-      return { success: true, data };
+      return { success: true, data: Array.isArray(data) ? data : [] };
     } catch (error) {
       return handleSupabaseError(error);
     }
@@ -477,7 +477,7 @@ export const getSupplies = async (query: Record<string, unknown> = {}) => {
         return handleSupabaseError(error);
       }
       
-      return { success: true, data };
+      return { success: true, data: Array.isArray(data) ? data : [] };
     } catch (error) {
       return handleSupabaseError(error);
     }
@@ -536,7 +536,7 @@ export const getSupplies = async (query: Record<string, unknown> = {}) => {
       return handleSupabaseError(error);
     }
     
-    return { success: true, data };
+    return { success: true, data: Array.isArray(data) ? data : [] };
   } catch (error) {
     return handleSupabaseError(error);
   }

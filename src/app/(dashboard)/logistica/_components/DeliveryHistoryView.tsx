@@ -42,9 +42,10 @@ export function DeliveryHistoryView({ deliveryId }: DeliveryHistoryViewProps) {
         if (error) throw error;
         
         // Extrair IDs de usuários únicos
-        const userIds = Array.from(new Set(
-          data?.filter(item => item.user_id).map(item => item.user_id) || []
-        )) as string[];
+        const safeData = Array.isArray(data) ? data : [];
+        const userIds = Array.from(
+          new Set(safeData.filter(item => item.user_id).map(item => item.user_id))
+        ) as string[];
         
         // Buscar nomes de usuários se houver IDs
         if (userIds.length > 0) {
