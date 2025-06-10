@@ -6,8 +6,8 @@ export async function middleware(request: NextRequest) {
   try {
     const { supabase, response } = await createSupabaseMiddlewareClient(request);
 
-    // Refresh session if expired - required for Server Components
-    const { data: { session } } = await supabase.auth.getSession();
+    // Obter usuário autenticado de forma segura
+    const { data: { user } } = await supabase.auth.getUser();
 
     // Define public routes (accessible without login)
     const publicRoutes = ["/login", "/register", "/password-reset", "/403"];
@@ -16,18 +16,18 @@ export async function middleware(request: NextRequest) {
     const isPublicRoute = publicRoutes.some(route => request.nextUrl.pathname.startsWith(route));
 
     // If user is not logged in and trying to access a protected route, redirect to login
-    if (!session && !isPublicRoute) {
+    if (!user && !isPublicRoute) {
       return NextResponse.redirect(new URL("/login", request.url));
     }
 
     // If user is logged in and trying to access the login page, redirect to dashboard
-    if (session && request.nextUrl.pathname.startsWith("/login")) {
+    if (user && request.nextUrl.pathname.startsWith("/login")) {
       return NextResponse.redirect(new URL("/", request.url));
     }
 
     // Controle de acesso por perfil
-    if (session) {
-      const userRole = session.user.user_metadata?.role as string | null;
+    if (user) {
+      const userRole = user.user_metadata?.role as string | null;
       if (!canAccessRoute(request.nextUrl.pathname, userRole)) {
         return NextResponse.redirect(new URL("/403", request.url));
       }

@@ -18,18 +18,18 @@ export default function Home() {
       setLoadingTimeout(true);
     }, 5000); // 5 segundos de timeout
     
-    const checkSession = async () => {
+    const checkUser = async () => {
       try {
-        const { data, error } = await supabase.auth.getSession();
-        
+        const { data: { user }, error } = await supabase.auth.getUser();
+
         if (error) {
-          console.error("Erro ao verificar sessão:", error.message);
+          console.error("Erro ao verificar usuário:", error.message);
           setError("Não foi possível verificar sua sessão. Por favor, faça login novamente.");
           router.push("/login");
           return;
         }
-        
-        if (data?.session) {
+
+        if (user) {
           // Se o usuário estiver autenticado, permanece na página principal (dashboard)
           // Não redireciona, pois esta já é a página do dashboard
           setIsLoading(false);
@@ -47,7 +47,7 @@ export default function Home() {
       }
     };
     
-    checkSession();
+    checkUser();
     
     return () => clearTimeout(timer);
   }, [router, supabase]);

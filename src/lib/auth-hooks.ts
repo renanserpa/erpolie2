@@ -20,14 +20,14 @@ export const useAuth = () => {
       try {
         setLoading(true);
         
-        const { data: { session }, error } = await supabase.auth.getSession();
-        
+        const { data: { user }, error } = await supabase.auth.getUser();
+
         if (error) {
           throw error;
         }
-        
-        if (session?.user) {
-          setUser(session.user);
+
+        if (user) {
+          setUser(user);
         } else {
           setUser(null);
         }
@@ -44,10 +44,13 @@ export const useAuth = () => {
     checkUser();
 
     const { data: authListener } = supabase.auth.onAuthStateChange(
-      async (event, session) => {
-        if (session?.user) {
-          setUser(session.user);
-        } else {
+      async (event) => {
+        if (event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED') {
+          const { data: { user } } = await supabase.auth.getUser();
+          if (user) {
+            setUser(user);
+          }
+        } else if (event === 'SIGNED_OUT') {
           setUser(null);
         }
         setLoading(false);
