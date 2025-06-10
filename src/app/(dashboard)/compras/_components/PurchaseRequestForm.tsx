@@ -18,6 +18,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { toast } from "sonner";
 import { createClient } from "@/lib/supabase/client";
+import { useAuth } from "@/contexts/auth-context";
 import { useRouter } from "next/navigation";
 import { PlusCircle, Trash2, Loader2 } from "lucide-react";
 import { InputNumber } from "@/components/ui/input-number";
@@ -52,6 +53,7 @@ interface PurchaseRequestFormProps {
 
 export function PurchaseRequestForm({ initialData, onSuccess }: PurchaseRequestFormProps) {
   const supabase = createClient();
+  const { user } = useAuth();
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
   const [isFetchingData, setIsFetchingData] = useState(true);
@@ -127,7 +129,6 @@ export function PurchaseRequestForm({ initialData, onSuccess }: PurchaseRequestF
   async function onSubmit(values: PurchaseRequestFormValues) {
     setIsLoading(true);
     try {
-      const { data: { user } } = await supabase.auth.getUser();
       if (!user) throw new Error("Usuário não autenticado.");
 
       const requestData = {

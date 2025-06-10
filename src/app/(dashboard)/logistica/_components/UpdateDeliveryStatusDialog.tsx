@@ -25,6 +25,7 @@ import {
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { createClient } from "@/lib/supabase/client";
+import { useAuth } from "@/contexts/auth-context";
 import { Delivery } from "./DeliveryColumns";
 import { toast } from "sonner";
 import { Loader2, Truck, CheckCircle } from 'lucide-react';
@@ -64,7 +65,6 @@ async function addDeliveryHistory(
   details: Record<string, any>
 ) {
   try {
-    const { data: { user } } = await supabase.auth.getUser();
     const userId = user?.id || null;
 
     const { error } = await supabase
@@ -88,13 +88,14 @@ async function addDeliveryHistory(
 
 // --- Component --- 
 
-export function UpdateDeliveryStatusDialog({ 
-  delivery, 
-  open, 
-  onOpenChange, 
-  onSuccess 
+export function UpdateDeliveryStatusDialog({
+  delivery,
+  open,
+  onOpenChange,
+  onSuccess
 }: UpdateDeliveryStatusDialogProps) {
   const supabase = createClient();
+  const { user } = useAuth();
   const [statuses, setStatuses] = React.useState<Status[]>([]);
   const [loadingStatuses, setLoadingStatuses] = React.useState(true);
   const [isSubmitting, setIsSubmitting] = React.useState(false);
