@@ -60,6 +60,7 @@ Este arquivo centraliza os checklists de tarefas, validações e revisões para 
 
 - 2025-06-09: Login module fully validated (CODEX)
 - 2025-06-09: Movimentacoes estoque refatorado para separar lógica client/server (CODEX)
+- 2025-06-14: Rota de movimentações refatorada com wrapper server e componente client isolado (CODEX)
 - 2025-06-10: Módulo de clientes revisado e validado (CODEX)
 - 2025-06-10: Módulo de clientes revisado e validado (CODEX)
 - 2025-06-09: Módulo de fornecedores revisado e validado (CODEX)
