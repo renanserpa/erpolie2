@@ -1,0 +1,101 @@
+table_name,column_name,data_type
+audit_logs,id,uuid
+audit_logs,user_id,uuid
+audit_logs,action,character varying
+audit_logs,table_name,character varying
+audit_logs,record_id,uuid
+audit_logs,old_values,jsonb
+audit_logs,new_values,jsonb
+audit_logs,ip_address,character varying
+audit_logs,user_agent,text
+audit_logs,created_at,timestamp with time zone
+audit_logs,updated_at,timestamp with time zone
+certificates,id,uuid
+certificates,course_id,uuid
+certificates,user_id,uuid
+certificates,issue_date,timestamp with time zone
+certificates,validation_code,character varying
+certificates,status,character varying
+certificates,created_at,timestamp with time zone
+certificates,updated_at,timestamp with time zone
+client_addresses,id,uuid
+client_addresses,client_id,uuid
+client_addresses,address_type,character varying
+client_addresses,address,text
+client_addresses,city,character varying
+client_addresses,state,character varying
+client_addresses,postal_code,character varying
+client_addresses,is_default,boolean
+client_addresses,created_at,timestamp with time zone
+client_addresses,updated_at,timestamp with time zone
+client_categories,id,uuid
+client_categories,name,character varying
+client_categories,description,text
+client_categories,created_at,timestamp with time zone
+client_categories,updated_at,timestamp with time zone
+client_category_relations,client_id,uuid
+client_category_relations,category_id,uuid
+client_category_relations,created_at,timestamp with time zone
+client_category_relations,updated_at,timestamp with time zone
+client_contacts,id,uuid
+client_contacts,client_id,uuid
+client_contacts,name,character varying
+client_contacts,position,character varying
+client_contacts,email,character varying
+client_contacts,phone,character varying
+client_contacts,is_primary,boolean
+client_contacts,created_at,timestamp with time zone
+client_contacts,updated_at,timestamp with time zone
+clients,id,uuid
+clients,name,character varying
+clients,email,character varying
+clients,phone,character varying
+clients,document,character varying
+clients,document_type,character varying
+clients,address,text
+clients,city,character varying
+clients,state,character varying
+clients,postal_code,character varying
+clients,notes,text
+clients,is_active,boolean
+clients,created_at,timestamp with time zone
+clients,updated_at,timestamp with time zone
+component_supplies,id,uuid
+component_supplies,component_id,uuid
+component_supplies,supply_id,uuid
+component_supplies,quantity,numeric
+component_supplies,created_at,timestamp with time zone
+component_supplies,updated_at,timestamp with time zone
+componente_insumo,id,uuid
+componente_insumo,componente_id,uuid
+componente_insumo,insumo_id,uuid
+componente_insumo,quantidade,numeric
+componente_insumo,unidade_medida_id,uuid
+componente_insumo,created_at,timestamp with time zone
+componente_insumo,updated_at,timestamp with time zone
+components,id,uuid
+components,name,character varying
+components,description,text
+components,image_url,text
+components,is_active,boolean
+components,created_at,timestamp with time zone
+components,updated_at,timestamp with time zone
+courses,id,uuid
+courses,title,character varying
+courses,description,text
+courses,hours_duration,integer
+courses,level,character varying
+courses,category,character varying
+courses,status,character varying
+courses,cover_image,text
+courses,division_id,uuid
+courses,created_at,timestamp with time zone
+courses,updated_at,timestamp with time zone
+customers,id,uuid
+customers,name,text
+customers,email,text
+customers,phone,text
+customers,cpf,text
+customers,cnpj,text
+customers,birth_date,date
+customers,address,text
