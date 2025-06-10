@@ -25,7 +25,7 @@ async function getMovements(): Promise<StockMovement[]> {
   return [];
 }
 
-export default function MovementsPageClient() {
+export function MovementsPageClient() {
   const [isFormOpen, setIsFormOpen] = React.useState(false);
   const [movements, setMovements] = React.useState<StockMovement[]>([]);
   // Editing movements is generally not recommended, focus on creation and viewing

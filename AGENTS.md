@@ -80,3 +80,4 @@ Data | Autor | Descrição
 2025-06-11 | CODEX | Módulo de RH estruturado com colaboradores e produtividade.
 2025-06-12 | CODEX | Autenticação passa a usar `supabase.auth.getUser()` para validar usuário, substituindo `getSession` e confiabilidade em eventos.
 2025-06-13 | CODEX | Corrigido erro `AuthSessionMissingError` garantindo que `getUser()` seja chamado apenas após `onAuthStateChange('INITIAL_SESSION')`.
+2025-06-14 | CODEX | Corrigido build de `/estoque/movimentacoes` separando wrapper server e MovementsPageClient.
