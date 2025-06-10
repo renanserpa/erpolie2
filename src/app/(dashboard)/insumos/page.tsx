@@ -1,12 +1,12 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { DataTable } from "@/components/ui/data-table";
-import { columns } from "./_components/InsumoColumns";
+import { insumoColumns } from "./_components/InsumoColumns";
 import { Plus, FileDown, FileUp, Filter } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { useDebounce } from "@/hooks/use-debounce";
@@ -16,16 +16,17 @@ import { saveAs } from 'file-saver';
 import { toast } from "sonner";
 import { InsumoForm } from "./_components/InsumoForm";
 import { getSupplies, useSupabaseData } from "@/lib/data-hooks";
+import type { Insumo } from "@/modules/estoque/estoque.types";
 
 export default function InsumosPage() {
   const router = useRouter();
   const [searchQuery, setSearchQuery] = useState("");
   const [isLoading, setIsLoading] = useState(true);
-  const [insumos, setInsumos] = useState<any[]>([]);
+  const [insumos, setInsumos] = useState<Insumo[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
   const [isFiltersOpen, setIsFiltersOpen] = useState(false);
-  const [activeFilters, setActiveFilters] = useState<Record<string, any>>({});
+  const [activeFilters, setActiveFilters] = useState<Record<string, unknown>>({});
   const [visibleColumns, setVisibleColumns] = useState<string[]>([
     "name", "sku", "quantity", "min_quantity", "unit_of_measurement_id", "supplier_id", "is_active", "actions"
   ]);
@@ -62,6 +63,21 @@ export default function InsumosPage() {
     { id: "is_active", label: "Status" },
     { id: "actions", label: "Ações" }
   ];
+
+  const handleEdit = useCallback((insumo: Insumo) => {
+    router.push(`/insumos/${insumo.id}?edit=1`);
+  }, [router]);
+
+  const handleDelete = useCallback(async (insumo: Insumo) => {
+    if (confirm(`Excluir insumo "${insumo.name}"?`)) {
+      toast.info('Funcionalidade de exclusão não implementada');
+    }
+  }, []);
+
+  const columns = useMemo(
+    () => insumoColumns(handleEdit, handleDelete),
+    [handleEdit, handleDelete]
+  );
 
   // Carregar dados dos insumos
   const fetchInsumos = async () => {
