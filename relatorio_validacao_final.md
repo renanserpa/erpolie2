@@ -18,3 +18,15 @@ Os testes de lint foram executados com sucesso e o build foi executado até a et
 - Serviços atualizados para garantir retorno de arrays com `Array.isArray`.
 - Iniciado ajuste de tipagem nas páginas e formulários.
 
+## Logística
+- Funções de listagem ajustadas com `Array.isArray` e colunas geradas via `useMemo`.
+
+## Auditoria
+- Colunas da tabela agora usam `useMemo` para evitar recriações.
+
+## RH
+- Histórico de produtividade tipado e componentes corrigidos.
+
+## BI
+- Serviços de BI retornam dados tipados e páginas exibem gráficos.
+
