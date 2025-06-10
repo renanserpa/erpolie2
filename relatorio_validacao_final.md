@@ -32,3 +32,4 @@ Os testes de lint foram executados com sucesso e o build foi executado até a et
 
 ## Financeiro
 - Ajustes parciais realizados, porém erros de tipagem persistem e o build falha em `/logistica`.
+

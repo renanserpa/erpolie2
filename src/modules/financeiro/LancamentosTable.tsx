@@ -1,10 +1,11 @@
 "use client";
 import React from 'react';
 import { DataTable } from '@/components/ui/data-table';
-import { transactionColumns, type FinancialTransaction } from '@/app/(dashboard)/financeiro/_components/TransactionColumns';
+import { transactionColumns } from '@/app/(dashboard)/financeiro/_components/TransactionColumns';
+import type { LancamentoFinanceiro } from './financeiro.types';
 
 interface LancamentosTableProps {
-  data: FinancialTransaction[];
+  data: LancamentoFinanceiro[];
   loading?: boolean;
 }
 
