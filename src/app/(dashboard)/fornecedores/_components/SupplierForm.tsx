@@ -46,7 +46,7 @@ interface SupplierFormProps {
 
 export function SupplierForm({ initialData, onSuccess }: SupplierFormProps) {
   const form = useForm<SupplierFormValues>({
-    resolver: zodResolver(supplierFormSchema),
+    resolver: zodResolver<SupplierFormValues>(supplierFormSchema),
     defaultValues: {
       name: initialData?.name || "",
       email: initialData?.email || "",
