@@ -169,7 +169,7 @@ export default function AuditLogPage() {
         return;
       }
       
-      if (!data || data.length === 0) {
+      if (!Array.isArray(data) || data.length === 0) {
         toast.warning('Nenhum log para exportar');
         return;
       }

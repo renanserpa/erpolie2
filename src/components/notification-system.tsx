@@ -111,8 +111,9 @@ export function NotificationProvider({ children }: { children: React.ReactNode }
         
       if (error) throw error;
       
-      setNotifications(data || []);
-      setUnreadCount(data?.filter(n => !n.read).length || 0);
+      const notificationsData = Array.isArray(data) ? data : [];
+      setNotifications(notificationsData);
+      setUnreadCount(notificationsData.filter(n => !n.read).length);
     } catch (error: any) {
       console.error('Erro ao buscar notificações:', error);
     } finally {

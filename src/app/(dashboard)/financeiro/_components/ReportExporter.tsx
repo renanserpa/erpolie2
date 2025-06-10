@@ -24,7 +24,7 @@ export function ReportExporter({
   const [isExporting, setIsExporting] = useState(false);
 
   const handleExport = async () => {
-    if (!data || data.length === 0) {
+    if (!Array.isArray(data) || data.length === 0) {
       toast.error("Não há dados para exportar.");
       return;
     }
