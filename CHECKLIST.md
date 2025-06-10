@@ -82,3 +82,5 @@ Este arquivo centraliza os checklists de tarefas, validações e revisões para 
 - 2025-06-10: RH validado com histórico de produtividade (CODEX)
 - 2025-06-10: BI integrado ao painel com serviços tipados (CODEX)
 
+- 2025-06-10: Correções pendentes impedem build final (CODEX)
+

@@ -11,8 +11,12 @@ const formatCurrency = (value: number) =>
 
 export function ResumoFinanceiro({ data }: ResumoFinanceiroProps) {
   const safeData = Array.isArray(data) ? data : [];
-  const receitas = safeData.filter(t => t.is_income).reduce((sum, t) => sum + t.amount, 0);
-  const despesas = safeData.filter(t => !t.is_income).reduce((sum, t) => sum + t.amount, 0);
+  const receitas = safeData
+    .filter((t) => t.type === 'income')
+    .reduce((sum, t) => sum + t.amount, 0);
+  const despesas = safeData
+    .filter((t) => t.type === 'expense')
+    .reduce((sum, t) => sum + t.amount, 0);
   const saldo = receitas - despesas;
 
   return (

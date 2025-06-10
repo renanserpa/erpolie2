@@ -92,4 +92,5 @@ Data | Autor | Descrição
 2025-06-10 | CODEX | Auditoria recebe colunas memoizadas e tipagens revisadas.
 2025-06-10 | CODEX | Ajustado RH com histórico tipado e imports corretos.
 2025-06-10 | CODEX | BI validado com serviços retornando arrays tipados.
+2025-06-10 | CODEX | Ajustes parciais no financeiro; build falha em /logistica.
 
