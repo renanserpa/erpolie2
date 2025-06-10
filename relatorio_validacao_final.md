@@ -9,3 +9,12 @@ As correções aplicadas incluem:
 - Correção da validação da quantidade na `MovementForm` usando `refine`.
 
 Os testes de lint foram executados com sucesso e o build foi executado até a etapa que revelou outras páginas com problemas não tratados neste ciclo.
+
+## Fornecedores
+- Colunas da tabela agora geradas via `useMemo` e callbacks `handleEdit`/`handleDelete`.
+- Formulário ajustado com `zodResolver` tipado.
+
+## Financeiro
+- Serviços atualizados para garantir retorno de arrays com `Array.isArray`.
+- Iniciado ajuste de tipagem nas páginas e formulários.
+

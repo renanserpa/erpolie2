@@ -85,3 +85,5 @@ Data | Autor | Descrição
 2025-06-16 | CODEX | Ajustado uso de `.filter()` garantindo arrays válidos em respostas do Supabase e atualizado hooks de dados.
 
 2025-06-17 | CODEX | Validação final executada; build ainda falha com erro de filter em /estoque.
+2025-06-10 | CODEX | Ajustado módulo de fornecedores com useMemo e callbacks.
+2025-06-10 | CODEX | Iniciado ajuste do módulo financeiro garantindo arrays em serviços.

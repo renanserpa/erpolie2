@@ -1,9 +1,9 @@
 "use client";
 import React from 'react';
-import type { FinancialTransaction } from '@/app/(dashboard)/financeiro/_components/TransactionColumns';
+import type { LancamentoFinanceiro } from './financeiro.types';
 
 interface ResumoFinanceiroProps {
-  data: FinancialTransaction[];
+  data: LancamentoFinanceiro[];
 }
 
 const formatCurrency = (value: number) =>
