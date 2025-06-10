@@ -17,3 +17,4 @@ Os testes de lint foram executados com sucesso e o build foi executado até a et
 ## Financeiro
 - Serviços atualizados para garantir retorno de arrays com `Array.isArray`.
 - Iniciado ajuste de tipagem nas páginas e formulários.
+
