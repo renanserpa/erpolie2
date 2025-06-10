@@ -24,7 +24,9 @@ import { toast } from "sonner";
 // Define Zod schema para validação do formulário
 const movementFormSchema = z.object({
   stock_item_id: z.string().min(1, { message: "Item de estoque é obrigatório." }),
-  quantity: z.number().nonzero({ message: "Quantidade deve ser diferente de zero." }),
+  quantity: z
+    .number()
+    .refine((val) => val !== 0, { message: "Quantidade deve ser diferente de zero." }),
   movement_type: z.enum(["entrada", "saida", "ajuste", "transferencia"], { 
     required_error: "Tipo de movimentação é obrigatório." 
   }),
