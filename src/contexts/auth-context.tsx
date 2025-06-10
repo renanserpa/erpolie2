@@ -71,17 +71,17 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const loadUserAndPermissions = async () => {
       setIsLoading(true);
       try {
-        // Verificar sessão atual
-        const { data: { session }, error: sessionError }: { data: { session: AuthSession | null }; error: SupabaseAuthError | null } = await supabase.auth.getSession();
-        
-        if (sessionError) {
-          console.error("Erro ao obter sessão:", sessionError);
+        // Verificar usuário autenticado de forma segura
+        const { data: { user }, error: userError } = await supabase.auth.getUser();
+
+        if (userError) {
+          console.error("Erro ao obter usuário:", userError);
           setIsAuthenticated(false);
           setIsLoading(false);
           return;
         }
-        
-        if (!session) {
+
+        if (!user) {
           setUser(null);
           setProfile(null);
           setRoles([]);
@@ -90,8 +90,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
           setIsLoading(false);
           return;
         }
-        
-        setUser(session.user);
+
+        setUser(user);
         setIsAuthenticated(true);
         
         try {
@@ -99,7 +99,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
           const { data: profileData, error: profileError } = await supabase
             .from('user_profiles')
             .select('*')
-            .eq('id', session.user.id)
+            .eq('id', user.id)
             .single();
             
           if (profileError) {
@@ -130,7 +130,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
                 is_active
               )
             `)
-            .eq('user_id', session.user.id);
+            .eq('user_id', user.id);
             
           if (rolesError) {
             console.error("Erro ao carregar roles:", rolesError);
@@ -230,8 +230,12 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const { data: authListener } = supabase.auth.onAuthStateChange(
       async (event) => {
         if (event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED') {
-          setIsAuthenticated(true);
-          await loadUserAndPermissions();
+          const { data: { user } } = await supabase.auth.getUser();
+          if (user) {
+            setUser(user);
+            setIsAuthenticated(true);
+            await loadUserAndPermissions();
+          }
         } else if (event === 'SIGNED_OUT') {
           setUser(null);
           setProfile(null);

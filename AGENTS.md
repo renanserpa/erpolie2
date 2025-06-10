@@ -78,3 +78,4 @@ Data | Autor | Descrição
 2025-06-10 | CODEX | Módulo de logística validado com rastreamento de entregas.
 2025-06-10 | CODEX | Módulo de BI validado com dashboards por setor.
 2025-06-11 | CODEX | Módulo de RH estruturado com colaboradores e produtividade.
+2025-06-12 | CODEX | Autenticação passa a usar `supabase.auth.getUser()` para validar usuário, substituindo `getSession` e confiabilidade em eventos.
