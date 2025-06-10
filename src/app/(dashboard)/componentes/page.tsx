@@ -1,12 +1,12 @@
 "use client";
 
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { DataTable } from "@/components/ui/data-table";
-import { columns } from "./_components/ComponentColumns";
+import { componentColumns } from "./_components/ComponentColumns";
 import { Plus, FileDown, FileUp, Filter } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { useDebounce } from "@/hooks/use-debounce";
@@ -58,6 +58,22 @@ export default function ComponentesPage() {
     { id: "is_active", label: "Status" },
     { id: "actions", label: "Ações" }
   ];
+
+  const handleEdit = useCallback((component: Component) => {
+    router.push(`/componentes/${component.id}?edit=1`);
+  }, [router]);
+
+  const handleDelete = useCallback(async (component: Component) => {
+    if (confirm(`Excluir componente "${component.name}"?`)) {
+      // TODO: implementar deleção via API
+      toast.info('Funcionalidade de exclusão não implementada');
+    }
+  }, []);
+
+  const columns = React.useMemo(
+    () => componentColumns(handleEdit, handleDelete),
+    [handleEdit, handleDelete]
+  );
 
   // Carregar dados dos componentes
   const fetchComponents = useCallback(async () => {

@@ -48,7 +48,7 @@ const financialTransactionSchema = z.object({
   }).default("pending"),
 });
 
-type FinancialTransactionFormValues = z.infer<typeof financialTransactionSchema>;
+export type FinancialTransactionFormValues = z.infer<typeof financialTransactionSchema>;
 
 // --- Types --- 
 

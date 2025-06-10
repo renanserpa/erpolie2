@@ -1,10 +1,10 @@
 "use client";
 import React from 'react';
 import { FinancialTransactionForm } from '@/app/(dashboard)/financeiro/_components/FinancialTransactionForm';
-import type { FinancialTransaction } from '@/app/(dashboard)/financeiro/_components/TransactionColumns';
+import type { FinancialTransactionFormValues } from '@/app/(dashboard)/financeiro/_components/FinancialTransactionForm';
 
 interface ReceitaFormProps {
-  initialData?: Partial<FinancialTransaction> & { id?: string };
+  initialData?: Partial<FinancialTransactionFormValues> & { id?: string };
   onSuccess: () => void;
 }
 

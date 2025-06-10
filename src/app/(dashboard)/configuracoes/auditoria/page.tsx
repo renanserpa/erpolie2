@@ -219,42 +219,45 @@ export default function AuditLogPage() {
   };
   
   // Definir colunas da tabela
-  const columns: ColumnDef<AuditLog>[] = [
-    {
-      accessorKey: 'created_at',
-      header: 'Data',
-      cell: ({ row }) => format(new Date(row.original.created_at), 'dd/MM/yyyy HH:mm:ss', { locale: ptBR }),
-    },
-    {
-      accessorKey: 'user_email',
-      header: 'Usuário',
-    },
-    {
-      accessorKey: 'action_type',
-      header: 'Ação',
-    },
-    {
-      accessorKey: 'entity_type',
-      header: 'Entidade',
-    },
-    {
-      accessorKey: 'entity_id',
-      header: 'ID Entidade',
-      cell: ({ row }) => row.original.entity_id || '-',
-    },
-    {
-      id: 'actions',
-      cell: ({ row }) => (
-        <Button 
-          variant="ghost" 
-          size="icon" 
-          onClick={() => viewLogDetails(row.original.id)}
-        >
-          <Eye className="h-4 w-4" />
-        </Button>
-      ),
-    },
-  ];
+  const columns = React.useMemo<ColumnDef<AuditLog>[]>(
+    () => [
+      {
+        accessorKey: 'created_at',
+        header: 'Data',
+        cell: ({ row }) => format(new Date(row.original.created_at), 'dd/MM/yyyy HH:mm:ss', { locale: ptBR }),
+      },
+      {
+        accessorKey: 'user_email',
+        header: 'Usuário',
+      },
+      {
+        accessorKey: 'action_type',
+        header: 'Ação',
+      },
+      {
+        accessorKey: 'entity_type',
+        header: 'Entidade',
+      },
+      {
+        accessorKey: 'entity_id',
+        header: 'ID Entidade',
+        cell: ({ row }) => row.original.entity_id || '-',
+      },
+      {
+        id: 'actions',
+        cell: ({ row }) => (
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => viewLogDetails(row.original.id)}
+          >
+            <Eye className="h-4 w-4" />
+          </Button>
+        ),
+      },
+    ],
+    [viewLogDetails]
+  );
   
   // Renderizar componente
   return (

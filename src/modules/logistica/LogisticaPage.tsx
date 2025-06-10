@@ -82,17 +82,23 @@ async function getDeliveries(supabase: ReturnType<typeof createClient>, filters:
     return [];
   }
 
-  const mappedData = data?.map(item => ({
-    id: item.id,
-    order_id: item.order_id,
-    order_ref: `Pedido #${item.order_id?.substring(0, 8)}...`, // Placeholder ref
-    delivery_date: item.delivery_date,
-    driver_id: item.driver_id,
-    driver_name: `Motorista ${item.driver_id?.substring(0, 5)}...`, // Placeholder name
-    status_id: item.status_id,
-    status_name: (item.status as { name: string })?.name || 'Desconhecido',
-    created_at: item.created_at,
-  })) || [];
+  const mappedData = (Array.isArray(data) ? data : []).map((item) => {
+    const statusInfo = Array.isArray((item as any).status)
+      ? (item as any).status[0]
+      : (item as any).status;
+
+    return {
+      id: item.id,
+      order_id: item.order_id,
+      order_ref: `Pedido #${item.order_id?.substring(0, 8)}...`,
+      delivery_date: item.delivery_date,
+      driver_id: item.driver_id,
+      driver_name: `Motorista ${item.driver_id?.substring(0, 5)}...`,
+      status_id: item.status_id,
+      status_name: (statusInfo as { name?: string })?.name || 'Desconhecido',
+      created_at: item.created_at,
+    };
+  });
 
   return mappedData;
 }
@@ -442,6 +448,22 @@ export default function LogisticaPage() {
     toast.warning("Funcionalidade de visualização de detalhes ainda não implementada completamente.");
   };
 
+  const handleEditRoute = (route: DeliveryRoute) => {
+    toast.info(`Edição da rota ${route.id.substring(0, 8)}... solicitada.`);
+    toast.warning("Funcionalidade de edição ainda não implementada completamente.");
+  };
+
+  const handleDeleteRoute = (route: DeliveryRoute) => {
+    if (confirm(`Excluir a rota ${route.route_name}?`)) {
+      toast.warning("Funcionalidade de exclusão ainda não implementada completamente.");
+    }
+  };
+
+  const routeColumns = React.useMemo(
+    () => deliveryRouteColumns(handleEditRoute, handleDeleteRoute),
+    [handleEditRoute, handleDeleteRoute]
+  );
+
   // Table meta for actions
   const deliveryTableMeta = {
     updateStatus: handleUpdateDeliveryStatus,
@@ -497,9 +519,9 @@ export default function LogisticaPage() {
               filterOptions={dynamicRouteFilterOptions} 
               onFilterChange={handleRouteFilterChange}
             />
-            <DataTable 
-              columns={deliveryRouteColumns} 
-              data={routes} 
+            <DataTable
+              columns={routeColumns}
+              data={routes}
               loading={loadingRoutes}
             />
           </div>

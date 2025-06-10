@@ -1,12 +1,12 @@
 "use client";
 
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { DataTable } from "@/components/ui/data-table";
-import { columns } from "@/app/(dashboard)/estoque/_components/StockItemColumns";
+import { stockItemColumns } from "@/app/(dashboard)/estoque/_components/StockItemColumns";
 import { Plus, FileDown, FileUp, Filter } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { useDebounce } from "@/hooks/use-debounce";
@@ -64,6 +64,21 @@ export default function EstoquePage() {
     { id: "is_active", label: "Status" },
     { id: "actions", label: "Ações" }
   ];
+
+  const handleEdit = useCallback((item: Insumo) => {
+    router.push(`/estoque/${item.id}?edit=1`);
+  }, [router]);
+
+  const handleDelete = useCallback(async (item: Insumo) => {
+    if (confirm(`Excluir item "${item.name}"?`)) {
+      toast.info('Funcionalidade de exclusão não implementada');
+    }
+  }, []);
+
+  const columns = useMemo(
+    () => stockItemColumns(handleEdit, handleDelete),
+    [handleEdit, handleDelete]
+  );
 
   // Carregar dados dos itens de estoque
   const loadStockItems = useCallback(async () => {

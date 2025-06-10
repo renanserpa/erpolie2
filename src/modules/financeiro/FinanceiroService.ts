@@ -19,7 +19,8 @@ export async function fetchLancamentos(query: Record<string, unknown> = {}) {
 
     const { data, error } = await builder;
     if (error) return handleSupabaseError(error);
-    return { success: true, data } as { success: true; data: LancamentoFinanceiro[] };
+    const safeData = Array.isArray(data) ? (data as LancamentoFinanceiro[]) : [];
+    return { success: true, data: safeData };
   } catch (error) {
     return handleSupabaseError(error);
   }
@@ -45,7 +46,8 @@ export async function fetchCategorias() {
       .select('id,name')
       .order('name');
     if (error) return handleSupabaseError(error);
-    return { success: true, data } as { success: true; data: Categoria[] };
+    const safeData = Array.isArray(data) ? (data as Categoria[]) : [];
+    return { success: true, data: safeData };
   } catch (error) {
     return handleSupabaseError(error);
   }
@@ -60,7 +62,8 @@ export async function fetchFormasPagamento() {
       .eq('is_active', true)
       .order('name');
     if (error) return handleSupabaseError(error);
-    return { success: true, data } as { success: true; data: FormaDePagamento[] };
+    const safeData = Array.isArray(data) ? (data as FormaDePagamento[]) : [];
+    return { success: true, data: safeData };
   } catch (error) {
     return handleSupabaseError(error);
   }

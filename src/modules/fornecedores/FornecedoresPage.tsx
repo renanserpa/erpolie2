@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useCallback, useEffect } from "react";
+import React, { useState, useCallback, useEffect, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -139,11 +139,20 @@ export default function FornecedoresPage() {
     toast.success("Fornecedor criado com sucesso!");
   };
 
-  const handleSupplierClick = (supplierId: string) => {
-    router.push(`/fornecedores/${supplierId}`);
-  };
+  const handleEdit = useCallback((supplier: Supplier) => {
+    router.push(`/fornecedores/${supplier.id}?edit=1`);
+  }, [router]);
 
-  const columns = supplierColumns(() => {}, () => {});
+  const handleDelete = useCallback(async (supplier: Supplier) => {
+    if (confirm(`Excluir fornecedor "${supplier.name}"?`)) {
+      toast.info('Funcionalidade de exclusão não implementada');
+    }
+  }, []);
+
+  const columns = useMemo(
+    () => supplierColumns(handleEdit, (id, name) => handleDelete({ id, name } as Supplier)),
+    [handleEdit, handleDelete]
+  );
 
   return (
     <div className="space-y-4">
