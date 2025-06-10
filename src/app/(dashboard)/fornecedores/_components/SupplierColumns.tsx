@@ -17,24 +17,7 @@ import { Badge } from "@/components/ui/badge";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
-// Tipagem do fornecedor
-export type Supplier = {
-  id: string;
-  name: string;
-  fantasy_name?: string | null;
-  document?: string | null; // CNPJ
-  email?: string | null;
-  phone?: string | null;
-  address?: string | null;
-  city?: string | null;
-  state?: string | null;
-  postal_code?: string | null;
-  contact_name?: string | null;
-  notes?: string | null;
-  is_active: boolean;
-  created_at: string;
-  updated_at?: string | null;
-};
+import type { Supplier } from "@/types/schema";
 
 // Função auxiliar para exclusão
 const handleDeleteSupplier = async (
