@@ -11,11 +11,12 @@ import Link from "next/link";
 // Define the data structure for a Delivery Route based on the actual database schema
 export type DeliveryRoute = {
   id: string;
-  name: string;
-  description?: string | null;
-  delivery_date: string;
-  status: string;
+  route_name: string;
+  route_date: string;
+  driver_id?: string | null;
   driver_name?: string | null;
+  status?: string;
+  description?: string | null;
   vehicle_info?: string | null;
   notes?: string | null;
   created_by?: string | null;
@@ -47,7 +48,7 @@ export const deliveryRouteColumns = (
     enableHiding: false,
   },
   {
-    accessorKey: "name",
+    accessorKey: "route_name",
     header: ({ column }) => {
       return (
         <Button
@@ -61,7 +62,7 @@ export const deliveryRouteColumns = (
     },
     cell: ({ row }) => (
       <Link href={`/logistica/rotas/${row.original.id}`} className="font-medium text-blue-600 hover:underline">
-        {row.getValue("name")}
+        {row.getValue("route_name")}
       </Link>
     ),
   },

@@ -295,6 +295,26 @@ export interface FinancialTransaction {
   } | null;
 }
 
+export interface FinancialCategory {
+  id: string;
+  name: string;
+  parent_id?: string | null;
+  type_id?: string | null;
+  created_at: string;
+  updated_at: string;
+  deleted_at?: string | null;
+}
+
+export interface PaymentMethod {
+  id: string;
+  name: string;
+  description?: string | null;
+  is_active: boolean;
+  created_at: string;
+  updated_at: string;
+  deleted_at?: string | null;
+}
+
 export interface Division {
   id: string;
   name: string;
