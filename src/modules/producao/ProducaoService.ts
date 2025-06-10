@@ -1,7 +1,6 @@
 import { createClient } from '@/lib/supabase/client';
 import { handleSupabaseError } from '@/lib/data-hooks';
-import type { EtapaDeProducao } from './producao.types';
-import type { ProductionOrder } from '@/app/(dashboard)/producao/_components/columns';
+import type { EtapaDeProducao, OrdemDeProducao } from './producao.types';
 
 export async function fetchOrdensProducao(query: Record<string, unknown> = {}) {
   try {
@@ -21,7 +20,7 @@ export async function fetchOrdensProducao(query: Record<string, unknown> = {}) {
 
     const { data, error } = await builder;
     if (error) return handleSupabaseError(error);
-    return { success: true, data } as { success: true; data: ProductionOrder[] };
+    return { success: true, data } as { success: true; data: OrdemDeProducao[] };
   } catch (error) {
     return handleSupabaseError(error);
   }

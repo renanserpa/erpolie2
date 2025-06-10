@@ -83,3 +83,5 @@ Data | Autor | Descrição
 2025-06-14 | CODEX | Corrigido build de `/estoque/movimentacoes` separando wrapper server e MovementsPageClient.
 2025-06-15 | CODEX | Otimizado contexto de autenticação e componentes para reduzir chamadas a supabase.auth.getUser e centralizar uso do hook useAuth.
 2025-06-16 | CODEX | Ajustado uso de `.filter()` garantindo arrays válidos em respostas do Supabase e atualizado hooks de dados.
+
+2025-06-17 | CODEX | Validação final executada; build ainda falha com erro de filter em /estoque.
