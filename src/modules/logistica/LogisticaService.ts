@@ -67,11 +67,19 @@ export async function fetchRotas(query: Record<string, unknown> = {}) {
 }
 
 export async function createEntrega(values: EntregaFormValues) {
-  return createRecord<Entrega>('deliveries', values);
+  const payload = {
+    ...values,
+    delivery_date: values.delivery_date.toISOString(),
+  };
+  return createRecord<Entrega>('deliveries', payload);
 }
 
 export async function updateEntrega(id: string, values: EntregaFormValues) {
-  return updateRecord<Entrega>('deliveries', id, values);
+  const payload = {
+    ...values,
+    delivery_date: values.delivery_date.toISOString(),
+  };
+  return updateRecord<Entrega>('deliveries', id, payload);
 }
 
 export async function deleteEntrega(id: string) {
@@ -79,11 +87,13 @@ export async function deleteEntrega(id: string) {
 }
 
 export async function createRota(values: RotaFormValues) {
-  return createRecord<Rota>('delivery_routes', values);
+  const payload = { ...values, route_date: values.route_date.toISOString() };
+  return createRecord<Rota>('delivery_routes', payload);
 }
 
 export async function updateRota(id: string, values: RotaFormValues) {
-  return updateRecord<Rota>('delivery_routes', id, values);
+  const payload = { ...values, route_date: values.route_date.toISOString() };
+  return updateRecord<Rota>('delivery_routes', id, payload);
 }
 
 export async function deleteRota(id: string) {

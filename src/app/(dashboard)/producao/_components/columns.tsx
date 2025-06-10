@@ -8,25 +8,8 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Badge } from "@/components/ui/badge";
 // Import the dialog component
-import { UpdateProductionStatusDialog } from "./UpdateProductionStatusDialog"; 
-// TODO: Import ProductionOrderForm and DeleteProductionOrderAlert if needed for actions
-
-// Define the data structure for a Production Order based on Mapeamento de Dados
-export type ProductionOrder = {
-  id: string; // UUID
-  order_id: string; // UUID from orders table
-  order_ref?: string; // User-friendly reference from the linked order
-  status_id: string; // UUID, needs join to get status name
-  status_name?: string; // Added for display
-  status_color?: string; // Added for badge color
-  priority_id?: string; // UUID, needs join to get priority name
-  priority_name?: string; // Added for display
-  priority_color?: string; // Added for badge color
-  start_date?: string; // Date/Timestamp
-  end_date?: string; // Date/Timestamp
-  created_at: string;
-  // Add other relevant fields like assigned user, current stage, etc.
-};
+import { UpdateProductionStatusDialog } from "./UpdateProductionStatusDialog";
+import type { OrdemDeProducao } from "@/modules/producao/producao.types";
 
 // Helper function to format dates (optional)
 const formatDate = (dateString: string | null | undefined) => {
@@ -39,7 +22,7 @@ const formatDate = (dateString: string | null | undefined) => {
 };
 
 // Define columns with type annotation including meta
-export const columns: ColumnDef<ProductionOrder, any>[] = [
+export const columns: ColumnDef<OrdemDeProducao, any>[] = [
   {
     id: "select",
     header: ({ table }) => (

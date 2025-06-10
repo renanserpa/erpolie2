@@ -33,7 +33,7 @@ export const handleSupabaseError = (error: unknown) => {
   const message = errorMessages[pgError] || 'Erro ao acessar o banco de dados.';
   
   toast.error(message);
-  return { success: false, error: message };
+  return { success: false, error: message } as const;
 };
 
 // Função para criar um novo registro
