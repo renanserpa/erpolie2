@@ -83,4 +83,5 @@ Este arquivo centraliza os checklists de tarefas, validações e revisões para 
 - 2025-06-10: BI integrado ao painel com serviços tipados (CODEX)
 
 - 2025-06-10: Correções pendentes impedem build final (CODEX)
+ 2025-06-18: Nova tentativa de estabilização, build ainda falha em /logistica e persiste erros de tipagem (CODEX)
 
