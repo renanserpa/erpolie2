@@ -93,4 +93,5 @@ Data | Autor | Descrição
 2025-06-10 | CODEX | Ajustado RH com histórico tipado e imports corretos.
 2025-06-10 | CODEX | BI validado com serviços retornando arrays tipados.
 2025-06-10 | CODEX | Ajustes parciais no financeiro; build falha em /logistica.
+2025-06-18 | CODEX | Nova tentativa de estabilização final. Corrigidos formulários duplicados no módulo financeiro. Type-check e build ainda apresentam falhas, especialmente em /logistica.
 
