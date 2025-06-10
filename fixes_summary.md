@@ -9,3 +9,5 @@
 - Auditoria agora utiliza `useMemo` para colunas e tipagem estável.
 - RH revisado para garantir históricos corretos.
 - BI com serviços tipados e exportação CSV funcional.
+- Serviços financeiros retornam arrays seguros e tipagem iniciada.
+
