@@ -224,18 +224,15 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       }
     };
     
-    loadUserAndPermissions();
-    
-    // Configurar listener para mudanças de autenticação
+    // Configurar listener para mudanças de autenticação e sessão inicial
     const { data: authListener } = supabase.auth.onAuthStateChange(
       async (event) => {
-        if (event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED') {
-          const { data: { user } } = await supabase.auth.getUser();
-          if (user) {
-            setUser(user);
-            setIsAuthenticated(true);
-            await loadUserAndPermissions();
-          }
+        if (
+          event === 'INITIAL_SESSION' ||
+          event === 'SIGNED_IN' ||
+          event === 'TOKEN_REFRESHED'
+        ) {
+          await loadUserAndPermissions();
         } else if (event === 'SIGNED_OUT') {
           setUser(null);
           setProfile(null);
@@ -243,6 +240,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
           setPermissions([]);
           setModules([]);
           setIsAuthenticated(false);
+          setIsLoading(false);
         }
       }
     );
