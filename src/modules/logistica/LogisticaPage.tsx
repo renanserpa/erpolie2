@@ -4,7 +4,7 @@ import React from 'react';
 import { Button } from "@/components/ui/button";
 import { PlusCircle, Truck, Map, Upload, Download } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { EntregasTable } from './EntregasTable';
+import { EntregasTable } from './components/EntregasTable';
 import { EntregaForm } from './EntregaForm';
 import { ResumoLogistica } from './ResumoLogistica';
 import { DataTable } from "@/components/ui/data-table";

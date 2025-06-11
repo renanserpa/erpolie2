@@ -1,7 +1,8 @@
 import { createClient } from '@/lib/supabase/client';
 import { handleSupabaseError, createRecord, updateRecord, deleteRecord } from '@/lib/data-hooks';
 import type { LancamentoFormValues } from './financeiro.schema';
-import type { LancamentoFinanceiro, Categoria, FormaDePagamento } from './financeiro.types';
+import type { FinancialTransaction } from "@/app/(dashboard)/financeiro/_components/TransactionColumns";
+import type { Categoria, FormaDePagamento } from './financeiro.types';
 
 export async function fetchLancamentos(query: Record<string, unknown> = {}) {
   try {
@@ -19,7 +20,7 @@ export async function fetchLancamentos(query: Record<string, unknown> = {}) {
 
     const { data, error } = await builder;
     if (error) return handleSupabaseError(error);
-    const safeData = Array.isArray(data) ? (data as LancamentoFinanceiro[]) : [];
+    const safeData = Array.isArray(data) ? (data as FinancialTransaction[]) : [];
     return { success: true, data: safeData };
   } catch (error) {
     return handleSupabaseError(error);
@@ -27,11 +28,11 @@ export async function fetchLancamentos(query: Record<string, unknown> = {}) {
 }
 
 export async function createLancamento(data: LancamentoFormValues) {
-  return createRecord<LancamentoFinanceiro>('financial_transactions', data);
+  return createRecord<FinancialTransaction>('financial_transactions', data);
 }
 
 export async function updateLancamento(id: string, data: LancamentoFormValues) {
-  return updateRecord<LancamentoFinanceiro>('financial_transactions', id, data);
+  return updateRecord<FinancialTransaction>('financial_transactions', id, data);
 }
 
 export async function deleteLancamento(id: string) {

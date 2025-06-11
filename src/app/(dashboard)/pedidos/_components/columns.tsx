@@ -5,22 +5,9 @@ import { ArrowUpDown, MoreHorizontal } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import type { Order } from "@/types/schema";
 // TODO: Import OrderForm and DeleteOrderAlert if needed for actions
 
-// Define the data structure for an Order based on Mapeamento de Dados
-export type Order = {
-  id: string; // UUID
-  customer_id: string; // UUID, needs join to get customer name
-  customer_name?: string; // Added for display
-  date: string; // Date/Timestamp
-  status_id: string; // UUID, needs join to get status name
-  status_name?: string; // Added for display
-  total_amount: number;
-  channel_id?: string; // UUID, needs join to get channel name
-  channel_name?: string; // Added for display
-  created_at: string;
-  // Add other relevant fields from the mapping
-};
 
 export const columns: ColumnDef<Order>[] = [
   {
