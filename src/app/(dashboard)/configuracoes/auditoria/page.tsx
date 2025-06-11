@@ -65,21 +65,8 @@ export default function AuditLogPage() {
   const [selectedLog, setSelectedLog] = useState<AuditLog | null>(null);
   const [isDetailsOpen, setIsDetailsOpen] = useState(false);
   
-  // Verificar permissão
-  if (!hasPermission('permissions.manage')) {
-    return (
-      <div className="flex items-center justify-center h-full">
-        <Card className="w-full max-w-md">
-          <CardHeader>
-            <CardTitle>Acesso Negado</CardTitle>
-            <CardDescription>
-              Você não tem permissão para acessar esta página.
-            </CardDescription>
-          </CardHeader>
-        </Card>
-      </div>
-    );
-  }
+  // Verificar permissão antecipadamente
+  const accessDenied = !hasPermission('permissions.manage');
   
   // Buscar logs
   const fetchLogs = async () => {
@@ -258,6 +245,21 @@ export default function AuditLogPage() {
     ],
     [viewLogDetails]
   );
+
+  if (accessDenied) {
+    return (
+      <div className="flex items-center justify-center h-full">
+        <Card className="w-full max-w-md">
+          <CardHeader>
+            <CardTitle>Acesso Negado</CardTitle>
+            <CardDescription>
+              Você não tem permissão para acessar esta página.
+            </CardDescription>
+          </CardHeader>
+        </Card>
+      </div>
+    );
+  }
   
   // Renderizar componente
   return (

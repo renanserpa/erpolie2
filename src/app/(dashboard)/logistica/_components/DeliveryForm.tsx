@@ -200,9 +200,8 @@ export function DeliveryForm({ onSuccess, initialData }: DeliveryFormProps) {
           render={({ field }) => (
             <FormItem className="flex flex-col">
               <FormLabel>Data da Entrega *</FormLabel>
-              <Popover>
-                <PopoverTrigger asChild>
-                  <FormControl>
+                <Popover>
+                  <PopoverTrigger><FormControl>
                     <Button
                       variant={"outline"}
                       className={cn(
@@ -218,9 +217,8 @@ export function DeliveryForm({ onSuccess, initialData }: DeliveryFormProps) {
                       )}
                       <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
                     </Button>
-                  </FormControl>
-                </PopoverTrigger>
-                <PopoverContent className="w-auto p-0" align="start">
+                  </FormControl></PopoverTrigger>
+                  <PopoverContent className="w-auto p-0" align="start">
                   <Calendar
                     mode="single"
                     selected={field.value}
