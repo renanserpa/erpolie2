@@ -75,6 +75,7 @@ Este arquivo centraliza os checklists de tarefas, validações e revisões para 
 - 2025-06-10: Módulo de BI validado com dashboards interativos (CODEX)
 - 2025-06-11: Módulo de RH estruturado e validado (CODEX)
 - 2025-06-10: Ajuste nas colunas e validação do módulo de fornecedores (CODEX)
+- 2025-06-11: Módulo de fornecedores validado com tipagem completa (CODEX)
 - 2025-06-10: Iniciada correção do módulo financeiro com tipagem forte (CODEX)
 
 - 2025-06-10: Módulo de logística revisado e colunas padronizadas (CODEX)

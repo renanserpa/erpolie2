@@ -2,7 +2,7 @@
 
 import React from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
+import { useForm, type SubmitHandler, type Resolver } from "react-hook-form";
 import * as z from "zod";
 import { Button } from "@/components/ui/button";
 import {
@@ -46,7 +46,7 @@ interface SupplierFormProps {
 
 export function SupplierForm({ initialData, onSuccess }: SupplierFormProps) {
   const form = useForm<SupplierFormValues>({
-    resolver: zodResolver<SupplierFormValues>(supplierFormSchema),
+    resolver: zodResolver(supplierFormSchema) as Resolver<SupplierFormValues>,
     defaultValues: {
       name: initialData?.name || "",
       email: initialData?.email || "",
@@ -62,7 +62,7 @@ export function SupplierForm({ initialData, onSuccess }: SupplierFormProps) {
     },
   });
 
-  async function onSubmit(values: SupplierFormValues) {
+  const onSubmit: SubmitHandler<SupplierFormValues> = async (values) => {
     try {
       // Preparar dados para envio
       const supplierData = {
@@ -173,9 +173,9 @@ export function SupplierForm({ initialData, onSuccess }: SupplierFormProps) {
         </div>
 
         {/* Endereço */}
-        <FormField
-          control={form.control}
-          name="address"
+          <FormField
+            control={form.control}
+            name="address"
           render={({ field }) => (
             <FormItem>
               <FormLabel>Endereço</FormLabel>
@@ -189,7 +189,7 @@ export function SupplierForm({ initialData, onSuccess }: SupplierFormProps) {
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           {/* Cidade */}
-          <FormField
+            <FormField
             control={form.control}
             name="city"
             render={({ field }) => (
