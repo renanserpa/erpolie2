@@ -13,6 +13,7 @@ Os testes de lint foram executados com sucesso e o build foi executado até a et
 ## Fornecedores
 - Colunas da tabela agora geradas via `useMemo` e callbacks `handleEdit`/`handleDelete`.
 - Formulário ajustado com `zodResolver` tipado.
+- Validação final do módulo concluída. `npm run type-check` sem erros para fornecedores.
 
 ## Clientes
 - Diretórios de clientes revisados e tipados. `type-check` executa sem erros no módulo.

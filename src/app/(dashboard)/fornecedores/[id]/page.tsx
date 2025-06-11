@@ -22,10 +22,13 @@ export default function SupplierDetailsPage() {
       setLoading(true);
       setError(null);
 
-      const result = await getRecordById('suppliers', params.id as string);
+      const result = await getRecordById<Supplier>(
+        'suppliers',
+        params.id as string
+      );
 
       if (result.success) {
-        setSupplier(result.data);
+        setSupplier(result.data ?? null);
       } else {
         setError('Fornecedor não encontrado.');
       }

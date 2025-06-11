@@ -17,7 +17,7 @@ import {
 } from "@/components/ui/dialog";
 import { useDebounce } from "@/hooks/use-debounce";
 import { AdvancedFilters, type FilterOption } from "@/components/ui/advanced-filters";
-import Papa from "papaparse";
+import Papa, { type ParseError, type ParseResult } from "papaparse";
 import { saveAs } from "file-saver";
 import { toast } from "sonner";
 import { SupplierForm } from "@/app/(dashboard)/fornecedores/_components/SupplierForm";
@@ -119,9 +119,9 @@ export default function FornecedoresPage() {
   const importFromCSV = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (!file) return;
-    Papa.parse(file, {
+    Papa.parse<Record<string, unknown>>(file, {
       header: true,
-      complete: async (results) => {
+      complete: (results) => {
         toast.success(`${results.data.length} fornecedores importados com sucesso!`);
         fetchSuppliers();
       },
@@ -143,14 +143,14 @@ export default function FornecedoresPage() {
     router.push(`/fornecedores/${supplier.id}?edit=1`);
   }, [router]);
 
-  const handleDelete = useCallback(async (supplier: Supplier) => {
-    if (confirm(`Excluir fornecedor "${supplier.name}"?`)) {
+  const handleDelete = useCallback(async (id: string, name: string) => {
+    if (confirm(`Excluir fornecedor "${name}"?`)) {
       toast.info('Funcionalidade de exclusão não implementada');
     }
   }, []);
 
   const columns = useMemo(
-    () => supplierColumns(handleEdit, (id, name) => handleDelete({ id, name } as Supplier)),
+    () => supplierColumns(handleEdit, handleDelete),
     [handleEdit, handleDelete]
   );
 
