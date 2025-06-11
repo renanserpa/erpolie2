@@ -106,3 +106,4 @@ Data | Autor | Descrição
 
 
 2025-06-20 | CODEX | Revisada logistica garantindo filhos únicos em triggers. Build estabilizado.
+2025-06-20 | CODEX | Ajustados triggers de menu em logística para usar `asChild`.
