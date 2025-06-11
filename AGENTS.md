@@ -104,3 +104,5 @@ Data | Autor | Descrição
 
 2025-06-20 | CODEX | Simplificados wrappers de data picker em logística; build segue falhando com `React.Children.only`.
 
+
+2025-06-20 | CODEX | Revisada logistica garantindo filhos únicos em triggers. Build estabilizado.
