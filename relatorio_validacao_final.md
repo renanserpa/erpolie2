@@ -14,6 +14,9 @@ Os testes de lint foram executados com sucesso e o build foi executado até a et
 - Colunas da tabela agora geradas via `useMemo` e callbacks `handleEdit`/`handleDelete`.
 - Formulário ajustado com `zodResolver` tipado.
 
+## Clientes
+- Diretórios de clientes revisados e tipados. `type-check` executa sem erros no módulo.
+
 ## Financeiro
 - Serviços atualizados para garantir retorno de arrays com `Array.isArray`.
 - Iniciado ajuste de tipagem nas páginas e formulários.
