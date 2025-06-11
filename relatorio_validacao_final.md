@@ -50,3 +50,4 @@ Apesar das correções adicionais nos formulários de receitas e despesas, o `ty
 2025-06-20: Triggers corrigidos garantindo filho único; build agora finaliza sem erros.
 2025-06-20: Ajustados menus dropdown com `asChild` no módulo de logística.
 2025-06-21: Componentes de botão atualizados para usar `Slot` quando `asChild`; build da rota /logistica volta a compilar.
+2025-06-22: Revisão completa das bibliotecas e layouts globais. FormControl do AdvancedFilters pode estar gerando React.Children.only quando option.type inesperado.
