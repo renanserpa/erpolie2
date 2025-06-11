@@ -12,6 +12,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { useDebounce } from "@/hooks/use-debounce";
 import { AdvancedFilters, type FilterOption } from "@/components/ui/advanced-filters";
 import Papa from 'papaparse';
+import type { ParseResult } from 'papaparse';
 import { saveAs } from 'file-saver';
 import { toast } from "sonner";
 import { StockItemForm } from "@/app/(dashboard)/estoque/_components/StockItemForm";
@@ -113,9 +114,10 @@ export default function EstoquePage() {
 
       if (result.success) {
         setStockItems(result.data || []);
+        setError(null);
       } else {
         setStockItems([]);
-        setError(result.error || 'Erro ao buscar itens de estoque');
+        setError('error' in result ? result.error : 'Erro ao buscar itens de estoque');
       }
     } catch (err: unknown) {
       const error = err instanceof Error ? err : new Error('Unknown error');
@@ -163,7 +165,7 @@ export default function EstoquePage() {
 
     Papa.parse(file, {
       header: true,
-      complete: async (results) => {
+      complete: async (results: ParseResult<Record<string, unknown>>) => {
         try {
           // Aqui você implementaria a lógica para salvar os itens importados
           // Por enquanto, apenas mostramos uma mensagem de sucesso
@@ -275,7 +277,7 @@ export default function EstoquePage() {
           {isFiltersOpen && (
             <div className="mb-6">
               <AdvancedFilters
-                options={filterOptions}
+                filterOptions={filterOptions}
                 onFilterChange={setActiveFilters}
                 columnOptions={columnOptions}
                 visibleColumns={visibleColumns}
@@ -297,7 +299,7 @@ export default function EstoquePage() {
           )}
 
           <DataTable
-            columns={columns.filter(col => visibleColumns.includes(col.id))}
+            columns={columns.filter(col => typeof col.id === 'string' && visibleColumns.includes(col.id))}
             data={stockItems}
             loading={isLoading}
             onRowClick={(row) => handleItemClick(row.id)}

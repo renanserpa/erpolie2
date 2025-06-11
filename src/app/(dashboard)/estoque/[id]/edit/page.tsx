@@ -13,7 +13,7 @@ import { StockItemForm } from '../../_components/StockItemForm';
 export default function EditStockItemPage() {
   const params = useParams<{ id: string }>();
   const router = useRouter();
-  const [stockItem, setStockItem] = useState<StockItem | null>(null);
+  const [stockItem, setStockItem] = useState<Partial<StockItem> | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -22,20 +22,7 @@ export default function EditStockItemPage() {
       setLoading(true);
       setError(null);
       
-      const result = await getRecordById('stock_items', params.id as string, {
-        select: `
-          id, 
-          name, 
-          sku, 
-          location_id, 
-          quantity, 
-          min_quantity,
-          unit_of_measurement_id, 
-          group_id,
-          is_active,
-          updated_at
-        `
-      });
+      const result = await getRecordById<StockItem>('stock_items', params.id as string);
       
       if (result.success) {
         setStockItem(result.data);

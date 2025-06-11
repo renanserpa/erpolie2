@@ -91,10 +91,10 @@ export const stockItemColumns = (onEdit: (item: Insumo) => void, onDelete: (item
       if (!isActive) {
         status = "Inativo";
         variant = "secondary";
-      } else if (row.original.min_quantity !== null && row.original.quantity <= row.original.min_quantity) {
+      } else if (row.original.min_quantity != null && row.original.quantity <= row.original.min_quantity) {
         status = "Crítico";
         variant = "destructive";
-      } else if (row.original.min_quantity !== null && row.original.quantity <= row.original.min_quantity * 1.5) {
+      } else if (row.original.min_quantity != null && row.original.quantity <= row.original.min_quantity * 1.5) {
         status = "Baixo";
         variant = "outline";
       }

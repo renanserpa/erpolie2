@@ -19,7 +19,7 @@ import {
 async function getMovements(): Promise<StockMovement[]> {
   const result = await fetchMovimentacoes();
   if (result.success) {
-    return result.data || [];
+    return (result.data as StockMovement[]) || [];
   }
   console.warn('Nenhuma movimentação encontrada');
   return [];

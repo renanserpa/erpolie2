@@ -12,7 +12,7 @@ export interface FilterOption {
   id: string;
   label: string;
   options?: { value: string; label: string }[];
-  type: 'text' | 'select' | 'date';
+  type: 'text' | 'select' | 'date' | 'boolean';
 }
 
 interface FilterValues {
@@ -22,12 +22,18 @@ interface FilterValues {
 interface AdvancedFiltersProps {
   filterOptions: FilterOption[];
   onFilterChange: (filters: FilterValues) => void;
+  columnOptions: { id: string; label: string }[];
+  visibleColumns: string[];
+  onVisibleColumnsChange: (columns: string[]) => void;
   className?: string;
 }
 
 export const AdvancedFilters: React.FC<AdvancedFiltersProps> = ({
   filterOptions,
   onFilterChange,
+  columnOptions,
+  visibleColumns,
+  onVisibleColumnsChange,
   className = '',
 }) => {
   const [expanded, setExpanded] = React.useState(false);
@@ -132,6 +138,24 @@ export const AdvancedFilters: React.FC<AdvancedFiltersProps> = ({
                 )}
               </div>
             ))}
+            <div className="space-y-2 md:col-span-2">
+              <Label>Colunas Visíveis</Label>
+              {columnOptions.map((opt) => (
+                <div key={opt.id} className="flex items-center gap-2">
+                  <input
+                    type="checkbox"
+                    checked={visibleColumns.includes(opt.id)}
+                    onChange={(e) => {
+                      const updated = e.target.checked
+                        ? [...visibleColumns, opt.id]
+                        : visibleColumns.filter((c) => c !== opt.id);
+                      onVisibleColumnsChange(updated);
+                    }}
+                  />
+                  <span>{opt.label}</span>
+                </div>
+              ))}
+            </div>
           </div>
         </CardContent>
       )}
