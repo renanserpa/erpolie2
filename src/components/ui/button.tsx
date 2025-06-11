@@ -1,6 +1,7 @@
 "use client"
 
 import * as React from "react"
+import { Slot } from "@radix-ui/react-slot"
 import { cva, type VariantProps } from "class-variance-authority"
 
 import { cn } from "@/lib/utils"
@@ -42,7 +43,18 @@ export interface ButtonProps
 
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
   ({ className, variant, size, asChild = false, ...props }, ref) => {
-    const Comp = asChild ? React.Fragment : "button"
+    const Comp = asChild ? Slot : "button"
+    if (asChild) {
+      const { children } = props
+      if (
+        !React.isValidElement(children) ||
+        React.Children.count(children) !== 1
+      ) {
+        if (process.env.NODE_ENV !== "production") {
+          console.error("Button with 'asChild' expects a single React element child.")
+        }
+      }
+    }
     return (
       <Comp
         className={cn(buttonVariants({ variant, size, className }))}
