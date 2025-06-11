@@ -96,6 +96,7 @@ Data | Autor | Descrição
 2025-06-18 | CODEX | Nova tentativa de estabilização final. Corrigidos formulários duplicados no módulo financeiro. Type-check e build ainda apresentam falhas, especialmente em /logistica.
 
 2025-06-19 | CODEX | Client table fix for logística and partial type updates; build ainda apresenta erros de tipagem.
+2025-06-19 | CODEX | Ajustado módulo de estoque para tipagem segura e filtros avançados.
 2025-06-11 | CODEX | Pequenos ajustes de tipagem e props; build ainda falha na pagina /logistica.
 2025-06-11 | CODEX | Validação do módulo de clientes concluída; type-check limpo para diretórios de clientes.
 2025-06-11 | CODEX | Módulo de fornecedores validado com tipagens e colunas. Type-check limpo para fornecedores.

@@ -36,7 +36,7 @@ export default function EstoqueTable() {
   const [searchTerm, setSearchTerm] = useState("");
   const [isFormDialogOpen, setIsFormDialogOpen] = useState(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
-  const [currentItem, setCurrentItem] = useState<StockItem | null>(null);
+  const [currentItem, setCurrentItem] = useState<Partial<StockItem> | null>(null);
   
   // Usar o hook genérico para buscar dados do estoque
   const { 
@@ -249,9 +249,9 @@ export default function EstoqueTable() {
               {currentItem ? "Editar Item de Estoque" : "Adicionar Item de Estoque"}
             </DialogTitle>
           </DialogHeader>
-          <StockItemForm 
-            initialData={currentItem} 
-            onSuccess={handleFormSuccess} 
+          <StockItemForm
+            initialData={currentItem ?? undefined}
+            onSuccess={handleFormSuccess}
           />
         </DialogContent>
       </Dialog>

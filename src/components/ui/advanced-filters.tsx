@@ -33,16 +33,19 @@ type FilterFormValues = z.infer<typeof filterFormSchema>;
 export type FilterOption = {
   id: string;
   label: string;
-  type: "text" | "select" | "date";
+  type: "text" | "select" | "date" | "boolean";
   options?: { value: string; label: string }[];
 };
 
 interface AdvancedFiltersProps {
   filterOptions: FilterOption[];
   onFilterChange: (filters: { [key: string]: string }) => void;
+  columnOptions?: { id: string; label: string }[];
+  visibleColumns?: string[];
+  onVisibleColumnsChange?: (cols: string[]) => void;
 }
 
-export function AdvancedFilters({ filterOptions, onFilterChange }: AdvancedFiltersProps) {
+export function AdvancedFilters({ filterOptions, onFilterChange, columnOptions = [], visibleColumns = [], onVisibleColumnsChange }: AdvancedFiltersProps) {
   const form = useForm<FilterFormValues>({
     resolver: zodResolver(filterFormSchema),
     defaultValues: {},
@@ -114,14 +117,48 @@ export function AdvancedFilters({ filterOptions, onFilterChange }: AdvancedFilte
                         value={field.value || ""}
                       />
                     )}
+                    {option.type === "boolean" && (
+                      <Select onValueChange={field.onChange} value={field.value || ""}>
+                        <FormControl>
+                          <SelectTrigger>
+                            <SelectValue placeholder="Selecione" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          <SelectItem value="true">Sim</SelectItem>
+                          <SelectItem value="false">Não</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    )}
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
-          ))}
+      ))}
         </div>
-        <div className="flex justify-end space-x-2">
+        {columnOptions.length > 0 && (
+          <div className="mt-4 space-y-2">
+            <FormLabel>Colunas Visíveis</FormLabel>
+            {columnOptions.map((opt) => (
+              <div key={opt.id} className="flex items-center gap-2">
+                <input
+                  type="checkbox"
+                  checked={visibleColumns.includes(opt.id)}
+                  onChange={(e) => {
+                    if (!onVisibleColumnsChange) return;
+                    const updated = e.target.checked
+                      ? [...visibleColumns, opt.id]
+                      : visibleColumns.filter((c) => c !== opt.id);
+                    onVisibleColumnsChange(updated);
+                  }}
+                />
+                <span>{opt.label}</span>
+              </div>
+            ))}
+          </div>
+        )}
+        <div className="flex justify-end space-x-2 mt-4">
           <Button
             type="button"
             variant="outline"
