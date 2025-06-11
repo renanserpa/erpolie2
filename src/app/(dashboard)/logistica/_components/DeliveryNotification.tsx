@@ -277,8 +277,8 @@ export function DeliveryNotification({
                 Cancelar
               </Button>
             </DialogClose>
-            <Button 
-              onClick={handleSendNotification} 
+            <Button
+              onClick={handleSendNotification}
               disabled={isSending || (!sendSms && !sendEmail)}
             >
               {isSending ? (
