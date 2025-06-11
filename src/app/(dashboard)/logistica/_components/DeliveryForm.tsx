@@ -201,6 +201,7 @@ export function DeliveryForm({ onSuccess, initialData }: DeliveryFormProps) {
             <FormItem className="flex flex-col">
               <FormLabel>Data da Entrega *</FormLabel>
                 <Popover>
+                  <PopoverTrigger asChild>
                   <PopoverTrigger><FormControl>
                     <Button
                       variant={"outline"}
@@ -217,6 +218,8 @@ export function DeliveryForm({ onSuccess, initialData }: DeliveryFormProps) {
                       )}
                       <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
                     </Button>
+
+                  </PopoverTrigger>
                   </FormControl></PopoverTrigger>
                   <PopoverContent className="w-auto p-0" align="start">
                   <Calendar

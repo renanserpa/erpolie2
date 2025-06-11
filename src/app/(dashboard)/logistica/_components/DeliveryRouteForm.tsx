@@ -151,6 +151,7 @@ export function DeliveryRouteForm({ onSuccess, initialData }: DeliveryRouteFormP
             <FormItem className="flex flex-col">
               <FormLabel>Data da Rota *</FormLabel>
               <Popover>
+                <PopoverTrigger asChild>
                 <PopoverTrigger><FormControl>
                   <Button
                     variant={"outline"}
@@ -167,6 +168,7 @@ export function DeliveryRouteForm({ onSuccess, initialData }: DeliveryRouteFormP
                       )}
                       <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
                     </Button>
+                </PopoverTrigger>
                   </FormControl></PopoverTrigger>
                 <PopoverContent className="w-auto p-0" align="start">
                   <Calendar

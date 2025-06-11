@@ -272,6 +272,11 @@ export function DeliveryNotification({
           </div>
           
           <DialogFooter>
+            <DialogClose asChild>
+              <Button type="button" variant="outline" disabled={isSending}>
+                Cancelar
+              </Button>
+            </DialogClose>
             <DialogClose><Button type="button" variant="outline" disabled={isSending}>Cancelar</Button></DialogClose>
             <Button
               onClick={handleSendNotification}

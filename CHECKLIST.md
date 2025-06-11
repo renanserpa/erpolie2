@@ -91,3 +91,6 @@ Este arquivo centraliza os checklists de tarefas, validações e revisões para 
 2025-06-11: Tentativa de estabilizacao final. Type-check e build ainda falham.
 2025-06-11: Módulo de clientes validado; erros de tipagem resolvidos (CODEX)
 2025-06-20: Logística ajustada removendo `asChild` para estabilizar build (CODEX)
+
+2025-06-20: Popover wrappers simplificados no módulo de logística; build ainda falha (CODEX)
+
