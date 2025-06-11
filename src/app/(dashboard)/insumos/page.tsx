@@ -325,7 +325,7 @@ export default function InsumosPage() {
           <DataTable
             columns={columns.filter(col => visibleColumns.includes(col.id))}
             data={insumos}
-            isLoading={isLoading}
+            loading={isLoading}
             onRowClick={(row) => handleInsumoClick(row.id)}
           />
         </CardContent>

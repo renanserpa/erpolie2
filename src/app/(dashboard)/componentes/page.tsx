@@ -318,7 +318,7 @@ export default function ComponentesPage() {
           <DataTable
             columns={columns.filter(col => visibleColumns.includes(col.id))}
             data={components}
-            isLoading={isLoading}
+            loading={isLoading}
             onRowClick={(row) => handleComponentClick(row.id)}
           />
         </CardContent>
