@@ -44,11 +44,12 @@ export default function LoginPage() {
     } else {
       // Armazena o perfil em user_metadata para facilitar o middleware
       try {
+        type RoleQueryResult = { role: { name: string } | null } | null;
         const { data: roleData } = await supabase
           .from('user_roles')
           .select('role:roles(name)')
           .eq('user_id', data.user.id)
-          .single();
+          .single<RoleQueryResult>();
 
         const roleName = roleData?.role?.name;
         if (roleName) {

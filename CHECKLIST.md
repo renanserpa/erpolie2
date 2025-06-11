@@ -86,3 +86,4 @@ Este arquivo centraliza os checklists de tarefas, validações e revisões para 
  2025-06-18: Nova tentativa de estabilização, build ainda falha em /logistica e persiste erros de tipagem (CODEX)
 
 2025-06-19: Ajustes parciais na tipagem e componente de entregas convertido para client (CODEX)
+2025-06-11: Tentativa de estabilizacao final. Type-check e build ainda falham.

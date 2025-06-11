@@ -384,7 +384,7 @@ export default function AuditLogPage() {
           <DataTable
             columns={columns}
             data={logs}
-            isLoading={isLoading}
+            loading={isLoading}
             pageCount={Math.ceil(totalLogs / pageSize)}
             pageIndex={page}
             pageSize={pageSize}

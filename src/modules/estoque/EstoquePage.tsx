@@ -299,7 +299,7 @@ export default function EstoquePage() {
           <DataTable
             columns={columns.filter(col => visibleColumns.includes(col.id))}
             data={stockItems}
-            isLoading={isLoading}
+            loading={isLoading}
             onRowClick={(row) => handleItemClick(row.id)}
           />
         </CardContent>

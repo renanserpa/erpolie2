@@ -25,7 +25,7 @@ export default function ClientDetailsPage() {
       const result = await getRecordById('clients', params.id as string);
       
       if (result.success) {
-        setClient(result.data);
+        setClient(result.data || null);
       } else {
         setError('Cliente não encontrado.');
       }
