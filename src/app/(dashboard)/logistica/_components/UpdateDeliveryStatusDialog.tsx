@@ -312,6 +312,7 @@ export function UpdateDeliveryStatusDialog({
                   Cancelar
                 </Button>
               </DialogClose>
+              <DialogClose><Button type="button" variant="outline" disabled={isSubmitting}>Cancelar</Button></DialogClose>
               <Button type="submit" disabled={loadingStatuses || isSubmitting}>
                 {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                 {isSubmitting ? "Salvando..." : "Salvar Status"}

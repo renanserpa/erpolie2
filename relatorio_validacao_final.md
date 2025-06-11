@@ -40,8 +40,10 @@ Os testes de lint foram executados com sucesso e o build foi executado até a et
 ## Conclusão Final
 Apesar das correções adicionais nos formulários de receitas e despesas, o `type-check` ainda reporta inúmeras falhas nos módulos de cadastro e o `next build` interrompe a geração da página `/logistica` com erro de renderização. Nova rodada de refatoração será necessária antes do deploy.
 
-\n## 2025-06-19\nParciais correções no módulo de logística e tipagens. Build ainda não estabilizado.
+2025-06-19: Parciais correções no módulo de logística e tipagens. Build ainda não estabilizado.
 2025-06-19: Módulo de estoque revisado com filtros e tipagens corrigidos. Build continua falhando em /logistica.
 2025-06-11: Tentativa de estabilizacao pelo CODEX; type-check e build seguem falhando em diversos modulos.
 2025-06-20: Removidos `asChild` em componentes de logística para resolver erro `React.Children.only` durante o build.
+
 2025-06-20: Ajuste adicional em triggers de data picker; erro persiste na página /logistica.
+
