@@ -96,3 +96,4 @@ Este arquivo centraliza os checklists de tarefas, validações e revisões para 
 
 2025-06-20: Triggers revisados em logística garantindo ReactElement único (CODEX)
 2025-06-20: Dropdown triggers convertidos para `asChild` em logística (CODEX)
+2025-06-21: Button utiliza `Slot` ao usar `asChild`, evitando múltiplos filhos (CODEX)
