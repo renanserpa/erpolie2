@@ -95,3 +95,4 @@ Data | Autor | Descrição
 2025-06-10 | CODEX | Ajustes parciais no financeiro; build falha em /logistica.
 2025-06-18 | CODEX | Nova tentativa de estabilização final. Corrigidos formulários duplicados no módulo financeiro. Type-check e build ainda apresentam falhas, especialmente em /logistica.
 
+2025-06-19 | CODEX | Client table fix for logística and partial type updates; build ainda apresenta erros de tipagem.

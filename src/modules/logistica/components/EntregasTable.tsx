@@ -1,3 +1,4 @@
+"use client";
 import { DataTable } from '@/components/ui/data-table';
 import { deliveryColumns, type Delivery, type DeliveryTableMeta } from '@/app/(dashboard)/logistica/_components/DeliveryColumns';
 

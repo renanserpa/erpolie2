@@ -7,11 +7,11 @@ import { fetchLancamentos } from './FinanceiroService';
 import { LancamentosTable } from './LancamentosTable';
 import { ResumoFinanceiro } from './ResumoFinanceiro';
 import { ReceitaForm } from './ReceitaForm';
+import type { FinancialTransaction } from '@/app/(dashboard)/financeiro/_components/TransactionColumns';
 import { DespesaForm } from './DespesaForm';
-import type { LancamentoFinanceiro } from './financeiro.types';
 
 export default function FinanceiroPage() {
-  const [transactions, setTransactions] = useState<LancamentoFinanceiro[]>([]);
+  const [transactions, setTransactions] = useState<FinancialTransaction[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [openReceita, setOpenReceita] = useState(false);
   const [openDespesa, setOpenDespesa] = useState(false);
