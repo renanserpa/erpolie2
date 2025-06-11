@@ -43,3 +43,4 @@ Apesar das correções adicionais nos formulários de receitas e despesas, o `ty
 \n## 2025-06-19\nParciais correções no módulo de logística e tipagens. Build ainda não estabilizado.
 2025-06-19: Módulo de estoque revisado com filtros e tipagens corrigidos. Build continua falhando em /logistica.
 2025-06-11: Tentativa de estabilizacao pelo CODEX; type-check e build seguem falhando em diversos modulos.
+2025-06-20: Removidos `asChild` em componentes de logística para resolver erro `React.Children.only` durante o build.
