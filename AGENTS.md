@@ -97,3 +97,4 @@ Data | Autor | Descrição
 
 2025-06-19 | CODEX | Client table fix for logística and partial type updates; build ainda apresenta erros de tipagem.
 2025-06-11 | CODEX | Pequenos ajustes de tipagem e props; build ainda falha na pagina /logistica.
+2025-06-11 | CODEX | Validação do módulo de clientes concluída; type-check limpo para diretórios de clientes.
