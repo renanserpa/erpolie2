@@ -94,3 +94,4 @@ Este arquivo centraliza os checklists de tarefas, validações e revisões para 
 
 2025-06-20: Popover wrappers simplificados no módulo de logística; build ainda falha (CODEX)
 
+2025-06-20: Triggers revisados em logística garantindo ReactElement único (CODEX)

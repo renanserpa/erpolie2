@@ -47,3 +47,4 @@ Apesar das correções adicionais nos formulários de receitas e despesas, o `ty
 
 2025-06-20: Ajuste adicional em triggers de data picker; erro persiste na página /logistica.
 
+2025-06-20: Triggers corrigidos garantindo filho único; build agora finaliza sem erros.
