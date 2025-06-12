@@ -86,7 +86,7 @@ export function LocationForm({ initialData, onSuccess }: LocationFormProps) {
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
         {/* Nome */}
-        <FormField
+        <FormField<LocationFormValues, "name">
           control={form.control}
           name="name"
           render={({ field }) => (
@@ -101,7 +101,7 @@ export function LocationForm({ initialData, onSuccess }: LocationFormProps) {
         />
 
         {/* Descrição */}
-        <FormField
+        <FormField<LocationFormValues, "description">
           control={form.control}
           name="description"
           render={({ field }) => (
@@ -116,7 +116,7 @@ export function LocationForm({ initialData, onSuccess }: LocationFormProps) {
         />
 
         {/* Capacidade */}
-        <FormField
+        <FormField<LocationFormValues, "capacity">
           control={form.control}
           name="capacity"
           render={({ field }) => (

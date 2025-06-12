@@ -60,11 +60,15 @@ export default function EstoqueTable() {
   });
 
   // Filtrar itens de estoque com base no termo de pesquisa
-  const filteredEstoque = estoque.filter(
-    (item) =>
-      item.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      item.sku?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      item.locations?.name?.toLowerCase().includes(searchTerm.toLowerCase())
+  const filteredEstoque = React.useMemo(
+    () =>
+      estoque.filter(
+        (item) =>
+          item.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          item.sku?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          item.locations?.name?.toLowerCase().includes(searchTerm.toLowerCase())
+      ),
+    [estoque, searchTerm]
   );
 
   // Formatar data para exibição

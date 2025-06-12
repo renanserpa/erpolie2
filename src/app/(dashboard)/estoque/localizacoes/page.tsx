@@ -4,7 +4,8 @@ import React from 'react';
 import { Button } from "@/components/ui/button";
 import { PlusCircle } from "lucide-react";
 import { DataTable } from "@/components/ui/data-table";
-import { locationColumns, type StockLocation } from "./_components/LocationColumns"; // Import real columns and type
+import { locationColumns } from "./_components/LocationColumns";
+import type { LocalizacaoEstoque } from "@/modules/estoque/estoque.types";
 import { LocationForm } from "./_components/LocationForm"; // Import real form
 import {
   Dialog,
@@ -17,7 +18,7 @@ import {
 // TODO: Import AlertDialog for delete confirmation
 
 // Fetch real location data from Supabase (Placeholder)
-async function getLocations(): Promise<StockLocation[]> {
+async function getLocations(): Promise<LocalizacaoEstoque[]> {
   console.log("Fetching stock locations...");
   // Example structure matching potential columns
   return [
@@ -55,8 +56,8 @@ async function deleteLocationAPI(locationId: string): Promise<void> {
 
 export default function LocalizacoesEstoquePage() {
   const [isFormOpen, setIsFormOpen] = React.useState(false);
-  const [locations, setLocations] = React.useState<StockLocation[]>([]);
-  const [editingLocation, setEditingLocation] = React.useState<StockLocation | null>(null);
+  const [locations, setLocations] = React.useState<LocalizacaoEstoque[]>([]);
+  const [editingLocation, setEditingLocation] = React.useState<LocalizacaoEstoque | null>(null);
 
   const fetchAndSetLocations = () => {
     getLocations().then(setLocations);
@@ -73,12 +74,13 @@ export default function LocalizacoesEstoquePage() {
     // TODO: Add toast notification for success
   };
 
-  const handleEdit = React.useCallback((location: StockLocation) => {
+  const handleEdit = React.useCallback((location: LocalizacaoEstoque) => {
     setEditingLocation(location);
     setIsFormOpen(true);
   }, []);
 
-  const handleDelete = React.useCallback(async (locationId: string, locationName: string) => {
+  const handleDelete = React.useCallback(async (location: LocalizacaoEstoque) => {
+    const { id: locationId, name: locationName } = location;
     if (window.confirm(`Tem certeza que deseja excluir a localização "${locationName}"? Esta ação pode afetar itens de estoque associados.`)) {
       try {
         await deleteLocationAPI(locationId);

@@ -24,7 +24,7 @@ export default function EditStockItemPage() {
       
       const result = await getRecordById<StockItem>('stock_items', params.id as string);
       
-      if (result.success) {
+      if (result.success && result.data) {
         setStockItem(result.data);
       } else {
         // Criar um item de estoque mockado para demonstração
@@ -56,6 +56,10 @@ export default function EditStockItemPage() {
   useEffect(() => {
     fetchStockItem();
   }, [fetchStockItem]);
+
+  if (!params?.id) {
+    return null;
+  }
 
   const handleSuccess = () => {
     toast.success('Item de estoque atualizado com sucesso');

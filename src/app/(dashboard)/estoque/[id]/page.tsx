@@ -45,7 +45,7 @@ interface Produto {
 }
 
 export default function EstoqueDetalhes() {
-  const params = useParams();
+  const params = useParams<{ id: string }>();
   const router = useRouter();
   const { toast } = useToast();
   const [estoqueItem, setEstoqueItem] = useState<EstoqueItem | null>(null);
@@ -111,6 +111,10 @@ export default function EstoqueDetalhes() {
       fetchEstoqueItem();
     }
   }, [params.id, supabase, toast]);
+
+  if (!params?.id) {
+    return null;
+  }
 
   const handleDelete = async () => {
     if (!confirm("Tem certeza que deseja excluir este item de estoque?")) {
