@@ -8,11 +8,12 @@ import { ArrowLeft, Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
 import { getRecordById } from '@/lib/data-hooks';
 import { OrderForm } from '../../_components/OrderForm';
+import type { Order } from '@/types/schema';
 
 export default function EditOrderPage() {
   const params = useParams();
   const router = useRouter();
-  const [order, setOrder] = useState<any>(null);
+  const [order, setOrder] = useState<Order | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -21,27 +22,14 @@ export default function EditOrderPage() {
       setLoading(true);
       setError(null);
       
-      const result = await getRecordById('orders', params.id as string, {
-        select: `
-          id, 
-          total_amount,
-          payment_method_id,
-          sales_channel_id,
-          created_by,
-          created_at,
-          updated_at,
-          customers:customer_id (id, name, email, phone, document),
-          payment_methods:payment_method_id (id, name),
-          sales_channels:sales_channel_id (id, name)
-        `
-      });
+      const result = await getRecordById<Order>('orders', params.id as string);
       
-      if (result.success) {
+      if (result.success && result.data) {
         setOrder(result.data);
       } else {
         // Criar um pedido mockado para demonstração
         setOrder({
-          id: params.id,
+          id: params.id as string,
           total_amount: 299.90,
           payment_method_id: null,
           sales_channel_id: null,
@@ -63,13 +51,14 @@ export default function EditOrderPage() {
             id: '789',
             name: 'Loja Online'
           }
-        });
+        } as unknown as Order);
         
         console.warn('Usando dados mockados para pedido');
       }
-    } catch (err: any) {
-      console.error('Error fetching order details:', err);
-      setError(err.message || 'Erro ao carregar detalhes do pedido');
+    } catch (err) {
+      const e = err as Error;
+      console.error('Error fetching order details:', e);
+      setError(e.message || 'Erro ao carregar detalhes do pedido');
       toast.error('Erro ao carregar detalhes do pedido.');
     } finally {
       setLoading(false);
@@ -79,6 +68,8 @@ export default function EditOrderPage() {
   useEffect(() => {
     fetchOrder();
   }, [params.id]);
+
+  if (!params?.id) return null;
 
   const handleSuccess = () => {
     toast.success('Pedido atualizado com sucesso');
@@ -121,13 +112,9 @@ export default function EditOrderPage() {
           <CardTitle>Formulário de Pedido</CardTitle>
         </CardHeader>
         <CardContent>
-          {order && (
-            <OrderForm 
-              initialData={order} 
-              onSuccess={handleSuccess}
-              isEditing={true}
-            />
-          )}
+            {order && (
+              <OrderForm initialData={order as any} onSuccess={handleSuccess} />
+            )}
         </CardContent>
       </Card>
     </div>

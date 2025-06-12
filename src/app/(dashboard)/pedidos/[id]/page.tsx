@@ -61,25 +61,21 @@ export default function OrderDetailsPage() {
       try {
         const { data, error } = await supabase
           .from("orders")
-          .select(`
-            *,
-            channel:channel_id(name),
-            payment_method:payment_method_id(name)
-          `)
-          .eq("id", params.id)
-          .single();
-
-        if (error) throw error;
-        setOrder(data);
+          .select(
+            `*, channel:channel_id(name), payment_method:payment_method_id(name)`
+          )
+          .eq("id", params.id as string)
+          .single()
+          .returns<Order>();
+          if (error) throw error;
+          if (data) setOrder(data as Order);
 
         // Fetch order items
         const { data: itemsData, error: itemsError } = await supabase
           .from("order_items")
-          .select(`
-            *,
-            product:product_id(name, sku)
-          `)
-          .eq("order_id", params.id);
+          .select(`*, product:product_id(name, sku)`)
+          .eq("order_id", params.id as string)
+          .returns<OrderItem[]>();
 
         if (itemsError) throw itemsError;
         setOrderItems(itemsData || []);
@@ -95,6 +91,8 @@ export default function OrderDetailsPage() {
       fetchOrder();
     }
   }, [params.id, supabase]);
+
+  if (!params?.id) return null;
 
   const handleDelete = async () => {
     try {

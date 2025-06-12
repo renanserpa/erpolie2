@@ -2,7 +2,7 @@
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import type { Order } from './columns';
+import type { Order } from '@/types/schema';
 
 export interface Status {
   id: string;
@@ -11,7 +11,7 @@ export interface Status {
 }
 
 interface KanbanProps {
-  orders: Order[];
+  orders: (Order & { date?: string | null })[];
   statuses: Status[];
   loading: boolean;
 }
@@ -58,7 +58,7 @@ export function OrderKanbanBoard({ orders, statuses, loading }: KanbanProps) {
                   <Card key={order.id} className="shadow-sm">
                     <CardContent className="p-3 space-y-1">
                       <p className="text-sm font-medium">{order.client?.name}</p>
-                      <p className="text-xs text-muted-foreground">{formatDate(order.date)}</p>
+                      <p className="text-xs text-muted-foreground">{formatDate((order as any).date)}</p>
                       <p className="text-xs font-semibold text-primary">#{order.id.substring(0,8)}</p>
                     </CardContent>
                   </Card>
