@@ -101,3 +101,4 @@ Este arquivo centraliza os checklists de tarefas, validações e revisões para 
 
 2025-06-23: Validação de tipagem aplicada aos módulos de produção, financeiro, RH, BI e auditoria (CODEX)
 
+2025-06-24: Ajustes de tipagem em vários módulos; type-check ainda falha.

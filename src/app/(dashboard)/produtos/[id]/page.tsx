@@ -93,14 +93,17 @@ export default function ProductDetailsPage() {
         // Fetch stock items
         const { data: stockData, error: stockError } = await supabase
           .from("stock_items")
-          .select(`
+          .select(
+            `
             id,
             location_id,
             quantity,
             min_quantity,
             location:location_id(name)
-          `)
-          .eq("product_id", params.id);
+          `
+          )
+          .eq("product_id", params.id)
+          .returns<StockItem[]>();
 
         if (stockError) throw stockError;
         setStockItems(stockData || []);
@@ -108,13 +111,16 @@ export default function ProductDetailsPage() {
         // Fetch components
         const { data: componentsData, error: componentsError } = await supabase
           .from("produto_componente")
-          .select(`
+          .select(
+            `
             id,
             component_id,
             quantity,
             component:component_id(name)
-          `)
-          .eq("product_id", params.id);
+          `
+          )
+          .eq("product_id", params.id)
+          .returns<Component[]>();
 
         if (componentsError) throw componentsError;
         setComponents(componentsData || []);
@@ -122,13 +128,16 @@ export default function ProductDetailsPage() {
         // Fetch supplies
         const { data: suppliesData, error: suppliesError } = await supabase
           .from("produto_insumo")
-          .select(`
+          .select(
+            `
             id,
             supply_id,
             quantity,
             supply:supply_id(name)
-          `)
-          .eq("product_id", params.id);
+          `
+          )
+          .eq("product_id", params.id)
+          .returns<Supply[]>();
 
         if (suppliesError) throw suppliesError;
         setSupplies(suppliesData || []);

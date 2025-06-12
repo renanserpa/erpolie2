@@ -130,16 +130,18 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
                 is_active
               )
             `)
-            .eq('user_id', user.id);
+            .eq('user_id', user.id)
+            .returns<(UserRole & { role: Role | null })[]>();
             
           if (rolesError) {
             console.error("Erro ao carregar roles:", rolesError);
             // Continua com roles vazios
             setRoles([]);
           } else {
+            const typedRoles = (userRoles ?? []) as Array<UserRole & { role: Role | null }>;
             // Filtra roles nulos e inativos
-            const validRoles = userRoles
-              .filter(ur => ur.role && ur.role.is_active)
+            const validRoles = typedRoles
+              .filter((ur): ur is UserRole & { role: Role } => Boolean(ur.role) && ur.role.is_active)
               .map(ur => ur.role);
             
             setRoles(validRoles);
@@ -151,16 +153,19 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
               try {
                 const { data: permissionsData, error: permissionsError } = await supabase
                   .from('role_permissions')
-                  .select(`
-                    permission:permissions (
-                      id,
-                      name,
-                      code,
-                      description,
-                      module_id
-                    )
-                  `)
-                  .in('role_id', roleIds);
+                  .select(
+                    `
+                      permission:permissions (
+                        id,
+                        name,
+                        code,
+                        description,
+                        module_id
+                      )
+                    `
+                  )
+                  .in('role_id', roleIds)
+                  .returns<{ permission: Permission | null }[]>();
                   
                 if (permissionsError) {
                   console.error("Erro ao carregar permissões:", permissionsError);
@@ -169,7 +174,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
                 } else {
                   // Extrair permissões únicas e filtrar nulos
                   const validPermissions = permissionsData
-                    .filter(rp => rp.permission)
+                    .filter((rp): rp is { permission: Permission } => Boolean(rp.permission))
                     .map(rp => rp.permission);
                   
                   const uniquePermissions = Array.from(
@@ -288,15 +293,17 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
             is_active
           )
         `)
-        .eq('user_id', user.id);
+        .eq('user_id', user.id)
+        .returns<(UserRole & { role: Role | null })[]>();
         
       if (rolesError) {
         console.error("Erro ao recarregar roles:", rolesError);
         return;
       }
       
-      const validRoles = userRoles
-        .filter(ur => ur.role && ur.role.is_active)
+      const typedRoles = (userRoles ?? []) as Array<UserRole & { role: Role | null }>;
+      const validRoles = typedRoles
+        .filter((ur): ur is UserRole & { role: Role } => Boolean(ur.role) && ur.role.is_active)
         .map(ur => ur.role);
       
       setRoles(validRoles);
@@ -305,9 +312,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       if (validRoles.length > 0) {
         const roleIds = validRoles.map(r => r.id);
         
-        const { data: permissionsData, error: permissionsError } = await supabase
-          .from('role_permissions')
-          .select(`
+      const { data: permissionsData, error: permissionsError } = await supabase
+        .from('role_permissions')
+        .select(
+          `
             permission:permissions (
               id,
               name,
@@ -315,8 +323,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
               description,
               module_id
             )
-          `)
-          .in('role_id', roleIds);
+          `
+        )
+        .in('role_id', roleIds)
+        .returns<{ permission: Permission | null }[]>();
           
         if (permissionsError) {
           console.error("Erro ao recarregar permissões:", permissionsError);
@@ -325,7 +335,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         
         // Extrair permissões únicas
         const validPermissions = permissionsData
-          .filter(rp => rp.permission)
+          .filter((rp): rp is { permission: Permission } => Boolean(rp.permission))
           .map(rp => rp.permission);
         
         const uniquePermissions = Array.from(
