@@ -6,6 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { DataTable } from '@/components/ui/data-table';
 import { columns } from '@/app/(dashboard)/producao/_components/columns';
+import type { OrdemDeProducaoDetalhada } from './producao.types';
 import { ProducaoKanban } from './components/ProducaoKanban';
 import { useDebounce } from '@/hooks/use-debounce';
 import { fetchOrdensProducao, fetchEtapasProducao } from './ProducaoService';
@@ -72,7 +73,11 @@ export default function ProducaoPage() {
           {view === 'kanban' ? (
             <ProducaoKanban ordens={ops} etapas={etapas} loading={isLoading} />
           ) : (
-            <DataTable columns={columns} data={ops} loading={isLoading} />
+            <DataTable<OrdemDeProducaoDetalhada, unknown>
+              columns={columns}
+              data={ops}
+              loading={isLoading}
+            />
           )}
         </CardContent>
       </Card>

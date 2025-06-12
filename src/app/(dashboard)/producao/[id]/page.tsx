@@ -67,6 +67,7 @@ export default function ProductionOrderDetailsPage() {
   const params = useParams();
   const router = useRouter();
   const supabase = createSupabaseClient();
+
   const [productionOrder, setProductionOrder] = useState<ProductionOrder | null>(null);
   const [stages, setStages] = useState<ProductionStage[]>([]);
   const [supplies, setSupplies] = useState<ProductionSupply[]>([]);
@@ -128,10 +129,12 @@ export default function ProductionOrderDetailsPage() {
       }
     };
 
-    if (params.id) {
+    if (params?.id) {
       fetchProductionOrder();
     }
-  }, [params.id, supabase]);
+  }, [params?.id, supabase]);
+
+  if (!params?.id) return null;
 
   const handleDelete = async () => {
     try {

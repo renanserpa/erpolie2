@@ -10,6 +10,13 @@ export type OrdemDeProducao = Database['public']['Tables']['production_orders'][
   priority?: { id: string; name: string } | null;
 };
 
+// Extended type with optional fields used by tables/kanban
+export type OrdemDeProducaoDetalhada = OrdemDeProducao & {
+  order_ref?: string | null;
+  status_name?: string | null;
+  priority_name?: string | null;
+};
+
 export type EtapaDeProducao = Database['public']['Tables']['production_stages']['Row'];
 
 export interface ResponsavelOP {
