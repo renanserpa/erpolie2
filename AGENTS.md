@@ -109,4 +109,6 @@ Data | Autor | Descrição
 2025-06-20 | CODEX | Ajustados triggers de menu em logística para usar `asChild`.
 2025-06-21 | CODEX | Corrigido componente Button para usar `Slot` quando `asChild`, evitando erro `React.Children.only`.
 2025-06-22 | CODEX | Revisados componentes globais; suspeita de erro em FormControl sem filho em AdvancedFilters. Investigacao segue.
+
 2025-06-23 | CODEX | Ajustados módulos de produção, financeiro, RH, BI e auditoria para tipagem segura e build estável.
+
