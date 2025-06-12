@@ -409,11 +409,17 @@ export function PurchaseOrderForm({ initialData, onSuccess }: PurchaseOrderFormP
             <PlusCircle className="mr-2 h-4 w-4" /> Adicionar Item
           </Button>
           <Controller
-              name="purchase_order_items"
-              control={form.control}
-              render={({ fieldState }) => (
-                  fieldState.error && <p className="text-sm font-medium text-destructive mt-2">{fieldState.error.message}</p>
-              )}
+            name="purchase_order_items"
+            control={form.control}
+            render={({ fieldState }) => (
+              fieldState.error ? (
+                <p className="text-sm font-medium text-destructive mt-2">
+                  {fieldState.error.message}
+                </p>
+              ) : (
+                <></>
+              )
+            )}
           />
         </div>
 

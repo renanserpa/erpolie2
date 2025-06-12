@@ -112,3 +112,4 @@ Este arquivo centraliza os checklists de tarefas, validações e revisões para 
 2025-06-29: Relatório global de erros gerado (CODEX)
 2025-06-12: Financeiro module fully typed & build-clean
 2025-06-30: Estoque module fully typed & build-clean (CODEX)
+2025-06-30: Compras module fully typed & build-clean (CODEX)

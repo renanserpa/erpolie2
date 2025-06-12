@@ -82,7 +82,7 @@ export const orderColumns: ColumnDef<PurchaseOrder>[] = [
       </Button>
     ),
     cell: ({ row }) => (
-      <div className="lowercase">{row.getValue("id").substring(0, 8)}...</div>
+      <div className="lowercase">{String(row.getValue("id")).substring(0, 8)}...</div>
     ),
   },
   {

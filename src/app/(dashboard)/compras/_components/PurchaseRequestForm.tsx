@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm, useFieldArray } from "react-hook-form";
+import { useForm, useFieldArray, type Resolver } from "react-hook-form";
 import * as z from "zod";
 import { Button } from "@/components/ui/button";
 import {
@@ -40,7 +40,7 @@ const purchaseRequestSchema = z.object({
   status: z.enum(["pending", "approved", "rejected"]).default("pending"),
 });
 
-type PurchaseRequestFormValues = z.infer<typeof purchaseRequestSchema>;
+export type PurchaseRequestFormValues = z.infer<typeof purchaseRequestSchema>;
 
 // Define types for dropdown data
 type Department = { id: string; name: string };
@@ -61,8 +61,9 @@ export function PurchaseRequestForm({ initialData, onSuccess }: PurchaseRequestF
   const [stockItems, setStockItems] = useState<StockItem[]>([]);
 
   const form = useForm<PurchaseRequestFormValues>({
-    resolver: zodResolver(purchaseRequestSchema),
+    resolver: zodResolver(purchaseRequestSchema) as Resolver<PurchaseRequestFormValues>,
     defaultValues: {
+      requester_id: initialData?.requester_id || user?.id || "",
       department_id: initialData?.department_id || "",
       justification: initialData?.justification || "",
       items: initialData?.items || [],

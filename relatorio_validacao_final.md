@@ -64,3 +64,4 @@ Apesar das correções adicionais nos formulários de receitas e despesas, o `ty
 2025-06-12: Financeiro module fully typed & build-clean
 2025-06-30: Estoque module fully typed & build-clean
 2025-06-30: Producao corrigido com validação de params, tipagem do formulário, colunas memoizadas…
+2025-06-30: Compras module fully typed e build sem erros
