@@ -96,7 +96,7 @@ export const paymentMethodColumns: ColumnDef<PaymentMethod, PaymentMethodTableMe
     enableHiding: false,
     cell: ({ row, table }) => {
       const method = row.original;
-      const meta = table.options.meta;
+      const meta = table.options.meta as PaymentMethodTableMeta | undefined;
 
       return (
         <DropdownMenu>

@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
+import { useForm, type Resolver } from "react-hook-form";
 import * as z from "zod";
 import { Button } from "@/components/ui/button";
 import {
@@ -48,14 +48,22 @@ export function PaymentMethodForm({ onSuccess, initialData }: PaymentMethodFormP
   const isEditing = !!initialData;
 
   const form = useForm<PaymentMethodFormValues>({
-    resolver: zodResolver(paymentMethodFormSchema),
-    defaultValues: initialData || {
-      name: "",
-      description: "",
-      is_active: true,
-      requires_approval: false,
-      processing_fee_percentage: 0,
-    },
+    resolver: zodResolver(paymentMethodFormSchema) as Resolver<PaymentMethodFormValues>,
+    defaultValues: initialData
+      ? {
+          name: initialData.name,
+          description: initialData.description || "",
+          is_active: initialData.is_active,
+          requires_approval: initialData.requires_approval,
+          processing_fee_percentage: initialData.processing_fee_percentage ?? 0,
+        }
+      : {
+          name: "",
+          description: "",
+          is_active: true,
+          requires_approval: false,
+          processing_fee_percentage: 0,
+        },
   });
 
   async function onSubmit(values: PaymentMethodFormValues) {
@@ -94,7 +102,7 @@ export function PaymentMethodForm({ onSuccess, initialData }: PaymentMethodFormP
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
         {/* Name Field */}
-        <FormField
+        <FormField<PaymentMethodFormValues, "name">
           control={form.control}
           name="name"
           render={({ field }) => (
@@ -113,7 +121,7 @@ export function PaymentMethodForm({ onSuccess, initialData }: PaymentMethodFormP
         />
 
         {/* Description Field */}
-        <FormField
+        <FormField<PaymentMethodFormValues, "description">
           control={form.control}
           name="description"
           render={({ field }) => (
@@ -133,7 +141,7 @@ export function PaymentMethodForm({ onSuccess, initialData }: PaymentMethodFormP
         />
 
         {/* Processing Fee Percentage Field */}
-        <FormField
+        <FormField<PaymentMethodFormValues, "processing_fee_percentage">
           control={form.control}
           name="processing_fee_percentage"
           render={({ field }) => (
@@ -158,7 +166,7 @@ export function PaymentMethodForm({ onSuccess, initialData }: PaymentMethodFormP
         />
 
         {/* Is Active Field */}
-        <FormField
+        <FormField<PaymentMethodFormValues, "is_active">
           control={form.control}
           name="is_active"
           render={({ field }) => (
@@ -179,7 +187,7 @@ export function PaymentMethodForm({ onSuccess, initialData }: PaymentMethodFormP
         />
 
         {/* Requires Approval Field */}
-        <FormField
+        <FormField<PaymentMethodFormValues, "requires_approval">
           control={form.control}
           name="requires_approval"
           render={({ field }) => (

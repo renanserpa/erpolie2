@@ -94,7 +94,7 @@ export default function PaymentMethodsPage() {
         columns={paymentMethodColumns}
         data={paymentMethods}
         loading={loading}
-        searchColumn="name"
+        searchKey="name"
         meta={{
           editPaymentMethod: handleEditPaymentMethod,
           deletePaymentMethod: handleDeletePaymentMethod,

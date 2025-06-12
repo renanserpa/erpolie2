@@ -94,7 +94,7 @@ export default function FinancialCategoriesPage() {
         columns={financialCategoryColumns}
         data={categories}
         loading={loading}
-        searchColumn="name"
+        searchKey="name"
         meta={{
           editCategory: handleEditCategory,
           deleteCategory: handleDeleteCategory,

@@ -21,24 +21,7 @@ export default function EditFinancialTransactionPage() {
       setLoading(true);
       setError(null);
       
-      const result = await getRecordById('financial_transactions', params.id as string, {
-        select: `
-          id, 
-          amount,
-          date,
-          due_date,
-          payment_date,
-          category_id,
-          payment_method_id,
-          order_id,
-          purchase_order_id,
-          created_by,
-          created_at,
-          updated_at,
-          financial_categories:category_id (id, name),
-          payment_methods:payment_method_id (id, name)
-        `
-      });
+      const result = await getRecordById('financial_transactions', params.id as string);
       
       if (result.success) {
         setTransaction(result.data);
@@ -124,10 +107,9 @@ export default function EditFinancialTransactionPage() {
         </CardHeader>
         <CardContent>
           {transaction && (
-            <FinancialTransactionForm 
-              initialData={transaction} 
+            <FinancialTransactionForm
+              initialData={transaction}
               onSuccess={handleSuccess}
-              isEditing={true}
             />
           )}
         </CardContent>

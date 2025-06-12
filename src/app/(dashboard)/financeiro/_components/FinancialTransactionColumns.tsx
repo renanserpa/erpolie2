@@ -34,8 +34,16 @@ export interface FinancialTransaction {
   updated_at: string;
 }
 
+export interface FinancialTransactionTableMeta {
+  editTransaction: (transaction: FinancialTransaction) => void;
+  deleteTransaction: (id: string, description: string) => void;
+}
+
 // Define the columns
-export const financialTransactionColumns: ColumnDef<FinancialTransaction>[] = [
+export const financialTransactionColumns: ColumnDef<
+  FinancialTransaction,
+  FinancialTransactionTableMeta
+>[] = [
   {
     accessorKey: "date",
     header: ({ column }) => {
@@ -125,7 +133,8 @@ export const financialTransactionColumns: ColumnDef<FinancialTransaction>[] = [
     id: "actions",
     cell: ({ row, table }) => {
       const transaction = row.original;
-      
+      const meta = table.options.meta as FinancialTransactionTableMeta | undefined;
+
       return (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
@@ -138,13 +147,13 @@ export const financialTransactionColumns: ColumnDef<FinancialTransaction>[] = [
             <DropdownMenuLabel>Ações</DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuItem
-              onClick={() => table.options.meta?.editTransaction(transaction)}
+              onClick={() => meta?.editTransaction(transaction)}
             >
               <Edit className="mr-2 h-4 w-4" />
               Editar
             </DropdownMenuItem>
             <DropdownMenuItem
-              onClick={() => table.options.meta?.deleteTransaction(transaction.id, transaction.description)}
+              onClick={() => meta?.deleteTransaction(transaction.id, transaction.description)}
               className="text-destructive"
             >
               <Trash2 className="mr-2 h-4 w-4" />

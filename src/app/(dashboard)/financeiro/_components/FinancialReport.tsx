@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { createClient } from "@/lib/supabase/client";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { DateRangePicker } from "@/components/ui/date-range-picker";
+import type { DateRange } from 'react-day-picker';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -50,7 +51,7 @@ export function FinancialReport({ className }: FinancialReportProps) {
   const [transactions, setTransactions] = useState<FinancialTransaction[]>([]);
   const [categories, setCategories] = useState<FinancialCategory[]>([]);
   const [divisions, setDivisions] = useState<Division[]>([]);
-  const [dateRange, setDateRange] = useState<{ from: Date; to: Date }>({
+  const [dateRange, setDateRange] = useState<DateRange | undefined>({
     from: startOfMonth(new Date()),
     to: endOfMonth(new Date())
   });
@@ -125,8 +126,8 @@ export function FinancialReport({ className }: FinancialReportProps) {
           payment_methods!inner(id, name),
           divisions(id, name)
         `)
-        .gte("date", format(dateRange.from, "yyyy-MM-dd"))
-        .lte("date", format(dateRange.to, "yyyy-MM-dd"))
+        .gte("date", format(dateRange?.from ?? new Date(), "yyyy-MM-dd"))
+        .lte("date", format(dateRange?.to ?? new Date(), "yyyy-MM-dd"))
         .order("date", { ascending: false });
       
       // Aplicar filtro de categoria
@@ -149,19 +150,19 @@ export function FinancialReport({ className }: FinancialReportProps) {
       if (error) throw error;
       
       // Transformar os dados para o formato esperado
-      const formattedData = data?.map(item => ({
+      const formattedData = (data as any[])?.map((item) => ({
         id: item.id,
         date: item.date,
         amount: item.amount,
         description: item.description,
-        category_id: item.financial_categories.id,
-        category_name: item.financial_categories.name,
-        payment_method_id: item.payment_methods.id,
-        payment_method_name: item.payment_methods.name,
+        category_id: item.financial_categories?.id,
+        category_name: item.financial_categories?.name,
+        payment_method_id: item.payment_methods?.id,
+        payment_method_name: item.payment_methods?.name,
         type: item.type,
         status: item.status,
         division_id: item.divisions?.id,
-        division_name: item.divisions?.name
+        division_name: item.divisions?.name,
       })) || [];
       
       setTransactions(formattedData);
@@ -414,8 +415,8 @@ export function FinancialReport({ className }: FinancialReportProps) {
               <div className="space-y-2">
                 <label className="text-sm font-medium">Período</label>
                 <DateRangePicker
-                  value={dateRange}
-                  onChange={setDateRange}
+                  date={dateRange}
+                  onDateChange={setDateRange}
                 />
               </div>
               
