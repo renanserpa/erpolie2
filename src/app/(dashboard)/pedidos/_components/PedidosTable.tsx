@@ -26,8 +26,19 @@ import {
   ShoppingCart
 } from "lucide-react";
 
+interface Pedido {
+  id: string;
+  customer_name: string;
+  order_number: string;
+  date: string;
+  total: number;
+  items_count: number;
+  status: string;
+  payment_status: string;
+}
+
 // Dados de exemplo para pedidos
-const pedidosData = [
+const pedidosData: Pedido[] = [
   { 
     id: "1", 
     customer_name: "Maria Silva", 
@@ -82,7 +93,7 @@ const pedidosData = [
 
 export default function PedidosTable() {
   const [searchTerm, setSearchTerm] = useState("");
-  const [pedidos, setPedidos] = useState(pedidosData);
+  const [pedidos, setPedidos] = useState<Pedido[]>(pedidosData);
 
   // Filtrar pedidos com base no termo de pesquisa
   const filteredPedidos = pedidos.filter(
@@ -93,12 +104,12 @@ export default function PedidosTable() {
   );
 
   // Manipular a exclusão de pedido
-  const handleDeletePedido = (id) => {
+  const handleDeletePedido = (id: string) => {
     setPedidos(pedidos.filter((p) => p.id !== id));
   };
 
   // Formatar preço para exibição
-  const formatPrice = (price) => {
+  const formatPrice = (price: number) => {
     return new Intl.NumberFormat('pt-BR', {
       style: 'currency',
       currency: 'BRL'
@@ -106,13 +117,13 @@ export default function PedidosTable() {
   };
 
   // Formatar data para exibição
-  const formatDate = (dateString) => {
+  const formatDate = (dateString: string) => {
     const date = new Date(dateString);
     return new Intl.DateTimeFormat('pt-BR').format(date);
   };
 
   // Obter classe de cor com base no status
-  const getStatusClass = (status) => {
+  const getStatusClass = (status: string) => {
     switch (status.toLowerCase()) {
       case 'concluído':
         return "bg-green-100 text-green-800";
@@ -130,7 +141,7 @@ export default function PedidosTable() {
   };
 
   // Obter classe de cor com base no status de pagamento
-  const getPaymentStatusClass = (status) => {
+  const getPaymentStatusClass = (status: string) => {
     switch (status.toLowerCase()) {
       case 'pago':
         return "bg-green-100 text-green-800";

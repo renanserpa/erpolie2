@@ -42,12 +42,15 @@ export const columns: ColumnDef<Order>[] = [
         </Button>
       );
     },
-    cell: ({ row }) => <div className="lowercase">{row.getValue("id").substring(0, 8)}...</div>, // Display partial ID or order number
+    cell: ({ row }) => {
+      const id = row.getValue<string>("id");
+      return <div className="lowercase">{id.substring(0, 8)}...</div>;
+    },
   },
   {
-    accessorKey: "customer_name", // Display joined customer name
+    accessorKey: "client",
     header: "Cliente",
-    cell: ({ row }) => <div>{row.original.customer_name || "-"}</div>,
+    cell: ({ row }) => <div>{row.original.client?.name || "-"}</div>,
   },
   {
     accessorKey: "date",
@@ -82,9 +85,9 @@ export const columns: ColumnDef<Order>[] = [
     },
   },
   {
-    accessorKey: "status_name", // Display joined status name
+    accessorKey: "status",
     header: "Status",
-    cell: ({ row }) => <div>{row.original.status_name || "-"}</div>, // TODO: Add badge/color based on status
+    cell: ({ row }) => <div>{row.original.status?.name || "-"}</div>,
   },
   {
     id: "actions",

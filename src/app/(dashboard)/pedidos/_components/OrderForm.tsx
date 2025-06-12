@@ -438,11 +438,17 @@ export function OrderForm({ initialData, onSuccess }: OrderFormProps) {
             <PlusCircle className="mr-2 h-4 w-4" /> Adicionar Item
           </Button>
           <Controller
-              name="order_items" // Hidden controller to show array-level errors
-              control={form.control}
-              render={({ fieldState }) => (
-                  fieldState.error && <p className="text-sm font-medium text-destructive mt-2">{fieldState.error.message}</p>
-              )}
+            name="order_items" // Hidden controller to show array-level errors
+            control={form.control}
+            render={({ fieldState }) => (
+              <>
+                {fieldState.error && (
+                  <p className="text-sm font-medium text-destructive mt-2">
+                    {fieldState.error.message}
+                  </p>
+                )}
+              </>
+            )}
           />
         </div>
 
