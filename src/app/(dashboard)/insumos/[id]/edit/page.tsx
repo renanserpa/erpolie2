@@ -8,11 +8,12 @@ import { ArrowLeft, Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
 import { getRecordById } from '@/lib/data-hooks';
 import { InsumoForm } from '../../_components/InsumoForm';
+import type { Insumo } from '@/modules/estoque/estoque.types';
 
 export default function EditInsumoPage() {
   const params = useParams();
   const router = useRouter();
-  const [insumo, setInsumo] = useState<any>(null);
+  const [insumo, setInsumo] = useState<Insumo | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -56,6 +57,8 @@ export default function EditInsumoPage() {
     fetchInsumo();
   }, [params.id]);
 
+  if (!params?.id) return null;
+
   const handleSuccess = () => {
     toast.success('Insumo atualizado com sucesso');
     router.push(`/insumos/${params.id}`);
@@ -98,10 +101,9 @@ export default function EditInsumoPage() {
         </CardHeader>
         <CardContent>
           {insumo && (
-            <InsumoForm 
-              initialData={insumo} 
+            <InsumoForm
+              initialData={insumo}
               onSuccess={handleSuccess}
-              isEditing={true}
             />
           )}
         </CardContent>
