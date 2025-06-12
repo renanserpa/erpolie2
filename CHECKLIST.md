@@ -98,3 +98,6 @@ Este arquivo centraliza os checklists de tarefas, validações e revisões para 
 2025-06-20: Dropdown triggers convertidos para `asChild` em logística (CODEX)
 2025-06-21: Button utiliza `Slot` ao usar `asChild`, evitando múltiplos filhos (CODEX)
 2025-06-22: Investigação global aponta AdvancedFilters com FormControl condicional como potencial origem do erro (CODEX)
+
+2025-06-23: Validação de tipagem aplicada aos módulos de produção, financeiro, RH, BI e auditoria (CODEX)
+

@@ -4,7 +4,7 @@ import { FinancialTransactionForm } from '@/app/(dashboard)/financeiro/_componen
 import type { FinancialTransactionFormValues } from "@/app/(dashboard)/financeiro/_components/FinancialTransactionForm";
 
 interface DespesaFormProps {
-  initialData?: Partial<FinancialTransactionFormValues> & { id?: string };
+  initialData?: Partial<FinancialTransactionFormValues> & { id: string };
   onSuccess: () => void;
 }
 

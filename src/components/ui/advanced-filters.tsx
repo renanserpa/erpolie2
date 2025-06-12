@@ -82,24 +82,24 @@ export function AdvancedFilters({ filterOptions, onFilterChange, columnOptions =
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>{option.label}</FormLabel>
-                  <FormControl>
-                    {option.type === "text" && (
+                  {option.type === "text" && (
+                    <FormControl>
                       <Input
                         placeholder={`Filtrar por ${option.label.toLowerCase()}`}
                         {...field}
                         value={field.value || ""}
                       />
-                    )}
-                    {option.type === "select" && option.options && (
+                    </FormControl>
+                  )}
+                  {option.type === "select" && option.options && (
+                    <FormControl>
                       <Select
                         onValueChange={field.onChange}
                         value={field.value || ""}
                       >
-                        <FormControl>
-                          <SelectTrigger>
-                            <SelectValue placeholder={`Selecione ${option.label.toLowerCase()}`} />
-                          </SelectTrigger>
-                        </FormControl>
+                        <SelectTrigger>
+                          <SelectValue placeholder={`Selecione ${option.label.toLowerCase()}`} />
+                        </SelectTrigger>
                         <SelectContent>
                           <SelectItem value="">Todos</SelectItem>
                           {option.options.map((opt) => (
@@ -109,28 +109,30 @@ export function AdvancedFilters({ filterOptions, onFilterChange, columnOptions =
                           ))}
                         </SelectContent>
                       </Select>
-                    )}
-                    {option.type === "date" && (
+                    </FormControl>
+                  )}
+                  {option.type === "date" && (
+                    <FormControl>
                       <Input
                         type="date"
                         {...field}
                         value={field.value || ""}
                       />
-                    )}
-                    {option.type === "boolean" && (
+                    </FormControl>
+                  )}
+                  {option.type === "boolean" && (
+                    <FormControl>
                       <Select onValueChange={field.onChange} value={field.value || ""}>
-                        <FormControl>
-                          <SelectTrigger>
-                            <SelectValue placeholder="Selecione" />
-                          </SelectTrigger>
-                        </FormControl>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Selecione" />
+                        </SelectTrigger>
                         <SelectContent>
                           <SelectItem value="true">Sim</SelectItem>
                           <SelectItem value="false">Não</SelectItem>
                         </SelectContent>
                       </Select>
-                    )}
-                  </FormControl>
+                    </FormControl>
+                  )}
                   <FormMessage />
                 </FormItem>
               )}
