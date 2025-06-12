@@ -16,7 +16,13 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { toast } from "sonner";
 
 // Define Zod schema para validação do formulário de filtros avançados
@@ -33,7 +39,7 @@ type FilterFormValues = z.infer<typeof filterFormSchema>;
 export type FilterOption = {
   id: string;
   label: string;
-  type: "text" | "select" | "date" | "boolean";
+  type: "text" | "select" | "date" | "boolean" | "number";
   options?: { value: string; label: string }[];
 };
 
@@ -45,7 +51,13 @@ interface AdvancedFiltersProps {
   onVisibleColumnsChange?: (cols: string[]) => void;
 }
 
-export function AdvancedFilters({ filterOptions, onFilterChange, columnOptions = [], visibleColumns = [], onVisibleColumnsChange }: AdvancedFiltersProps) {
+export function AdvancedFilters({
+  filterOptions,
+  onFilterChange,
+  columnOptions = [],
+  visibleColumns = [],
+  onVisibleColumnsChange,
+}: AdvancedFiltersProps) {
   const form = useForm<FilterFormValues>({
     resolver: zodResolver(filterFormSchema),
     defaultValues: {},
@@ -55,11 +67,11 @@ export function AdvancedFilters({ filterOptions, onFilterChange, columnOptions =
     // Remover valores vazios
     const cleanedValues: { [key: string]: string } = {};
     Object.entries(values).forEach(([key, value]) => {
-      if (value && value.trim() !== '') {
+      if (value && value.trim() !== "") {
         cleanedValues[key] = value;
       }
     });
-    
+
     onFilterChange(cleanedValues);
     toast.success("Filtros aplicados");
   }
@@ -98,7 +110,9 @@ export function AdvancedFilters({ filterOptions, onFilterChange, columnOptions =
                         value={field.value || ""}
                       >
                         <SelectTrigger>
-                          <SelectValue placeholder={`Selecione ${option.label.toLowerCase()}`} />
+                          <SelectValue
+                            placeholder={`Selecione ${option.label.toLowerCase()}`}
+                          />
                         </SelectTrigger>
                         <SelectContent>
                           <SelectItem value="">Todos</SelectItem>
@@ -113,16 +127,15 @@ export function AdvancedFilters({ filterOptions, onFilterChange, columnOptions =
                   )}
                   {option.type === "date" && (
                     <FormControl>
-                      <Input
-                        type="date"
-                        {...field}
-                        value={field.value || ""}
-                      />
+                      <Input type="date" {...field} value={field.value || ""} />
                     </FormControl>
                   )}
                   {option.type === "boolean" && (
                     <FormControl>
-                      <Select onValueChange={field.onChange} value={field.value || ""}>
+                      <Select
+                        onValueChange={field.onChange}
+                        value={field.value || ""}
+                      >
                         <SelectTrigger>
                           <SelectValue placeholder="Selecione" />
                         </SelectTrigger>
@@ -137,7 +150,7 @@ export function AdvancedFilters({ filterOptions, onFilterChange, columnOptions =
                 </FormItem>
               )}
             />
-      ))}
+          ))}
         </div>
         {columnOptions.length > 0 && (
           <div className="mt-4 space-y-2">
@@ -161,11 +174,7 @@ export function AdvancedFilters({ filterOptions, onFilterChange, columnOptions =
           </div>
         )}
         <div className="flex justify-end space-x-2 mt-4">
-          <Button
-            type="button"
-            variant="outline"
-            onClick={handleClearFilters}
-          >
+          <Button type="button" variant="outline" onClick={handleClearFilters}>
             Limpar Filtros
           </Button>
           <Button type="submit">Aplicar Filtros</Button>

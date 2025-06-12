@@ -2,7 +2,13 @@
 
 import React, { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { createSupabaseClient } from "@/lib/supabase/client";
@@ -40,7 +46,7 @@ interface Product {
 }
 
 export default function ComponentDetailsPage() {
-  const params = useParams();
+  const params = useParams<{ id: string }>();
   const router = useRouter();
   const supabase = createSupabaseClient();
   const [component, setComponent] = useState<Component | null>(null);
@@ -56,54 +62,66 @@ export default function ComponentDetailsPage() {
         // Buscar detalhes do componente
         const { data: componentData, error: componentError } = await supabase
           .from("components")
-          .select(`
+          .select(
+            `
             *,
             unit_of_measurement:unit_of_measurement_id (name, abbreviation)
-          `)
+          `,
+          )
           .eq("id", params.id)
           .single();
 
         if (componentError) throw componentError;
-        setComponent(componentData);
+        setComponent(componentData as Component);
 
         // Buscar insumos relacionados
         const { data: suppliesData, error: suppliesError } = await supabase
           .from("componente_insumo")
-          .select(`
+          .select(
+            `
             id,
             supply_id,
             supplies:supply_id (name),
             quantity
-          `)
+          `,
+          )
           .eq("component_id", params.id);
 
         if (!suppliesError && suppliesData) {
-          setSupplies(suppliesData.map(item => ({
-            id: item.id,
-            supply_id: item.supply_id,
-            supply_name: item.supplies?.name || "Insumo desconhecido",
-            quantity: item.quantity
-          })));
+          setSupplies(
+            suppliesData.map((item) => ({
+              id: item.id,
+              supply_id: item.supply_id,
+              supply_name:
+                (item.supplies as any)?.name || "Insumo desconhecido",
+              quantity: item.quantity,
+            })),
+          );
         }
 
         // Buscar produtos que usam este componente
         const { data: productsData, error: productsError } = await supabase
           .from("produto_componente")
-          .select(`
+          .select(
+            `
             id,
             product_id,
             products:product_id (name),
             quantity
-          `)
+          `,
+          )
           .eq("component_id", params.id);
 
         if (!productsError && productsData) {
-          setProducts(productsData.map(item => ({
-            id: item.id,
-            product_id: item.product_id,
-            product_name: item.products?.name || "Produto desconhecido",
-            quantity: item.quantity
-          })));
+          setProducts(
+            productsData.map((item) => ({
+              id: item.id,
+              product_id: item.product_id,
+              product_name:
+                (item.products as any)?.name || "Produto desconhecido",
+              quantity: item.quantity,
+            })),
+          );
         }
       } catch (error) {
         console.error("Erro ao buscar detalhes do componente:", error);
@@ -126,20 +144,26 @@ export default function ComponentDetailsPage() {
 
   const handleDelete = async () => {
     if (!component) return;
-    
-    if (window.confirm(`Tem certeza que deseja excluir o componente ${component.name}?`)) {
+
+    if (
+      window.confirm(
+        `Tem certeza que deseja excluir o componente ${component.name}?`,
+      )
+    ) {
       try {
         const { error } = await supabase
           .from("components")
           .delete()
           .eq("id", component.id);
-          
+
         if (error) throw error;
-        
+
         router.push("/componentes");
       } catch (error) {
         console.error("Erro ao excluir componente:", error);
-        alert("Não foi possível excluir o componente. Verifique se não há registros relacionados.");
+        alert(
+          "Não foi possível excluir o componente. Verifique se não há registros relacionados.",
+        );
       }
     }
   };
@@ -195,7 +219,7 @@ export default function ComponentDetailsPage() {
           <TabsTrigger value="products">Produtos</TabsTrigger>
           <TabsTrigger value="history">Histórico</TabsTrigger>
         </TabsList>
-        
+
         <TabsContent value="details" className="space-y-4">
           <Card>
             <CardHeader>
@@ -210,26 +234,45 @@ export default function ComponentDetailsPage() {
             </CardHeader>
             <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <h3 className="font-medium text-sm text-muted-foreground">Informações Básicas</h3>
+                <h3 className="font-medium text-sm text-muted-foreground">
+                  Informações Básicas
+                </h3>
                 <div className="mt-2 space-y-2">
-                  <p><span className="font-medium">Unidade:</span> {component.unit_of_measurement?.name || "Não informado"} ({component.unit_of_measurement?.abbreviation || ""})</p>
-                  <p><span className="font-medium">Custo:</span> {
-                    new Intl.NumberFormat("pt-BR", {
+                  <p>
+                    <span className="font-medium">Unidade:</span>{" "}
+                    {component.unit_of_measurement?.name || "Não informado"} (
+                    {component.unit_of_measurement?.abbreviation || ""})
+                  </p>
+                  <p>
+                    <span className="font-medium">Custo:</span>{" "}
+                    {new Intl.NumberFormat("pt-BR", {
                       style: "currency",
                       currency: "BRL",
-                    }).format(component.cost)
-                  }</p>
+                    }).format(component.cost)}
+                  </p>
                 </div>
               </div>
               <div>
-                <h3 className="font-medium text-sm text-muted-foreground">Informações Adicionais</h3>
+                <h3 className="font-medium text-sm text-muted-foreground">
+                  Informações Adicionais
+                </h3>
                 <div className="mt-2 space-y-2">
-                  <p><span className="font-medium">Data de Cadastro:</span> {
-                    component.created_at ? format(new Date(component.created_at), "PPP", { locale: ptBR }) : "N/A"
-                  }</p>
-                  <p><span className="font-medium">Última Atualização:</span> {
-                    component.updated_at ? format(new Date(component.updated_at), "PPP", { locale: ptBR }) : "N/A"
-                  }</p>
+                  <p>
+                    <span className="font-medium">Data de Cadastro:</span>{" "}
+                    {component.created_at
+                      ? format(new Date(component.created_at), "PPP", {
+                          locale: ptBR,
+                        })
+                      : "N/A"}
+                  </p>
+                  <p>
+                    <span className="font-medium">Última Atualização:</span>{" "}
+                    {component.updated_at
+                      ? format(new Date(component.updated_at), "PPP", {
+                          locale: ptBR,
+                        })
+                      : "N/A"}
+                  </p>
                 </div>
               </div>
             </CardContent>
@@ -246,7 +289,7 @@ export default function ComponentDetailsPage() {
             </Card>
           )}
         </TabsContent>
-        
+
         <TabsContent value="supplies">
           <Card>
             <CardHeader>
@@ -268,14 +311,19 @@ export default function ComponentDetailsPage() {
                     </thead>
                     <tbody>
                       {supplies.map((supply) => (
-                        <tr key={supply.id} className="border-b hover:bg-muted/50">
+                        <tr
+                          key={supply.id}
+                          className="border-b hover:bg-muted/50"
+                        >
                           <td className="py-2 px-4">{supply.supply_name}</td>
                           <td className="py-2 px-4">{supply.quantity}</td>
                           <td className="py-2 px-4 text-right">
                             <Button
                               variant="ghost"
                               size="icon"
-                              onClick={() => router.push(`/insumos/${supply.supply_id}`)}
+                              onClick={() =>
+                                router.push(`/insumos/${supply.supply_id}`)
+                              }
                             >
                               <Package className="h-4 w-4" />
                             </Button>
@@ -299,7 +347,7 @@ export default function ComponentDetailsPage() {
             </CardContent>
           </Card>
         </TabsContent>
-        
+
         <TabsContent value="products">
           <Card>
             <CardHeader>
@@ -321,14 +369,19 @@ export default function ComponentDetailsPage() {
                     </thead>
                     <tbody>
                       {products.map((product) => (
-                        <tr key={product.id} className="border-b hover:bg-muted/50">
+                        <tr
+                          key={product.id}
+                          className="border-b hover:bg-muted/50"
+                        >
                           <td className="py-2 px-4">{product.product_name}</td>
                           <td className="py-2 px-4">{product.quantity}</td>
                           <td className="py-2 px-4 text-right">
                             <Button
                               variant="ghost"
                               size="icon"
-                              onClick={() => router.push(`/produtos/${product.product_id}`)}
+                              onClick={() =>
+                                router.push(`/produtos/${product.product_id}`)
+                              }
                             >
                               <Layers className="h-4 w-4" />
                             </Button>
@@ -349,13 +402,14 @@ export default function ComponentDetailsPage() {
             </CardContent>
           </Card>
         </TabsContent>
-        
+
         <TabsContent value="history">
           <Card>
             <CardHeader>
               <CardTitle>Histórico de Atividades</CardTitle>
               <CardDescription>
-                Registro de alterações e atividades relacionadas a este componente
+                Registro de alterações e atividades relacionadas a este
+                componente
               </CardDescription>
             </CardHeader>
             <CardContent>

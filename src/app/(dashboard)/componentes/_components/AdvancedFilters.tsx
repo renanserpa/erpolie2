@@ -14,7 +14,13 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { toast } from "sonner";
 
 // Define Zod schema para validação do formulário de filtros avançados
@@ -30,7 +36,7 @@ type FilterFormValues = z.infer<typeof filterFormSchema>;
 export type FilterOption = {
   id: string;
   label: string;
-  type: "text" | "select" | "date";
+  type: "text" | "select" | "date" | "number";
   options?: { value: string; label: string }[];
 };
 
@@ -39,7 +45,10 @@ interface AdvancedFiltersProps {
   onFilterChange: (filters: { [key: string]: string }) => void;
 }
 
-export function AdvancedFilters({ filterOptions, onFilterChange }: AdvancedFiltersProps) {
+export function AdvancedFilters({
+  filterOptions,
+  onFilterChange,
+}: AdvancedFiltersProps) {
   const form = useForm<FilterFormValues>({
     resolver: zodResolver(filterFormSchema),
     defaultValues: {},
@@ -49,11 +58,11 @@ export function AdvancedFilters({ filterOptions, onFilterChange }: AdvancedFilte
     // Remover valores vazios
     const cleanedValues: { [key: string]: string } = {};
     Object.entries(values).forEach(([key, value]) => {
-      if (value && value.trim() !== '') {
+      if (value && value.trim() !== "") {
         cleanedValues[key] = value;
       }
     });
-    
+
     onFilterChange(cleanedValues);
     toast.success("Filtros aplicados");
   }
@@ -91,7 +100,9 @@ export function AdvancedFilters({ filterOptions, onFilterChange }: AdvancedFilte
                       >
                         <FormControl>
                           <SelectTrigger>
-                            <SelectValue placeholder={`Selecione ${option.label.toLowerCase()}`} />
+                            <SelectValue
+                              placeholder={`Selecione ${option.label.toLowerCase()}`}
+                            />
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
@@ -105,11 +116,7 @@ export function AdvancedFilters({ filterOptions, onFilterChange }: AdvancedFilte
                       </Select>
                     )}
                     {option.type === "date" && (
-                      <Input
-                        type="date"
-                        {...field}
-                        value={field.value || ""}
-                      />
+                      <Input type="date" {...field} value={field.value || ""} />
                     )}
                   </FormControl>
                   <FormMessage />
@@ -119,11 +126,7 @@ export function AdvancedFilters({ filterOptions, onFilterChange }: AdvancedFilte
           ))}
         </div>
         <div className="flex justify-end space-x-2">
-          <Button
-            type="button"
-            variant="outline"
-            onClick={handleClearFilters}
-          >
+          <Button type="button" variant="outline" onClick={handleClearFilters}>
             Limpar Filtros
           </Button>
           <Button type="submit">Aplicar Filtros</Button>
