@@ -17,11 +17,11 @@ import { toast } from "sonner";
 import { createClient } from "@/lib/supabase/client";
 import { useRouter } from "next/navigation";
 import { Dialog, DialogTrigger, DialogContent } from "@/components/ui/dialog";
-import { PurchaseRequestForm } from "./PurchaseRequestForm";
+import { PurchaseRequestForm, type PurchaseRequestFormValues } from "./PurchaseRequestForm";
 import { PurchaseRequestApprovalDialog } from "./PurchaseRequestApprovalDialog";
 
 // Define the type based on the actual Supabase schema for purchase_requests
-export type PurchaseRequest = {
+export type PurchaseRequestRow = {
   id: string;
   requester_id: string | null;
   department_id: string | null;
@@ -73,7 +73,7 @@ const handleDelete = async (id: string, router: ReturnType<typeof useRouter>) =>
 };
 
 interface ActionsCellProps {
-  request: PurchaseRequest;
+  request: PurchaseRequestRow;
 }
 
 function ActionsCell({ request }: ActionsCellProps) {
@@ -127,7 +127,13 @@ function ActionsCell({ request }: ActionsCellProps) {
                 </DialogTrigger>
                 <DialogContent className="sm:max-w-[800px]">
                   <PurchaseRequestForm
-                    initialData={request}
+                    initialData={{
+                      id: request.id,
+                      department_id: request.department_id || "",
+                      justification: request.justification,
+                      requester_id: request.requester_id || undefined,
+                      status: (request.status?.name as PurchaseRequestFormValues["status"]) || "pending",
+                    }}
                     onSuccess={() => router.refresh()}
                   />
                 </DialogContent>
@@ -149,7 +155,16 @@ function ActionsCell({ request }: ActionsCellProps) {
       </DropdownMenu>
 
       <PurchaseRequestApprovalDialog
-        purchaseRequest={request}
+        purchaseRequest={{
+          id: request.id,
+          created_at: request.created_at,
+          requester_id: request.requester_id || undefined,
+          department_id: request.department_id || undefined,
+          justification: request.justification,
+          status:
+            (request.status?.name as PurchaseRequestFormValues["status"]) ||
+            "pending",
+        }}
         action={approvalAction}
         open={approvalDialogOpen}
         onOpenChange={setApprovalDialogOpen}
@@ -162,7 +177,7 @@ function ActionsCell({ request }: ActionsCellProps) {
   );
 }
 
-export const purchaseRequestColumns = (): ColumnDef<PurchaseRequest>[] => [
+export const purchaseRequestColumns = (): ColumnDef<PurchaseRequestRow>[] => [
   {
     accessorKey: "id",
     header: "ID",

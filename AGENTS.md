@@ -123,3 +123,4 @@ Data | Autor | Descrição
 2025-06-12 | CODEX | Financeiro module fully typed & build-clean
 2025-06-30 | CODEX | Estoque module fully typed & build-clean
 2025-06-30 | CODEX | Produção module fully typed & build-clean
+2025-06-30 | CODEX | Compras module fully typed & build-clean

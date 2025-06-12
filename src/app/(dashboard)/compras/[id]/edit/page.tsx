@@ -6,25 +6,29 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { ArrowLeft, Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
-import { getRecordById } from '@/lib/data-hooks';
-import { PurchaseRequestForm } from '../../_components/PurchaseRequestForm';
+import { createSupabaseClient } from '@/lib/supabase/client';
+import { PurchaseRequestForm, type PurchaseRequestFormValues } from '../../_components/PurchaseRequestForm';
 import type { PurchaseRequest } from '@/types/schema';
 
 export default function EditPurchaseRequestPage() {
   const params = useParams();
   const router = useRouter();
+  const supabase = createSupabaseClient();
   const [purchaseRequest, setPurchaseRequest] = useState<PurchaseRequest | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   const fetchPurchaseRequest = useCallback(async () => {
+    if (!params?.id) return;
     try {
       setLoading(true);
       setError(null);
-      
-      const result = await getRecordById('purchase_requests', params.id as string, {
-        select: `
-          id, 
+
+      const { data, error } = await supabase
+        .from('purchase_requests')
+        .select(
+          `
+          id,
           status_id,
           requester_id,
           approver_id,
@@ -34,26 +38,31 @@ export default function EditPurchaseRequestPage() {
           updated_at,
           purchase_request_statuses:status_id (id, name, color)
         `
-      });
-      
-      if (result.success) {
-        setPurchaseRequest(result.data);
+        )
+        .eq('id', params.id)
+        .single()
+        .returns<PurchaseRequest>();
+
+      if (error) {
+        setError('Erro ao buscar solicitação de compra');
       } else {
-        setError(result.error || 'Erro ao buscar solicitação de compra');
+        setPurchaseRequest(data);
       }
-      } catch (err: unknown) {
-        console.error('Error fetching purchase request details:', err);
-        const message = err instanceof Error ? err.message : 'Erro ao carregar detalhes da solicitação de compra';
-        setError(message);
-        toast.error('Erro ao carregar detalhes da solicitação de compra.');
-      } finally {
-        setLoading(false);
-      }
-  }, [params.id]);
+    } catch (err: unknown) {
+      console.error('Error fetching purchase request details:', err);
+      const message = err instanceof Error ? err.message : 'Erro ao carregar detalhes da solicitação de compra';
+      setError(message);
+      toast.error('Erro ao carregar detalhes da solicitação de compra.');
+    } finally {
+      setLoading(false);
+    }
+  }, [params?.id, supabase]);
 
   useEffect(() => {
     fetchPurchaseRequest();
   }, [fetchPurchaseRequest]);
+
+  if (!params?.id) return null;
 
   const handleSuccess = () => {
     toast.success('Solicitação de compra atualizada com sucesso');
@@ -97,10 +106,9 @@ export default function EditPurchaseRequestPage() {
         </CardHeader>
         <CardContent>
           {purchaseRequest && (
-            <PurchaseRequestForm 
-              initialData={purchaseRequest} 
+            <PurchaseRequestForm
+              initialData={purchaseRequest as unknown as Partial<PurchaseRequestFormValues> & { id: string }}
               onSuccess={handleSuccess}
-              isEditing={true}
             />
           )}
         </CardContent>

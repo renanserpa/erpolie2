@@ -101,7 +101,8 @@ export default function PurchaseOrderDetailsPage() {
             unit_price,
             total_price
           `)
-          .eq("purchase_order_id", params.id);
+          .eq("purchase_order_id", params.id)
+          .returns<PurchaseItem[]>();
 
         if (!itemsError) {
           setItems(itemsData || []);
@@ -112,7 +113,8 @@ export default function PurchaseOrderDetailsPage() {
           .from("purchase_order_history")
           .select("*")
           .eq("purchase_order_id", params.id)
-          .order("date", { ascending: false });
+          .order("date", { ascending: false })
+          .returns<PurchaseHistory[]>();
 
         if (!historyError) {
           setHistory(historyData || []);
@@ -129,6 +131,8 @@ export default function PurchaseOrderDetailsPage() {
       fetchPurchaseOrderDetails();
     }
   }, [params.id, supabase]);
+
+  if (!params?.id) return null;
 
   const handleEdit = () => {
     // Abrir modal de edição ou navegar para página de edição
