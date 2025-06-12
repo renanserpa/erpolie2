@@ -25,7 +25,7 @@ import {
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { createSupabaseClient } from "@/lib/supabase/client";
-import { ProductionOrder } from "./columns"; // Assuming type is exported from columns
+import type { OrdemDeProducaoDetalhada } from "@/modules/producao/producao.types";
 import { toast } from "sonner";
 
 // Define Zod schema for status update
@@ -42,7 +42,7 @@ interface Status {
 }
 
 interface UpdateProductionStatusDialogProps {
-  productionOrder: ProductionOrder;
+  productionOrder: OrdemDeProducaoDetalhada;
   open: boolean;
   onOpenChange: (open: boolean) => void;
   onSuccess: () => void; // Callback on successful update

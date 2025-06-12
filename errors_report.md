@@ -393,19 +393,7 @@ src/app/(dashboard)/pedidos/_components/PedidosTable.tsx(133,34): error TS7006: 
 src/app/(dashboard)/pedidos/_components/columns.tsx(45,52): error TS2571: Object is of type 'unknown'.
 src/app/(dashboard)/pedidos/_components/columns.tsx(50,43): error TS2339: Property 'customer_name' does not exist on type 'Order'.
 src/app/(dashboard)/pedidos/_components/columns.tsx(87,43): error TS2339: Property 'status_name' does not exist on type 'Order'.
-src/app/(dashboard)/producao/[id]/edit/page.tsx(24,84): error TS2554: Expected 2 arguments, but got 3.
-src/app/(dashboard)/producao/[id]/edit/page.tsx(130,15): error TS2322: Type '{ initialData: any; onSuccess: () => void; isEditing: boolean; }' is not assignable to type 'IntrinsicAttributes & ProductionOrderFormProps'.
-  Property 'isEditing' does not exist on type 'IntrinsicAttributes & ProductionOrderFormProps'.
-src/app/(dashboard)/producao/_components/ProductionKanbanBoard.tsx(4,10): error TS2305: Module '"./columns"' has no exported member 'ProductionOrder'.
-src/app/(dashboard)/producao/_components/ProductionOrderForm.tsx(203,34): error TS2339: Property 'name' does not exist on type '{ name: any; }[]'.
-src/app/(dashboard)/producao/_components/UpdateProductionStatusDialog.tsx(28,10): error TS2305: Module '"./columns"' has no exported member 'ProductionOrder'.
-src/app/(dashboard)/producao/_components/columns.tsx(58,70): error TS2571: Object is of type 'unknown'.
-src/app/(dashboard)/producao/_components/columns.tsx(63,43): error TS2339: Property 'order_ref' does not exist on type 'OrdemDeProducao'.
-src/app/(dashboard)/producao/_components/columns.tsx(69,39): error TS2339: Property 'status_name' does not exist on type 'OrdemDeProducao'.
-src/app/(dashboard)/producao/_components/columns.tsx(122,46): error TS2722: Cannot invoke an object which is possibly 'undefined'.
-src/app/(dashboard)/producao/_components/columns.tsx(125,46): error TS2722: Cannot invoke an object which is possibly 'undefined'.
-src/app/(dashboard)/producao/_components/columns.tsx(128,46): error TS2722: Cannot invoke an object which is possibly 'undefined'.
-src/app/(dashboard)/producao/_components/columns.tsx(139,46): error TS2722: Cannot invoke an object which is possibly 'undefined'.
+No TypeScript errors remaining in src/app/(dashboard)/producao after fixes.
 src/app/(dashboard)/produtos/[id]/edit/page.tsx(110,15): error TS2322: Type '{ initialData: any; onSuccess: () => void; isEditing: boolean; }' is not assignable to type 'IntrinsicAttributes & ProductFormProps'.
   Property 'isEditing' does not exist on type 'IntrinsicAttributes & ProductFormProps'.
 src/modules/clientes/ClientesPage.tsx(130,38): error TS2694: Namespace '"papaparse"' has no exported member 'ParseResult'.

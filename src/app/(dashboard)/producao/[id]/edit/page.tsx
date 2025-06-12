@@ -8,11 +8,12 @@ import { ArrowLeft, Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
 import { getRecordById } from '@/lib/data-hooks';
 import { ProductionOrderForm } from '../../_components/ProductionOrderForm';
+import type { OrdemDeProducao } from '@/modules/producao/producao.types';
 
 export default function EditProductionOrderPage() {
   const params = useParams();
   const router = useRouter();
-  const [productionOrder, setProductionOrder] = useState<any>(null);
+  const [productionOrder, setProductionOrder] = useState<Partial<OrdemDeProducao> | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -21,25 +22,8 @@ export default function EditProductionOrderPage() {
       setLoading(true);
       setError(null);
       
-      const result = await getRecordById('production_orders', params.id as string, {
-        select: `
-          id, 
-          order_id,
-          order_item_id,
-          product_id,
-          variant_id,
-          quantity,
-          status_id,
-          start_date,
-          due_date,
-          completion_date,
-          responsible_id,
-          created_by,
-          created_at,
-          updated_at,
-          production_statuses:status_id (id, name, color)
-        `
-      });
+      if (!params?.id) return;
+      const result = await getRecordById<OrdemDeProducao>('production_orders', params.id as string);
       
       if (result.success) {
         setProductionOrder(result.data);
@@ -79,8 +63,12 @@ export default function EditProductionOrderPage() {
   };
 
   useEffect(() => {
-    fetchProductionOrder();
+    if (params?.id) {
+      fetchProductionOrder();
+    }
   }, [params.id]);
+
+  if (!params?.id) return null;
 
   const handleSuccess = () => {
     toast.success('Ordem de produção atualizada com sucesso');
@@ -124,10 +112,9 @@ export default function EditProductionOrderPage() {
         </CardHeader>
         <CardContent>
           {productionOrder && (
-            <ProductionOrderForm 
-              initialData={productionOrder} 
+            <ProductionOrderForm
+              initialData={productionOrder}
               onSuccess={handleSuccess}
-              isEditing={true}
             />
           )}
         </CardContent>

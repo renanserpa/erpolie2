@@ -184,8 +184,8 @@ export function ProductionOrderForm({ initialData, onSuccess }: ProductionOrderF
         const { data: componentsData, error: componentsError } = await supabase
           .from("product_components")
           .select(`
-            product_id, 
-            component_product_id, 
+            product_id,
+            component_product_id,
             quantity,
             products!product_components_component_product_id_fkey ( name )
           `)
@@ -195,7 +195,7 @@ export function ProductionOrderForm({ initialData, onSuccess }: ProductionOrderF
 
         // Calculate total required quantity for each component
         const requiredMap = new Map<string, { name?: string; totalQuantity: number }>();
-        componentsData?.forEach(comp => {
+        (componentsData as (ProductComponent & { products?: { name?: string } | null })[] | null)?.forEach(comp => {
           const orderQuantity = orderQuantitiesMap.get(comp.product_id) || 0;
           const totalNeeded = comp.quantity * orderQuantity;
           const existing = requiredMap.get(comp.component_product_id);

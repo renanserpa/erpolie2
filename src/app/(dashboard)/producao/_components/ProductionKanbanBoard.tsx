@@ -1,7 +1,7 @@
 "use client";
 
 import React from 'react';
-import { ProductionOrder } from './columns'; // Assuming type is exported from columns
+import type { OrdemDeProducaoDetalhada } from '@/modules/producao/producao.types';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 
@@ -13,7 +13,7 @@ interface KanbanColumn {
 }
 
 interface ProductionKanbanBoardProps {
-  orders: ProductionOrder[];
+  orders: OrdemDeProducaoDetalhada[];
   statuses: KanbanColumn[]; // Pass the statuses to define columns
   loading: boolean;
 }
@@ -42,7 +42,7 @@ export function ProductionKanbanBoard({ orders, statuses, loading }: ProductionK
   const ordersByStatus = statuses.reduce((acc, status) => {
     acc[status.id] = orders.filter(order => order.status_id === status.id);
     return acc;
-  }, {} as { [key: string]: ProductionOrder[] });
+  }, {} as { [key: string]: OrdemDeProducaoDetalhada[] });
 
   return (
     <div className="flex gap-4 overflow-x-auto pb-4"> {/* Enable horizontal scrolling */}

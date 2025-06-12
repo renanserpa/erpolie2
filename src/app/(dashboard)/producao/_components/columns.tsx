@@ -9,7 +9,10 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel,
 import { Badge } from "@/components/ui/badge";
 // Import the dialog component
 import { UpdateProductionStatusDialog } from "./UpdateProductionStatusDialog";
-import type { OrdemDeProducao } from "@/modules/producao/producao.types";
+import type {
+  OrdemDeProducaoDetalhada,
+  OrdemDeProducao,
+} from "@/modules/producao/producao.types";
 
 // Helper function to format dates (optional)
 const formatDate = (dateString: string | null | undefined) => {
@@ -22,7 +25,7 @@ const formatDate = (dateString: string | null | undefined) => {
 };
 
 // Define columns with type annotation including meta
-export const columns: ColumnDef<OrdemDeProducao, any>[] = [
+export const columns: ColumnDef<OrdemDeProducaoDetalhada, any>[] = [
   {
     id: "select",
     header: ({ table }) => (
@@ -55,7 +58,11 @@ export const columns: ColumnDef<OrdemDeProducao, any>[] = [
         </Button>
       );
     },
-    cell: ({ row }) => <div className="lowercase font-mono text-xs">{row.getValue("id").substring(0, 8)}</div>,
+    cell: ({ row }) => (
+      <div className="lowercase font-mono text-xs">
+        {String(row.original.id).substring(0, 8)}
+      </div>
+    ),
   },
   {
     accessorKey: "order_ref", // Display linked order reference
@@ -119,13 +126,13 @@ export const columns: ColumnDef<OrdemDeProducao, any>[] = [
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Ações</DropdownMenuLabel>
-            <DropdownMenuItem onClick={() => meta?.viewDetails(productionOrder.id)} disabled>
+            <DropdownMenuItem onClick={() => meta?.viewDetails?.(productionOrder.id)} disabled>
               <Eye className="mr-2 h-4 w-4" /> Ver Detalhes
             </DropdownMenuItem>
-            <DropdownMenuItem onClick={() => meta?.editOrder(productionOrder.id)} disabled>
+            <DropdownMenuItem onClick={() => meta?.editOrder?.(productionOrder.id)} disabled>
               <Edit className="mr-2 h-4 w-4" /> Editar Ordem
             </DropdownMenuItem>
-            <DropdownMenuItem onClick={() => meta?.updateStatus(productionOrder)}>
+            <DropdownMenuItem onClick={() => meta?.updateStatus?.(productionOrder)}>
               <CheckCircle className="mr-2 h-4 w-4" /> Atualizar Status
             </DropdownMenuItem>
             <DropdownMenuItem
@@ -136,7 +143,7 @@ export const columns: ColumnDef<OrdemDeProducao, any>[] = [
             {/* TODO: Add actions like "Advance Stage", "Print Label", etc. */}
             {/* <DropdownMenuItem disabled>Avançar Etapa</DropdownMenuItem> */}
             <DropdownMenuSeparator />
-            <DropdownMenuItem onClick={() => meta?.deleteOrder(productionOrder.id)} className="text-red-600" disabled>
+            <DropdownMenuItem onClick={() => meta?.deleteOrder?.(productionOrder.id)} className="text-red-600" disabled>
               <Trash2 className="mr-2 h-4 w-4" /> Excluir Ordem
             </DropdownMenuItem>
           </DropdownMenuContent>
