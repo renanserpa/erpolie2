@@ -56,3 +56,6 @@ Apesar das correções adicionais nos formulários de receitas e despesas, o `ty
 
 2025-06-24: Refino parcial de tipagens; tsc exibe erros pendentes em pedidos e producao.
 2025-06-25: Módulo de clientes estabilizado com tipagem. Formulários revisados e components tipados.
+
+## 2025-06-27
+- Relatório global de erros de type-check gerado (errors_report.md).
