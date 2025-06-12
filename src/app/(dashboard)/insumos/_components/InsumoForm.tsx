@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import type { Insumo } from "@/modules/estoque/estoque.types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
@@ -39,7 +40,7 @@ const insumoFormSchema = z.object({
 type InsumoFormValues = z.infer<typeof insumoFormSchema>;
 
 interface InsumoFormProps {
-  initialData?: any; // Para edição
+  initialData?: Partial<Insumo>; // Para edição
   onSuccess?: () => void; // Callback após submissão bem-sucedida
 }
 

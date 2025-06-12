@@ -119,6 +119,8 @@ export default function SupplyDetailsPage() {
     }
   }, [params.id, supabase]);
 
+  if (!params?.id) return null;
+
   const handleEdit = () => {
     // Abrir modal de edição ou navegar para página de edição
     // Por enquanto, apenas mostra um alerta
