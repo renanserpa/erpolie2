@@ -114,3 +114,4 @@ Data | Autor | Descrição
 
 2025-06-24 | CODEX | Ajustes de tipagem adicionais em componentes e pages; type-check segue com falhas.
 2025-06-25 | CODEX | Módulo clientes estabilizado com tipagem
+2025-06-26 | CODEX | Tipos externos instalados e tsconfig ajustado – erros de declaração de módulo resolvidos.
