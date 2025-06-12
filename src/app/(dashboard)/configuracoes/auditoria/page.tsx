@@ -3,12 +3,14 @@
 import React, { useState } from 'react';
 import { useAuth } from '@/contexts/auth-context';
 import { useAudit, AuditAction } from '@/lib/audit-service';
+import { createClient } from '@/lib/supabase/client';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { DateRangePicker } from '@/components/ui/date-range-picker';
+import type { DateRange } from 'react-day-picker';
 import { DataTable } from '@/components/ui/data-table';
 import { ColumnDef } from '@tanstack/react-table';
 import { format } from 'date-fns';
@@ -90,11 +92,12 @@ export default function AuditLogPage() {
       }
       
       // Adicionar emails de usuários (em produção, isso seria feito via join no banco)
+      const supabase = createClient();
       const logsWithUserInfo = await Promise.all((data || []).map(async (log) => {
         if (!log.user_id) return { ...log, user_email: 'Sistema' };
-        
+
         try {
-          const { data: userData } = await auditService.supabase
+          const { data: userData } = await supabase
             .from('user_profiles')
             .select('full_name')
             .eq('id', log.user_id)
@@ -362,8 +365,10 @@ export default function AuditLogPage() {
               <div className="flex items-center">
                 <Calendar className="h-4 w-4 mr-2 text-muted-foreground" />
                 <DateRangePicker
-                  value={filters.dateRange}
-                  onChange={(range) => setFilters({ ...filters, dateRange: range })}
+                  date={filters.dateRange}
+                  onDateChange={(range: DateRange) =>
+                    setFilters({ ...filters, dateRange: range })
+                  }
                 />
               </div>
             </div>
@@ -387,11 +392,6 @@ export default function AuditLogPage() {
             columns={columns}
             data={logs}
             loading={isLoading}
-            pageCount={Math.ceil(totalLogs / pageSize)}
-            pageIndex={page}
-            pageSize={pageSize}
-            onPageChange={setPage}
-            onPageSizeChange={setPageSize}
           />
         </CardContent>
       </Card>
