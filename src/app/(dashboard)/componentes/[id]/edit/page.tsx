@@ -1,17 +1,17 @@
 "use client";
 
-import React, { useEffect, useState, useCallback } from 'react';
-import { useParams, useRouter } from 'next/navigation';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { ArrowLeft, Loader2 } from 'lucide-react';
-import { toast } from 'sonner';
-import { getRecordById } from '@/lib/data-hooks';
-import type { Component } from '@/types/schema';
-import { ComponentForm } from '../../_components/ComponentForm';
+import React, { useEffect, useState, useCallback } from "react";
+import { useParams, useRouter } from "next/navigation";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { ArrowLeft, Loader2 } from "lucide-react";
+import { toast } from "sonner";
+import { getRecordById } from "@/lib/data-hooks";
+import type { Component } from "@/types/schema";
+import { ComponentForm } from "../../_components/ComponentForm";
 
 export default function EditComponentPage() {
-  const params = useParams();
+  const params = useParams<{ id: string }>();
   const router = useRouter();
   const [component, setComponent] = useState<Component | null>(null);
   const [loading, setLoading] = useState(true);
@@ -21,33 +21,25 @@ export default function EditComponentPage() {
     try {
       setLoading(true);
       setError(null);
-      
-      const result = await getRecordById('components', params.id as string);
-      
+
+      const result = await getRecordById<Component>(
+        "components",
+        params.id as string,
+      );
+
       if (result.success) {
-        setComponent(result.data);
+        setComponent(result.data ?? null);
       } else {
-        // Criar um componente mockado para demonstração
-        setComponent({
-          id: params.id,
-          name: 'Componente Exemplo',
-          description: 'Descrição detalhada do componente exemplo',
-          image_url: null,
-          is_active: true,
-          created_at: new Date().toISOString(),
-          updated_at: new Date().toISOString()
-        });
-        
-        console.warn('Usando dados mockados para componente');
+        setError("Componente não encontrado.");
       }
     } catch (err: unknown) {
-      console.error('Error fetching component details:', err);
+      console.error("Error fetching component details:", err);
       if (err instanceof Error) {
         setError(err.message);
       } else {
-        setError('Erro ao carregar detalhes do componente');
+        setError("Erro ao carregar detalhes do componente");
       }
-      toast.error('Erro ao carregar detalhes do componente.');
+      toast.error("Erro ao carregar detalhes do componente.");
     } finally {
       setLoading(false);
     }
@@ -58,7 +50,7 @@ export default function EditComponentPage() {
   }, [fetchComponent]);
 
   const handleSuccess = () => {
-    toast.success('Componente atualizado com sucesso');
+    toast.success("Componente atualizado com sucesso");
     router.push(`/componentes/${params.id}`);
   };
 
@@ -85,9 +77,7 @@ export default function EditComponentPage() {
         <div className="bg-red-50 border-l-4 border-red-400 p-4 mb-4">
           <div className="flex">
             <div className="ml-3">
-              <p className="text-sm text-red-700">
-                {error}
-              </p>
+              <p className="text-sm text-red-700">{error}</p>
             </div>
           </div>
         </div>
@@ -99,11 +89,7 @@ export default function EditComponentPage() {
         </CardHeader>
         <CardContent>
           {component && (
-            <ComponentForm 
-              initialData={component} 
-              onSuccess={handleSuccess}
-              isEditing={true}
-            />
+            <ComponentForm initialData={component} onSuccess={handleSuccess} />
           )}
         </CardContent>
       </Card>

@@ -2,7 +2,7 @@
 
 import React from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
+import { useForm, type Resolver } from "react-hook-form";
 import * as z from "zod";
 import { Button } from "@/components/ui/button";
 import {
@@ -23,7 +23,9 @@ import type { Component } from "@/types/schema";
 
 // Define Zod schema para validação do formulário de componente
 const componentFormSchema = z.object({
-  name: z.string().min(2, { message: "Nome deve ter pelo menos 2 caracteres." }),
+  name: z
+    .string()
+    .min(2, { message: "Nome deve ter pelo menos 2 caracteres." }),
   description: z.string().optional().nullable(),
   is_active: z.boolean().default(true),
 });
@@ -37,7 +39,7 @@ interface ComponentFormProps {
 
 export function ComponentForm({ initialData, onSuccess }: ComponentFormProps) {
   const form = useForm<ComponentFormValues>({
-    resolver: zodResolver(componentFormSchema),
+    resolver: zodResolver(componentFormSchema) as Resolver<ComponentFormValues>,
     defaultValues: {
       name: initialData?.name || "",
       description: initialData?.description || "",
@@ -50,21 +52,29 @@ export function ComponentForm({ initialData, onSuccess }: ComponentFormProps) {
       // Preparar dados para envio
       const componentData = {
         ...values,
-        updated_at: new Date().toISOString()
+        updated_at: new Date().toISOString(),
       };
-      
+
       let result;
-      
+
       if (initialData?.id) {
         // Atualizar componente existente
-        result = await updateRecord('components', initialData.id, componentData);
+        result = await updateRecord(
+          "components",
+          initialData.id,
+          componentData,
+        );
       } else {
         // Criar novo componente
-        result = await createRecord('components', componentData);
+        result = await createRecord("components", componentData);
       }
-      
+
       if (result.success) {
-        toast.success(initialData ? "Componente atualizado com sucesso" : "Componente criado com sucesso");
+        toast.success(
+          initialData
+            ? "Componente atualizado com sucesso"
+            : "Componente criado com sucesso",
+        );
         onSuccess?.();
       } else {
         toast.error("Erro ao salvar componente");
@@ -86,7 +96,11 @@ export function ComponentForm({ initialData, onSuccess }: ComponentFormProps) {
             <FormItem>
               <FormLabel>Nome do Componente *</FormLabel>
               <FormControl>
-                <Input placeholder="Nome do componente" {...field} value={field.value || ""} />
+                <Input
+                  placeholder="Nome do componente"
+                  {...field}
+                  value={field.value || ""}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -101,10 +115,10 @@ export function ComponentForm({ initialData, onSuccess }: ComponentFormProps) {
             <FormItem>
               <FormLabel>Descrição</FormLabel>
               <FormControl>
-                <Textarea 
-                  placeholder="Descrição do componente" 
-                  {...field} 
-                  value={field.value || ""} 
+                <Textarea
+                  placeholder="Descrição do componente"
+                  {...field}
+                  value={field.value || ""}
                   className="min-h-[100px]"
                 />
               </FormControl>
@@ -120,7 +134,9 @@ export function ComponentForm({ initialData, onSuccess }: ComponentFormProps) {
           render={({ field }) => (
             <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
               <div className="space-y-0.5">
-                <FormLabel className="text-base">Status do Componente</FormLabel>
+                <FormLabel className="text-base">
+                  Status do Componente
+                </FormLabel>
                 <FormDescription>
                   Componente está ativo e disponível para uso?
                 </FormDescription>

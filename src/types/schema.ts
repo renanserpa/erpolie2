@@ -65,6 +65,10 @@ export interface StockItem {
     name: string;
     abbreviation: string;
   } | null;
+  supplier?: {
+    id: string;
+    name: string;
+  } | null;
 }
 
 export interface Component {
@@ -73,7 +77,13 @@ export interface Component {
   description?: string | null;
   sku?: string | null;
   category_id?: string | null;
+  code?: string | null;
+  price?: number | null;
   unit_of_measurement_id?: string | null;
+  cost?: number | null;
+  stock_quantity?: number | null;
+  min_stock?: number | null;
+  supplier_id?: string | null;
   is_active: boolean;
   created_at: string;
   updated_at: string;
@@ -259,7 +269,7 @@ export interface StockMovement {
   id: string;
   stock_item_id: string;
   quantity: number;
-  movement_type: 'entrada' | 'saida';
+  movement_type: "entrada" | "saida";
   reference_id?: string | null;
   reference_type?: string | null;
   notes?: string | null;
@@ -276,7 +286,7 @@ export interface FinancialTransaction {
   id: string;
   date: string;
   amount: number;
-  type: 'income' | 'expense';
+  type: "income" | "expense";
   category_id?: string | null;
   description?: string | null;
   reference_id?: string | null;
