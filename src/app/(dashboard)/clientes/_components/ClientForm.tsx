@@ -2,7 +2,7 @@
 
 import React from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
+import { useForm, type Resolver } from "react-hook-form";
 import * as z from "zod";
 import { Button } from "@/components/ui/button";
 import {
@@ -44,7 +44,7 @@ interface ClientFormProps {
 
 export function ClientForm({ initialData, onSuccess }: ClientFormProps) {
   const form = useForm<ClientFormValues>({
-    resolver: zodResolver(clientFormSchema),
+    resolver: zodResolver(clientFormSchema) as Resolver<ClientFormValues>,
     defaultValues: {
       name: initialData?.name || "",
       email: initialData?.email || "",
@@ -94,7 +94,7 @@ export function ClientForm({ initialData, onSuccess }: ClientFormProps) {
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {/* Nome */}
-          <FormField
+          <FormField<ClientFormValues, "name">
             control={form.control}
             name="name"
             render={({ field }) => (
@@ -109,7 +109,7 @@ export function ClientForm({ initialData, onSuccess }: ClientFormProps) {
           />
 
           {/* Email */}
-          <FormField
+          <FormField<ClientFormValues, "email">
             control={form.control}
             name="email"
             render={({ field }) => (
@@ -124,7 +124,7 @@ export function ClientForm({ initialData, onSuccess }: ClientFormProps) {
           />
 
           {/* Telefone */}
-          <FormField
+          <FormField<ClientFormValues, "phone">
             control={form.control}
             name="phone"
             render={({ field }) => (
@@ -139,7 +139,7 @@ export function ClientForm({ initialData, onSuccess }: ClientFormProps) {
           />
 
           {/* CPF/CNPJ */}
-          <FormField
+          <FormField<ClientFormValues, "document">
             control={form.control}
             name="document"
             render={({ field }) => (
@@ -155,7 +155,7 @@ export function ClientForm({ initialData, onSuccess }: ClientFormProps) {
         </div>
 
         {/* Endereço */}
-        <FormField
+        <FormField<ClientFormValues, "address">
           control={form.control}
           name="address"
           render={({ field }) => (
@@ -171,7 +171,7 @@ export function ClientForm({ initialData, onSuccess }: ClientFormProps) {
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           {/* Cidade */}
-          <FormField
+          <FormField<ClientFormValues, "city">
             control={form.control}
             name="city"
             render={({ field }) => (
@@ -186,7 +186,7 @@ export function ClientForm({ initialData, onSuccess }: ClientFormProps) {
           />
 
           {/* Estado */}
-          <FormField
+          <FormField<ClientFormValues, "state">
             control={form.control}
             name="state"
             render={({ field }) => (
@@ -201,7 +201,7 @@ export function ClientForm({ initialData, onSuccess }: ClientFormProps) {
           />
 
           {/* CEP */}
-          <FormField
+          <FormField<ClientFormValues, "postal_code">
             control={form.control}
             name="postal_code"
             render={({ field }) => (
@@ -217,7 +217,7 @@ export function ClientForm({ initialData, onSuccess }: ClientFormProps) {
         </div>
 
         {/* Observações */}
-        <FormField
+        <FormField<ClientFormValues, "notes">
           control={form.control}
           name="notes"
           render={({ field }) => (
@@ -237,7 +237,7 @@ export function ClientForm({ initialData, onSuccess }: ClientFormProps) {
         />
 
         {/* Status */}
-        <FormField
+        <FormField<ClientFormValues, "is_active">
           control={form.control}
           name="is_active"
           render={({ field }) => (

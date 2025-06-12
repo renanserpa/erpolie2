@@ -21,8 +21,8 @@ export default function ClientDetailsPage() {
     try {
       setLoading(true);
       setError(null);
-      
-      const result = await getRecordById('clients', params.id as string);
+
+      const result = await getRecordById<Client>('clients', params.id as string);
       
       if (result.success) {
         setClient(result.data || null);
