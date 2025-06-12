@@ -4,7 +4,8 @@ import React from 'react';
 import { Button } from "@/components/ui/button";
 import { PlusCircle } from "lucide-react";
 import { DataTable } from "@/components/ui/data-table";
-import { groupColumns, type StockGroup } from "./_components/GroupColumns"; // Import real columns and type
+import { groupColumns } from "./_components/GroupColumns"; // Import real columns
+import type { GrupoDeInsumo } from "@/modules/estoque/estoque.types";
 import { GroupForm } from "./_components/GroupForm"; // Import real form
 import {
   Dialog,
@@ -17,7 +18,7 @@ import {
 // TODO: Import AlertDialog for delete confirmation
 
 // Fetch real group data from Supabase (Placeholder)
-async function getGroups(): Promise<StockGroup[]> {
+async function getGroups(): Promise<GrupoDeInsumo[]> {
   console.log("Fetching stock groups...");
   // Example structure matching potential columns
   return [
@@ -54,8 +55,8 @@ async function deleteGroupAPI(groupId: string): Promise<void> {
 
 export default function GruposEstoquePage() {
   const [isFormOpen, setIsFormOpen] = React.useState(false);
-  const [groups, setGroups] = React.useState<StockGroup[]>([]);
-  const [editingGroup, setEditingGroup] = React.useState<StockGroup | null>(null);
+  const [groups, setGroups] = React.useState<GrupoDeInsumo[]>([]);
+  const [editingGroup, setEditingGroup] = React.useState<GrupoDeInsumo | null>(null);
 
   const fetchAndSetGroups = () => {
     getGroups().then(setGroups);
@@ -72,12 +73,13 @@ export default function GruposEstoquePage() {
     // TODO: Add toast notification for success
   };
 
-  const handleEdit = React.useCallback((group: StockGroup) => {
+  const handleEdit = React.useCallback((group: GrupoDeInsumo) => {
     setEditingGroup(group);
     setIsFormOpen(true);
   }, []);
 
-  const handleDelete = React.useCallback(async (groupId: string, groupName: string) => {
+  const handleDelete = React.useCallback(async (group: GrupoDeInsumo) => {
+    const { id: groupId, name: groupName } = group;
     if (window.confirm(`Tem certeza que deseja excluir o grupo "${groupName}"? Esta ação pode afetar itens de estoque associados.`)) {
       try {
         await deleteGroupAPI(groupId);

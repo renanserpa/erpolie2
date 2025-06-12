@@ -138,7 +138,7 @@ export function MovementForm({ initialData, onSuccess }: MovementFormProps) {
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {/* Item de Estoque */}
-          <FormField
+          <FormField<MovementFormValues, "stock_item_id">
             control={form.control}
             name="stock_item_id"
             render={({ field }) => (
@@ -164,7 +164,7 @@ export function MovementForm({ initialData, onSuccess }: MovementFormProps) {
           />
 
           {/* Tipo de Movimentação */}
-          <FormField
+          <FormField<MovementFormValues, "movement_type">
             control={form.control}
             name="movement_type"
             render={({ field }) => (
@@ -193,7 +193,7 @@ export function MovementForm({ initialData, onSuccess }: MovementFormProps) {
           />
 
           {/* Quantidade */}
-          <FormField
+          <FormField<MovementFormValues, "quantity">
             control={form.control}
             name="quantity"
             render={({ field }) => (
@@ -220,7 +220,7 @@ export function MovementForm({ initialData, onSuccess }: MovementFormProps) {
 
           {/* Localização de Origem (para transferências ou saídas) */}
           {(movementType === "transferencia" || movementType === "saida") && (
-            <FormField
+            <FormField<MovementFormValues, "source_location_id">
               control={form.control}
               name="source_location_id"
               render={({ field }) => (
@@ -249,7 +249,7 @@ export function MovementForm({ initialData, onSuccess }: MovementFormProps) {
 
           {/* Localização de Destino (para transferências ou entradas) */}
           {(movementType === "transferencia" || movementType === "entrada") && (
-            <FormField
+            <FormField<MovementFormValues, "destination_location_id">
               control={form.control}
               name="destination_location_id"
               render={({ field }) => (
@@ -277,7 +277,7 @@ export function MovementForm({ initialData, onSuccess }: MovementFormProps) {
           )}
 
           {/* Documento de Referência */}
-          <FormField
+          <FormField<MovementFormValues, "reference_document">
             control={form.control}
             name="reference_document"
             render={({ field }) => (
@@ -292,7 +292,7 @@ export function MovementForm({ initialData, onSuccess }: MovementFormProps) {
           />
 
           {/* Observações */}
-          <FormField
+          <FormField<MovementFormValues, "notes">
             control={form.control}
             name="notes"
             render={({ field }) => (

@@ -27,9 +27,15 @@ const stockItemFormSchema = z.object({
   group_id: z.string().optional(),
   location_id: z.string().optional(),
   unit_of_measurement_id: z.string().optional(),
-  quantity: z.number().nonnegative({ message: "Quantidade não pode ser negativa." }).default(0),
-  min_quantity: z.number().nonnegative({ message: "Quantidade mínima não pode ser negativa." }).optional(),
-  is_active: z.boolean().optional().default(true),
+  quantity: z
+    .number()
+    .nonnegative({ message: "Quantidade não pode ser negativa." })
+    .default(0),
+  min_quantity: z
+    .number()
+    .nonnegative({ message: "Quantidade mínima não pode ser negativa." })
+    .optional(),
+  is_active: z.boolean().default(true),
 });
 
 type StockItemFormValues = z.infer<typeof stockItemFormSchema>;
@@ -109,7 +115,7 @@ export function StockItemForm({ initialData, onSuccess }: StockItemFormProps) {
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {/* Nome */}
-          <FormField
+          <FormField<StockItemFormValues, "name">
             control={form.control}
             name="name"
             render={({ field }) => (
@@ -124,7 +130,7 @@ export function StockItemForm({ initialData, onSuccess }: StockItemFormProps) {
           />
 
           {/* SKU */}
-          <FormField
+          <FormField<StockItemFormValues, "sku">
             control={form.control}
             name="sku"
             render={({ field }) => (
@@ -139,7 +145,7 @@ export function StockItemForm({ initialData, onSuccess }: StockItemFormProps) {
           />
 
           {/* Grupo */}
-          <FormField
+          <FormField<StockItemFormValues, "group_id">
             control={form.control}
             name="group_id"
             render={({ field }) => (
@@ -166,7 +172,7 @@ export function StockItemForm({ initialData, onSuccess }: StockItemFormProps) {
           />
 
           {/* Localização */}
-          <FormField
+          <FormField<StockItemFormValues, "location_id">
             control={form.control}
             name="location_id"
             render={({ field }) => (
@@ -193,7 +199,7 @@ export function StockItemForm({ initialData, onSuccess }: StockItemFormProps) {
           />
 
           {/* Unidade de Medida */}
-          <FormField
+          <FormField<StockItemFormValues, "unit_of_measurement_id">
             control={form.control}
             name="unit_of_measurement_id"
             render={({ field }) => (
@@ -220,7 +226,7 @@ export function StockItemForm({ initialData, onSuccess }: StockItemFormProps) {
           />
 
           {/* Quantidade Atual */}
-          <FormField
+          <FormField<StockItemFormValues, "quantity">
             control={form.control}
             name="quantity"
             render={({ field }) => (
@@ -240,7 +246,7 @@ export function StockItemForm({ initialData, onSuccess }: StockItemFormProps) {
           />
 
           {/* Quantidade Mínima */}
-          <FormField
+          <FormField<StockItemFormValues, "min_quantity">
             control={form.control}
             name="min_quantity"
             render={({ field }) => (
@@ -260,7 +266,7 @@ export function StockItemForm({ initialData, onSuccess }: StockItemFormProps) {
           />
 
            {/* Status */}
-          <FormField
+          <FormField<StockItemFormValues, "is_active">
             control={form.control}
             name="is_active"
             render={({ field }) => (

@@ -81,7 +81,7 @@ export function GroupForm({ initialData, onSuccess }: GroupFormProps) {
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
         {/* Name */}
-        <FormField
+        <FormField<GroupFormValues, "name">
           control={form.control}
           name="name"
           render={({ field }) => (
@@ -96,7 +96,7 @@ export function GroupForm({ initialData, onSuccess }: GroupFormProps) {
         />
 
         {/* Description */}
-        <FormField
+        <FormField<GroupFormValues, "description">
           control={form.control}
           name="description"
           render={({ field }) => (
