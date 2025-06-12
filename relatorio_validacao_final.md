@@ -54,3 +54,4 @@ Apesar das correções adicionais nos formulários de receitas e despesas, o `ty
 
 2025-06-23: Módulos de produção, financeiro, RH, BI e auditoria revisados para eliminar erros de tipagem e garantir build.
 
+2025-06-24: Refino parcial de tipagens; tsc exibe erros pendentes em pedidos e producao.

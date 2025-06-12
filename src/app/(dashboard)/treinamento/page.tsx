@@ -468,8 +468,8 @@ export default function TrainingPage() {
                     <div className="flex justify-between items-start">
                       <CardTitle>{enrollment.course.title}</CardTitle>
                       <Badge variant={
-                        enrollment.status === "completed" ? "success" : 
-                        enrollment.status === "in_progress" ? "default" : 
+                        enrollment.status === "completed" ? "secondary" :
+                        enrollment.status === "in_progress" ? "default" :
                         "destructive"
                       }>
                         {enrollment.status === "completed" ? "Concluído" : 
@@ -646,8 +646,8 @@ export default function TrainingPage() {
                           <p className="text-sm text-muted-foreground">{enrollment.course.category}</p>
                         </div>
                         <Badge variant={
-                          enrollment.status === "completed" ? "success" : 
-                          enrollment.status === "in_progress" ? "default" : 
+                          enrollment.status === "completed" ? "secondary" :
+                          enrollment.status === "in_progress" ? "default" :
                           "destructive"
                         }>
                           {enrollment.progress_percentage}%

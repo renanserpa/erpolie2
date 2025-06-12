@@ -75,10 +75,10 @@ export const columns: ColumnDef<OrdemDeProducao, any>[] = [
     },
   },
   {
-    accessorKey: "priority_name",
+    accessorKey: "priority",
     header: "Prioridade",
     cell: ({ row }) => {
-      const priorityName = row.original.priority_name || "Normal";
+      const priorityName = row.original.priority?.name || "Normal";
       // TODO: Use priority_color for dynamic badge styling
       return <Badge variant="secondary">{priorityName}</Badge>;
     },
@@ -87,14 +87,14 @@ export const columns: ColumnDef<OrdemDeProducao, any>[] = [
     },
   },
   {
-    accessorKey: "start_date",
+    accessorKey: "estimated_start_date",
     header: "Início Prev.",
-    cell: ({ row }) => <div>{formatDate(row.original.start_date)}</div>,
+    cell: ({ row }) => <div>{formatDate(row.original.estimated_start_date)}</div>,
   },
   {
-    accessorKey: "end_date",
+    accessorKey: "estimated_end_date",
     header: "Fim Prev.",
-    cell: ({ row }) => <div>{formatDate(row.original.end_date)}</div>,
+    cell: ({ row }) => <div>{formatDate(row.original.estimated_end_date)}</div>,
   },
   {
     id: "actions",
@@ -102,7 +102,12 @@ export const columns: ColumnDef<OrdemDeProducao, any>[] = [
     cell: ({ row, table }) => {
       const productionOrder = row.original;
       // Access meta functions passed from DataTable
-      const meta = table.options.meta;
+      const meta = table.options.meta as {
+        viewDetails?: (id: string) => void;
+        editOrder?: (id: string) => void;
+        updateStatus?: (order: OrdemDeProducao) => void;
+        deleteOrder?: (id: string) => void;
+      } | undefined;
 
       return (
         <DropdownMenu>

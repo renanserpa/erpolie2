@@ -46,7 +46,21 @@ export default function ComprasPage() {
       });
       const result = await fetchPurchaseOrders(query);
       if (result.success) {
-        setOrders(result.data || []);
+        const mapped = (result.data || []).map(
+          (po): PurchaseOrder => ({
+            id: po.id,
+            supplier_id: po.supplier_id,
+            supplier_name: po.supplier?.name ?? undefined,
+            date: po.order_date,
+            status_id: po.status_id,
+            status_name: po.status?.name ?? undefined,
+            status_color: po.status?.color ?? undefined,
+            delivery_date: po.expected_delivery_date || undefined,
+            total_amount: po.total_amount,
+            created_at: po.created_at,
+          })
+        );
+        setOrders(mapped);
       } else {
         setOrders([]);
         setError(result.error || "Erro ao buscar pedidos de compra");
