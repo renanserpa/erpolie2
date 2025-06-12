@@ -113,3 +113,4 @@ Data | Autor | Descrição
 2025-06-23 | CODEX | Ajustados módulos de produção, financeiro, RH, BI e auditoria para tipagem segura e build estável.
 
 2025-06-24 | CODEX | Ajustes de tipagem adicionais em componentes e pages; type-check segue com falhas.
+2025-06-25 | CODEX | Módulo clientes estabilizado com tipagem
