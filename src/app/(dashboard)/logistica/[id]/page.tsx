@@ -70,6 +70,7 @@ export default function DeliveryDetailsPage() {
   const params = useParams();
   const router = useRouter();
   const supabase = createSupabaseClient();
+  if (!params?.id) return null;
   const [delivery, setDelivery] = useState<Delivery | null>(null);
   const [items, setItems] = useState<DeliveryItem[]>([]);
   const [statusHistory, setStatusHistory] = useState<DeliveryStatus[]>([]);
@@ -91,7 +92,8 @@ export default function DeliveryDetailsPage() {
             route:route_id (name)
           `)
           .eq("id", params.id)
-          .single();
+          .single()
+          .returns<Delivery>();
 
         if (deliveryError) throw deliveryError;
         setDelivery(deliveryData);
@@ -106,10 +108,11 @@ export default function DeliveryDetailsPage() {
             quantity,
             order_item_id
           `)
-          .eq("delivery_id", params.id);
+          .eq("delivery_id", params.id)
+          .returns<DeliveryItem[]>();
 
         if (!itemsError) {
-          setItems(itemsData || []);
+          setItems(itemsData ?? []);
         }
 
         // Buscar histórico de status
@@ -117,10 +120,11 @@ export default function DeliveryDetailsPage() {
           .from("delivery_status_history")
           .select("*")
           .eq("delivery_id", params.id)
-          .order("date", { ascending: true });
+          .order("date", { ascending: true })
+          .returns<DeliveryStatus[]>();
 
         if (!statusError) {
-          setStatusHistory(statusData || []);
+          setStatusHistory(statusData ?? []);
         }
       } catch (error) {
         console.error("Erro ao buscar detalhes da entrega:", error);

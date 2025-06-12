@@ -62,11 +62,10 @@ async function addDeliveryHistory(
   supabase: ReturnType<typeof createClient>,
   deliveryId: string,
   eventType: string,
-  details: Record<string, any>
+  details: Record<string, any>,
+  userId: string | null
 ) {
   try {
-    const userId = user?.id || null;
-
     const { error } = await supabase
       .from("delivery_history")
       .insert({
@@ -102,7 +101,7 @@ export function UpdateDeliveryStatusDialog({
   const [selectedStatus, setSelectedStatus] = React.useState<Status | null>(null);
 
   const form = useForm<UpdateDeliveryStatusFormValues>({
-    resolver: zodResolver(updateDeliveryStatusSchema),
+    resolver: zodResolver(updateDeliveryStatusSchema) as Resolver<UpdateDeliveryStatusFormValues>,
     defaultValues: {
       status_id: delivery.status_id,
       notes: "",
@@ -178,7 +177,7 @@ export function UpdateDeliveryStatusDialog({
         new_status_name: newStatus?.name || 'Desconhecido',
         notes: values.notes,
         notify_customer: values.notify_customer,
-      });
+      }, user?.id || null);
 
       // 3. If notify_customer is true, send notification (placeholder)
       if (values.notify_customer) {

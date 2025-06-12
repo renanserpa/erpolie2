@@ -72,10 +72,10 @@ export const deliveryRouteColumns = (
     cell: ({ row }) => <div className="truncate max-w-sm">{row.original.description || "-"}</div>,
   },
   {
-    accessorKey: "delivery_date",
+    accessorKey: "route_date",
     header: "Data de Entrega",
     cell: ({ row }) => {
-      const date = new Date(row.original.delivery_date);
+      const date = new Date(row.original.route_date);
       return <div>{date.toLocaleDateString("pt-BR")}</div>;
     },
   },
@@ -106,7 +106,11 @@ export const deliveryRouteColumns = (
         completed: "Concluída",
       };
       
-      return <Badge variant={variant}>{statusLabels[status] || status}</Badge>;
+      return (
+        <Badge variant={variant}>
+          {status ? statusLabels[status] || status : "-"}
+        </Badge>
+      );
     },
     filterFn: (row, id, value) => {
       return value.includes(row.getValue(id));
