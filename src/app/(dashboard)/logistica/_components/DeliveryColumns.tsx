@@ -76,7 +76,11 @@ export const deliveryColumns: ColumnDef<Delivery, DeliveryTableMeta>[] = [
         <ArrowUpDown className="ml-2 h-4 w-4" />
       </Button>
     ),
-    cell: ({ row }) => <div className="lowercase font-mono text-xs">{row.getValue("id").substring(0, 8)}</div>,
+    cell: ({ row }) => (
+      <div className="lowercase font-mono text-xs">
+        {(row.getValue("id") as string).substring(0, 8)}
+      </div>
+    ),
   },
   {
     accessorKey: "order_ref",
@@ -110,7 +114,7 @@ export const deliveryColumns: ColumnDef<Delivery, DeliveryTableMeta>[] = [
     enableHiding: false,
     cell: ({ row, table }) => {
       const delivery = row.original;
-      const meta = table.options.meta;
+      const meta = table.options.meta as DeliveryTableMeta | undefined;
 
       return (
         <DropdownMenu>
