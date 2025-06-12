@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
+import { useForm, type Resolver } from "react-hook-form";
 import * as z from "zod";
 import { Button } from "@/components/ui/button";
 import {
@@ -100,17 +100,17 @@ export function FinancialTransactionForm({
   const [referenceType, setReferenceType] = useState<string>(initialData?.reference_type || "other");
 
   const form = useForm<FinancialTransactionFormValues>({
-    resolver: zodResolver(financialTransactionSchema),
+    resolver: zodResolver(financialTransactionSchema) as Resolver<FinancialTransactionFormValues>,
     defaultValues: {
-      date: initialData?.date || new Date(),
-      amount: initialData?.amount || undefined,
-      description: initialData?.description || "",
-      category_id: initialData?.category_id || undefined,
-      payment_method_id: initialData?.payment_method_id || undefined,
-      reference_type: initialData?.reference_type || "other",
-      reference_id: initialData?.reference_id || undefined,
-      notes: initialData?.notes || "",
-      status: initialData?.status || "pending",
+      date: (initialData?.date as Date) ?? new Date(),
+      amount: initialData?.amount ?? undefined,
+      description: initialData?.description ?? "",
+      category_id: initialData?.category_id ?? undefined,
+      payment_method_id: initialData?.payment_method_id ?? undefined,
+      reference_type: initialData?.reference_type ?? "other",
+      reference_id: initialData?.reference_id ?? undefined,
+      notes: initialData?.notes ?? "",
+      status: initialData?.status ?? "pending",
     },
   });
 
@@ -234,7 +234,7 @@ export function FinancialTransactionForm({
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
         {/* Date Field */}
-        <FormField
+        <FormField<FinancialTransactionFormValues, "date">
           control={form.control}
           name="date"
           render={({ field }) => (
@@ -277,7 +277,7 @@ export function FinancialTransactionForm({
         />
 
         {/* Amount Field */}
-        <FormField
+        <FormField<FinancialTransactionFormValues, "amount">
           control={form.control}
           name="amount"
           render={({ field }) => (
@@ -300,7 +300,7 @@ export function FinancialTransactionForm({
         />
 
         {/* Description Field */}
-        <FormField
+        <FormField<FinancialTransactionFormValues, "description">
           control={form.control}
           name="description"
           render={({ field }) => (
@@ -319,7 +319,7 @@ export function FinancialTransactionForm({
         />
 
         {/* Category Field */}
-        <FormField
+        <FormField<FinancialTransactionFormValues, "category_id">
           control={form.control}
           name="category_id"
           render={({ field }) => (
@@ -349,7 +349,7 @@ export function FinancialTransactionForm({
         />
 
         {/* Payment Method Field */}
-        <FormField
+        <FormField<FinancialTransactionFormValues, "payment_method_id">
           control={form.control}
           name="payment_method_id"
           render={({ field }) => (
@@ -379,7 +379,7 @@ export function FinancialTransactionForm({
         />
 
         {/* Reference Type Field */}
-        <FormField
+        <FormField<FinancialTransactionFormValues, "reference_type">
           control={form.control}
           name="reference_type"
           render={({ field }) => (
@@ -408,7 +408,7 @@ export function FinancialTransactionForm({
 
         {/* Reference ID Field - Only show if reference_type is not 'other' */}
         {watchReferenceType !== 'other' && (
-          <FormField
+          <FormField<FinancialTransactionFormValues, "reference_id">
             control={form.control}
             name="reference_id"
             render={({ field }) => (
@@ -449,7 +449,7 @@ export function FinancialTransactionForm({
         )}
 
         {/* Notes Field */}
-        <FormField
+        <FormField<FinancialTransactionFormValues, "notes">
           control={form.control}
           name="notes"
           render={({ field }) => (
@@ -469,7 +469,7 @@ export function FinancialTransactionForm({
         />
 
         {/* Status Field */}
-        <FormField
+        <FormField<FinancialTransactionFormValues, "status">
           control={form.control}
           name="status"
           render={({ field }) => (

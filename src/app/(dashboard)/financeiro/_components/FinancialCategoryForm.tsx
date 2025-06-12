@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
+import { useForm, type Resolver } from "react-hook-form";
 import * as z from "zod";
 import { Button } from "@/components/ui/button";
 import {
@@ -48,12 +48,18 @@ export function FinancialCategoryForm({ onSuccess, initialData }: FinancialCateg
   const isEditing = !!initialData;
 
   const form = useForm<FinancialCategoryFormValues>({
-    resolver: zodResolver(financialCategoryFormSchema),
-    defaultValues: initialData || {
-      name: "",
-      description: "",
-      type: "Despesa", // Default to expense
-    },
+    resolver: zodResolver(financialCategoryFormSchema) as Resolver<FinancialCategoryFormValues>,
+    defaultValues: initialData
+      ? {
+          name: initialData.name,
+          description: initialData.description || "",
+          type: initialData.type,
+        }
+      : {
+          name: "",
+          description: "",
+          type: "Despesa",
+        },
   });
 
   async function onSubmit(values: FinancialCategoryFormValues) {
@@ -92,7 +98,7 @@ export function FinancialCategoryForm({ onSuccess, initialData }: FinancialCateg
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
         {/* Name Field */}
-        <FormField
+        <FormField<FinancialCategoryFormValues, "name">
           control={form.control}
           name="name"
           render={({ field }) => (
@@ -111,7 +117,7 @@ export function FinancialCategoryForm({ onSuccess, initialData }: FinancialCateg
         />
 
         {/* Type Field */}
-        <FormField
+        <FormField<FinancialCategoryFormValues, "type">
           control={form.control}
           name="type"
           render={({ field }) => (
@@ -148,7 +154,7 @@ export function FinancialCategoryForm({ onSuccess, initialData }: FinancialCateg
         />
 
         {/* Description Field */}
-        <FormField
+        <FormField<FinancialCategoryFormValues, "description">
           control={form.control}
           name="description"
           render={({ field }) => (

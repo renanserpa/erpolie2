@@ -61,3 +61,4 @@ Apesar das correções adicionais nos formulários de receitas e despesas, o `ty
 ## 2025-06-27- Relatório global de erros de type-check gerado (errors_report.md).
 
 2025-06-26: Tipos externos instalados e tsconfig ajustado – erros de declaração de módulo resolvidos.
+2025-06-12: Financeiro module fully typed & build-clean

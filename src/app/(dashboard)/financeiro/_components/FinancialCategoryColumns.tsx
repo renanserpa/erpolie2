@@ -62,9 +62,9 @@ export const financialCategoryColumns: ColumnDef<FinancialCategory, FinancialCat
     accessorKey: "type",
     header: "Tipo",
     cell: ({ row }) => {
-      const type = row.getValue("type");
+      const type = row.getValue("type") as string;
       const variant = type === 'Receita' ? "default" : "destructive";
-      return <Badge variant={variant as any}>{type}</Badge>; // Cast variant type
+      return <Badge variant={variant as any}>{type}</Badge>;
     },
     filterFn: (row, id, value) => {
       return value.includes(row.getValue(id));
@@ -88,7 +88,7 @@ export const financialCategoryColumns: ColumnDef<FinancialCategory, FinancialCat
     enableHiding: false,
     cell: ({ row, table }) => {
       const category = row.original;
-      const meta = table.options.meta;
+      const meta = table.options.meta as FinancialCategoryTableMeta | undefined;
 
       return (
         <DropdownMenu>
