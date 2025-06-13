@@ -32,23 +32,25 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { ChevronDown, Loader2 } from "lucide-react"
 
-interface DataTableProps<TData, TValue> {
+import type { RowData, TableMeta } from "@tanstack/react-table"
+
+interface DataTableProps<TData extends RowData, TValue> {
   columns: ColumnDef<TData, TValue>[]
   data: TData[]
   loading?: boolean
   searchKey?: string
-  meta?: any
+  meta?: TableMeta<TData>
   onRowClick?: (row: TData) => void
 }
 
-export function DataTable<TData, TValue>({
+export function DataTable<TData extends RowData, TValue>({
   columns,
   data,
   loading = false,
   searchKey,
   meta,
   onRowClick,
-}: DataTableProps<TData, TValue>) {
+}: DataTableProps<TData, TValue>): React.JSX.Element {
   const [sorting, setSorting] = React.useState<SortingState>([])
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([])
   const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({})

@@ -121,3 +121,4 @@ Este arquivo centraliza os checklists de tarefas, validações e revisões para 
 2025-07-01: RH module return types clarified and lint clean (CODEX)
 2025-07-02: BI module fully typed & build-clean (CODEX)
 2025-07-02: Login module refatorado com useForm e validacao Zod (CODEX)
+2025-07-02: UI components typed & validations improved (CODEX)

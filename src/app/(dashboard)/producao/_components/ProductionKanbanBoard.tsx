@@ -69,8 +69,8 @@ export function ProductionKanbanBoard({ orders, statuses, loading }: ProductionK
                         {order.order_ref || "Pedido não vinculado"}
                       </p>
                       <div className="flex justify-between items-center text-xs text-muted-foreground pt-1">
-                        <span>Início: {formatBriefDate(order.start_date) || "-"}</span>
-                        <span>Fim: {formatBriefDate(order.end_date) || "-"}</span>
+                        <span>Início: {formatBriefDate(order.estimated_start_date) || "-"}</span>
+                        <span>Fim: {formatBriefDate(order.estimated_end_date) || "-"}</span>
                       </div>
                       {/* TODO: Add more details like assigned user or product */}
                     </CardContent>

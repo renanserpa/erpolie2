@@ -132,3 +132,4 @@ Data | Autor | Descrição
 2025-07-01 | CODEX | RH module typing updated; explicit return types added.
 2025-07-02 | CODEX | BI module components typed and validated for production.
 2025-07-02 | CODEX | Login module refatorado com useForm e tipagem forte.
+2025-07-02 | CODEX | UI components typed and props validated.

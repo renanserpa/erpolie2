@@ -1,8 +1,12 @@
 "use client";
 
-import React from "react";
+import * as React from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
+import {
+  useForm,
+  type FieldPath,
+  type UseFormReturn,
+} from "react-hook-form";
 import * as z from "zod";
 import { Button } from "@/components/ui/button";
 import {
@@ -57,8 +61,8 @@ export function AdvancedFilters({
   columnOptions = [],
   visibleColumns = [],
   onVisibleColumnsChange,
-}: AdvancedFiltersProps) {
-  const form = useForm<FilterFormValues>({
+}: AdvancedFiltersProps): React.JSX.Element {
+  const form: UseFormReturn<FilterFormValues> = useForm<FilterFormValues>({
     resolver: zodResolver(filterFormSchema),
     defaultValues: {},
   });
@@ -90,7 +94,7 @@ export function AdvancedFilters({
             <FormField
               key={option.id}
               control={form.control}
-              name={option.id as any}
+              name={option.id as FieldPath<FilterFormValues>}
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>{option.label}</FormLabel>
