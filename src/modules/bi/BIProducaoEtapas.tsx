@@ -1,5 +1,5 @@
 "use client";
-import React from 'react';
+import * as React from 'react';
 import { Pie, PieChart, Cell, Legend, ResponsiveContainer, Tooltip } from 'recharts';
 
 export interface ProducaoEtapaData {
@@ -13,7 +13,7 @@ interface Props {
 
 const COLORS = ['#0088FE', '#FFBB28', '#FF8042', '#A5854E', '#8884d8'];
 
-export function BIProducaoEtapas({ data }: Props) {
+export function BIProducaoEtapas({ data }: Props): React.ReactElement {
   return (
     <ResponsiveContainer width="100%" height={300}>
       <PieChart>

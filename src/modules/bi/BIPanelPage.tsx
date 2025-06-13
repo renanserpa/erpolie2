@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from 'react';
+import * as React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import Papa from 'papaparse';
@@ -9,19 +9,19 @@ import { BIProducaoEtapas } from "./BIProducaoEtapas";
 import { BIResumoFinanceiro } from "./BIResumoFinanceiro";
 import { fetchPedidosPorStatus, fetchProducaoPorEtapa, fetchResumoFinanceiro } from "./BIService";
 
-export default function BIPanelPage() {
-  const [pedidosData, setPedidosData] = useState<{status: string; quantidade: number}[]>([]);
-  const [producaoData, setProducaoData] = useState<{etapa: string; quantidade: number}[]>([]);
-  const [financeiroData, setFinanceiroData] = useState<{receitas: number; despesas: number; saldo: number}>({receitas:0, despesas:0, saldo:0});
+export default function BIPanelPage(): React.ReactElement {
+  const [pedidosData, setPedidosData] = React.useState<{status: string; quantidade: number}[]>([]);
+  const [producaoData, setProducaoData] = React.useState<{etapa: string; quantidade: number}[]>([]);
+  const [financeiroData, setFinanceiroData] = React.useState<{receitas: number; despesas: number; saldo: number}>({receitas:0, despesas:0, saldo:0});
 
-  const exportCSV = (data: object[], filename: string) => {
+  const exportCSV = (data: object[], filename: string): void => {
     if (data.length === 0) return;
     const csv = Papa.unparse(data);
     const blob = new Blob([`\uFEFF${csv}`], { type: 'text/csv;charset=utf-8;' });
     saveAs(blob, `${filename}_${new Date().toISOString().split('T')[0]}.csv`);
   };
 
-  useEffect(() => {
+  React.useEffect(() => {
     const loadData = async () => {
       const [pedidosRes, producaoRes, financeiroRes] = await Promise.all([
         fetchPedidosPorStatus(),
