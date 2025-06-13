@@ -10,7 +10,7 @@ interface KanbanProps {
   loading: boolean;
 }
 
-export function ProducaoKanban({ ordens, etapas, loading }: KanbanProps) {
+export function ProducaoKanban({ ordens, etapas, loading }: KanbanProps): React.ReactElement {
   if (loading) {
     return (
       <p className="text-muted-foreground text-center py-10">Carregando ordens...</p>

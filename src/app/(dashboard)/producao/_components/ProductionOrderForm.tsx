@@ -52,7 +52,7 @@ const productionOrderFormSchema = z.object({
 
 // --- Types --- 
 
-type ProductionOrderFormValues = z.infer<typeof productionOrderFormSchema>;
+export type ProductionOrderFormValues = z.infer<typeof productionOrderFormSchema>;
 type AllocationValues = z.infer<typeof allocationSchema>;
 
 type CustomerOrder = { id: string; order_ref: string; order_items: { product_id: string; quantity: number }[] }; // Simplified

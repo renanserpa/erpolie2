@@ -18,7 +18,7 @@ export async function fetchOrdensProducao(query: Record<string, unknown> = {}) {
       }
     });
 
-    const { data, error } = await builder;
+    const { data, error } = await builder.returns<OrdemDeProducao[]>();
     if (error) return handleSupabaseError(error);
     return { success: true, data } as { success: true; data: OrdemDeProducao[] };
   } catch (error) {
@@ -32,7 +32,8 @@ export async function fetchEtapasProducao() {
     const { data, error } = await supabase
       .from('production_stages')
       .select('*')
-      .order('order');
+      .order('order')
+      .returns<EtapaDeProducao[]>();
     if (error) return handleSupabaseError(error);
     return { success: true, data } as { success: true; data: EtapaDeProducao[] };
   } catch (error) {

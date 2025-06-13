@@ -1,5 +1,7 @@
 import type { Database } from '@/types/supabase';
 
+export type Optional<T, K extends keyof T> = Omit<T, K> & Partial<Pick<T, K>>;
+
 export type OrdemDeProducao = Database['public']['Tables']['production_orders']['Row'] & {
   order?: {
     id: string;

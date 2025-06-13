@@ -133,3 +133,4 @@ Data | Autor | Descrição
 2025-07-02 | CODEX | BI module components typed and validated for production.
 2025-07-02 | CODEX | Login module refatorado com useForm e tipagem forte.
 2025-07-02 | CODEX | UI components typed and props validated.
+2025-07-03 | CODEX | Produção module pages typed and queries with `.returns`.

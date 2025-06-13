@@ -12,7 +12,7 @@ import { useDebounce } from '@/hooks/use-debounce';
 import { fetchOrdensProducao, fetchEtapasProducao } from './ProducaoService';
 import type { EtapaDeProducao, OrdemDeProducao } from './producao.types';
 
-export default function ProducaoPage() {
+export default function ProducaoPage(): React.ReactElement {
   const [searchQuery, setSearchQuery] = useState('');
   const [isLoading, setIsLoading] = useState(true);
   const [ops, setOps] = useState<OrdemDeProducao[]>([]);

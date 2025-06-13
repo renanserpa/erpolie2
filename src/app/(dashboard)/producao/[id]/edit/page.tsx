@@ -7,11 +7,11 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { ArrowLeft, Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
 import { getRecordById } from '@/lib/data-hooks';
-import { ProductionOrderForm } from '../../_components/ProductionOrderForm';
+import { ProductionOrderForm, type ProductionOrderFormValues } from '../../_components/ProductionOrderForm';
 import type { OrdemDeProducao } from '@/modules/producao/producao.types';
 
-export default function EditProductionOrderPage() {
-  const params = useParams();
+export default function EditProductionOrderPage(): React.ReactElement | null {
+  const params = useParams<{ id: string }>();
   const router = useRouter();
   const [productionOrder, setProductionOrder] = useState<Partial<OrdemDeProducao> | null>(null);
   const [loading, setLoading] = useState(true);
@@ -23,33 +23,28 @@ export default function EditProductionOrderPage() {
       setError(null);
       
       if (!params?.id) return;
-      const result = await getRecordById<OrdemDeProducao>('production_orders', params.id as string);
+      const result = await getRecordById<OrdemDeProducao>('production_orders', params.id);
       
       if (result.success) {
-        setProductionOrder(result.data);
+        setProductionOrder(result.data ?? null);
       } else {
         // Criar uma ordem de produção mockada para demonstração
         setProductionOrder({
-          id: params.id,
-          order_id: null,
-          order_item_id: null,
-          product_id: null,
-          variant_id: null,
-          quantity: 10,
+          id: String(params.id),
+          order_id: '',
+          priority_id: null,
           status_id: null,
-          start_date: new Date().toISOString().split('T')[0],
-          due_date: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
-          completion_date: null,
-          responsible_id: null,
-          created_by: null,
+          production_order_number: 'MOCK',
+          estimated_start_date: new Date().toISOString(),
+          estimated_end_date: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(),
+          actual_start_date: null,
+          actual_end_date: null,
+          notes: null,
+          current_stage_id: null,
           created_at: new Date().toISOString(),
           updated_at: new Date().toISOString(),
-          production_statuses: {
-            id: '123',
-            name: 'Em Andamento',
-            color: 'blue'
-          }
-        });
+          deleted_at: null
+        } as Partial<OrdemDeProducao>);
         
         console.warn('Usando dados mockados para ordem de produção');
       }
@@ -113,7 +108,7 @@ export default function EditProductionOrderPage() {
         <CardContent>
           {productionOrder && (
             <ProductionOrderForm
-              initialData={productionOrder}
+              initialData={productionOrder as Partial<ProductionOrderFormValues> & { id: string }}
               onSuccess={handleSuccess}
             />
           )}

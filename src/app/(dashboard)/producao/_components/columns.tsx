@@ -25,7 +25,7 @@ const formatDate = (dateString: string | null | undefined) => {
 };
 
 // Define columns with type annotation including meta
-export const columns: ColumnDef<OrdemDeProducaoDetalhada, any>[] = [
+export const columns: ColumnDef<OrdemDeProducaoDetalhada, unknown>[] = [
   {
     id: "select",
     header: ({ table }) => (

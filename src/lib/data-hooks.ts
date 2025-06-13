@@ -140,7 +140,8 @@ export const getRecordById = async <T>(
       .from(table)
       .select('*')
       .eq('id', id)
-      .single();
+      .single()
+      .returns<T>();
     
     if (error) {
       return handleSupabaseError(error);
@@ -160,7 +161,9 @@ export const getRecords = async <T>(
   try {
     const supabase = createClient();
     
-    let queryBuilder = supabase.from(table).select('*');
+    let queryBuilder = supabase
+      .from(table)
+      .select('*');
     
     // Aplicar filtros
     Object.entries(query).forEach(([key, value]) => {
@@ -201,7 +204,7 @@ export const getRecords = async <T>(
       }
     });
     
-    const { data, error } = await queryBuilder;
+    const { data, error } = await queryBuilder.returns<T[]>();
     
     if (error) {
       return handleSupabaseError(error);

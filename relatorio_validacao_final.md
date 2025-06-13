@@ -74,3 +74,4 @@ Apesar das correções adicionais nos formulários de receitas e despesas, o `ty
 2025-07-02: BI module typed with charts validated and services updated.
 2025-07-02: Login page reescrita com React Hook Form e validação.
 2025-07-02: UI component library finalized with explicit typing.
+2025-07-03: Produção module refined with typed queries and pages.
