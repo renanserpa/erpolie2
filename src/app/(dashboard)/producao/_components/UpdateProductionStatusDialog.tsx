@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
+import { useForm, type UseFormReturn } from "react-hook-form";
 import * as z from "zod";
 import { Button } from "@/components/ui/button";
 import {
@@ -58,10 +58,14 @@ export function UpdateProductionStatusDialog({
   const [statuses, setStatuses] = React.useState<Status[]>([]);
   const [loadingStatuses, setLoadingStatuses] = React.useState(true);
 
-  const form = useForm<UpdateStatusFormValues>({
+  const form: UseFormReturn<UpdateStatusFormValues> = useForm<
+    UpdateStatusFormValues,
+    any,
+    UpdateStatusFormValues
+  >({
     resolver: zodResolver(updateStatusSchema),
     defaultValues: {
-      status_id: productionOrder.status_id,
+      status_id: productionOrder.status_id ?? "",
       notes: "",
     },
   });
@@ -88,7 +92,7 @@ export function UpdateProductionStatusDialog({
 
     if (open) { // Fetch only when dialog is open
       fetchStatuses();
-      form.reset({ status_id: productionOrder.status_id, notes: "" }); // Reset form with current status
+      form.reset({ status_id: productionOrder.status_id ?? "", notes: "" }); // Reset form with current status
     }
   }, [open, supabase, productionOrder.status_id, form]);
 

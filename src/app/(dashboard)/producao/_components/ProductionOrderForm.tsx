@@ -58,7 +58,12 @@ type AllocationValues = z.infer<typeof allocationSchema>;
 type CustomerOrder = { id: string; order_ref: string; order_items: { product_id: string; quantity: number }[] }; // Simplified
 type ProductionStatus = { id: string; name: string };
 type ProductionPriority = { id: string; name: string };
-type ProductComponent = { component_product_id: string; quantity: number; products: { name: string } | null }; // From product_components join products
+type ProductComponent = {
+  product_id: string;
+  component_product_id: string;
+  quantity: number;
+  products: { name: string } | null;
+}; // From product_components join products
 type StockItem = { id: string; name: string; current_stock: number; sku?: string | null }; // Insumo
 
 // --- Props --- 
@@ -195,7 +200,7 @@ export function ProductionOrderForm({ initialData, onSuccess }: ProductionOrderF
 
         // Calculate total required quantity for each component
         const requiredMap = new Map<string, { name?: string; totalQuantity: number }>();
-        (componentsData as (ProductComponent & { products?: { name?: string } | null })[] | null)?.forEach(comp => {
+        (componentsData as unknown as (ProductComponent & { products?: { name?: string } | null })[] | null)?.forEach(comp => {
           const orderQuantity = orderQuantitiesMap.get(comp.product_id) || 0;
           const totalNeeded = comp.quantity * orderQuantity;
           const existing = requiredMap.get(comp.component_product_id);

@@ -176,7 +176,7 @@ export default function EstoquePage() {
           toast.error('Erro ao importar itens de estoque.');
         }
       },
-      error: (error) => {
+      error: (error: Error) => {
         console.error('Erro ao processar arquivo CSV:', error);
         toast.error('Erro ao processar arquivo CSV.');
       }
