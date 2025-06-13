@@ -3,13 +3,28 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { createSupabaseClient } from "@/lib/supabase/client";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ArrowLeft, Edit, Trash2, ShoppingCart } from "lucide-react";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 
 interface Product {
   id: string;
@@ -79,11 +94,13 @@ export default function ProductDetailsPage() {
       try {
         const { data, error } = await supabase
           .from("products")
-          .select(`
+          .select(
+            `
             *,
             category:category_id(name),
             unit_of_measurement:unit_of_measurement_id(name, abbreviation)
-          `)
+          `,
+          )
           .eq("id", params.id)
           .single();
 
@@ -100,7 +117,7 @@ export default function ProductDetailsPage() {
             quantity,
             min_quantity,
             location:location_id(name)
-          `
+          `,
           )
           .eq("product_id", params.id)
           .returns<StockItem[]>();
@@ -117,7 +134,7 @@ export default function ProductDetailsPage() {
             component_id,
             quantity,
             component:component_id(name)
-          `
+          `,
           )
           .eq("product_id", params.id)
           .returns<Component[]>();
@@ -134,14 +151,13 @@ export default function ProductDetailsPage() {
             supply_id,
             quantity,
             supply:supply_id(name)
-          `
+          `,
           )
           .eq("product_id", params.id)
           .returns<Supply[]>();
 
         if (suppliesError) throw suppliesError;
         setSupplies(suppliesData || []);
-
       } catch (error) {
         console.error("Error fetching product details:", error);
         // TODO: Show error toast
@@ -159,11 +175,14 @@ export default function ProductDetailsPage() {
     try {
       // First delete related records
       await Promise.all([
-        supabase.from("produto_componente").delete().eq("product_id", params.id),
+        supabase
+          .from("produto_componente")
+          .delete()
+          .eq("product_id", params.id),
         supabase.from("produto_insumo").delete().eq("product_id", params.id),
-        supabase.from("stock_items").delete().eq("product_id", params.id)
+        supabase.from("stock_items").delete().eq("product_id", params.id),
       ]);
-      
+
       // Then delete the product
       const { error } = await supabase
         .from("products")
@@ -171,7 +190,7 @@ export default function ProductDetailsPage() {
         .eq("id", params.id);
 
       if (error) throw error;
-      
+
       // Navigate back to products list
       router.push("/produtos");
       // TODO: Show success toast
@@ -182,6 +201,8 @@ export default function ProductDetailsPage() {
       setDeleteDialogOpen(false);
     }
   };
+
+  if (!params?.id) return null;
 
   if (loading) {
     return (
@@ -209,7 +230,10 @@ export default function ProductDetailsPage() {
           <ArrowLeft className="mr-2 h-4 w-4" /> Voltar
         </Button>
         <div className="flex gap-2">
-          <Button variant="outline" onClick={() => router.push(`/produtos/editar/${product.id}`)}>
+          <Button
+            variant="outline"
+            onClick={() => router.push(`/produtos/editar/${product.id}`)}
+          >
             <Edit className="mr-2 h-4 w-4" /> Editar
           </Button>
 
@@ -223,12 +247,20 @@ export default function ProductDetailsPage() {
               <DialogHeader>
                 <DialogTitle>Confirmar exclusão</DialogTitle>
                 <DialogDescription>
-                  Tem certeza que deseja excluir este produto? Esta ação não pode ser desfeita.
+                  Tem certeza que deseja excluir este produto? Esta ação não
+                  pode ser desfeita.
                 </DialogDescription>
               </DialogHeader>
               <DialogFooter>
-                <Button variant="outline" onClick={() => setDeleteDialogOpen(false)}>Cancelar</Button>
-                <Button variant="destructive" onClick={handleDelete}>Excluir</Button>
+                <Button
+                  variant="outline"
+                  onClick={() => setDeleteDialogOpen(false)}
+                >
+                  Cancelar
+                </Button>
+                <Button variant="destructive" onClick={handleDelete}>
+                  Excluir
+                </Button>
               </DialogFooter>
             </DialogContent>
           </Dialog>
@@ -241,14 +273,18 @@ export default function ProductDetailsPage() {
             <CardTitle>{product.name}</CardTitle>
             <CardDescription>
               <div className="flex gap-2">
-                <span className="text-gray-500">SKU: {product.sku || "Não definido"}</span>
+                <span className="text-gray-500">
+                  SKU: {product.sku || "Não definido"}
+                </span>
                 {product.is_active ? (
                   <span className="text-green-600 font-medium">Ativo</span>
                 ) : (
                   <span className="text-red-600 font-medium">Inativo</span>
                 )}
                 {product.is_manufactured && (
-                  <span className="text-blue-600 font-medium">Fabricação Própria</span>
+                  <span className="text-blue-600 font-medium">
+                    Fabricação Própria
+                  </span>
                 )}
               </div>
             </CardDescription>
@@ -264,7 +300,9 @@ export default function ProductDetailsPage() {
               <TabsContent value="info" className="space-y-4 mt-4">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <h3 className="text-sm font-medium text-gray-500">Preço de Venda</h3>
+                    <h3 className="text-sm font-medium text-gray-500">
+                      Preço de Venda
+                    </h3>
                     <p className="text-lg font-bold">
                       {new Intl.NumberFormat("pt-BR", {
                         style: "currency",
@@ -282,7 +320,9 @@ export default function ProductDetailsPage() {
                     </p>
                   </div>
                   <div>
-                    <h3 className="text-sm font-medium text-gray-500">Margem</h3>
+                    <h3 className="text-sm font-medium text-gray-500">
+                      Margem
+                    </h3>
                     <p>
                       {product.cost > 0
                         ? `${Math.round(((product.price - product.cost) / product.cost) * 100)}%`
@@ -290,30 +330,50 @@ export default function ProductDetailsPage() {
                     </p>
                   </div>
                   <div>
-                    <h3 className="text-sm font-medium text-gray-500">Categoria</h3>
+                    <h3 className="text-sm font-medium text-gray-500">
+                      Categoria
+                    </h3>
                     <p>{product.category?.name || "Não categorizado"}</p>
                   </div>
                   <div>
-                    <h3 className="text-sm font-medium text-gray-500">Unidade de Medida</h3>
-                    <p>{product.unit_of_measurement?.name || "Não definida"} ({product.unit_of_measurement?.abbreviation || "-"})</p>
+                    <h3 className="text-sm font-medium text-gray-500">
+                      Unidade de Medida
+                    </h3>
+                    <p>
+                      {product.unit_of_measurement?.name || "Não definida"} (
+                      {product.unit_of_measurement?.abbreviation || "-"})
+                    </p>
                   </div>
                   <div>
-                    <h3 className="text-sm font-medium text-gray-500">Estoque Mínimo</h3>
-                    <p>{product.min_stock} {product.unit_of_measurement?.abbreviation || "un"}</p>
+                    <h3 className="text-sm font-medium text-gray-500">
+                      Estoque Mínimo
+                    </h3>
+                    <p>
+                      {product.min_stock}{" "}
+                      {product.unit_of_measurement?.abbreviation || "un"}
+                    </p>
                   </div>
                   <div>
-                    <h3 className="text-sm font-medium text-gray-500">Data de Criação</h3>
+                    <h3 className="text-sm font-medium text-gray-500">
+                      Data de Criação
+                    </h3>
                     <p>
                       {product.created_at
-                        ? format(new Date(product.created_at), "dd/MM/yyyy", { locale: ptBR })
+                        ? format(new Date(product.created_at), "dd/MM/yyyy", {
+                            locale: ptBR,
+                          })
                         : "Data não disponível"}
                     </p>
                   </div>
                   <div>
-                    <h3 className="text-sm font-medium text-gray-500">Última Atualização</h3>
+                    <h3 className="text-sm font-medium text-gray-500">
+                      Última Atualização
+                    </h3>
                     <p>
                       {product.updated_at
-                        ? format(new Date(product.updated_at), "dd/MM/yyyy", { locale: ptBR })
+                        ? format(new Date(product.updated_at), "dd/MM/yyyy", {
+                            locale: ptBR,
+                          })
                         : "Data não disponível"}
                     </p>
                   </div>
@@ -334,14 +394,24 @@ export default function ProductDetailsPage() {
                       <tbody>
                         {stockItems.map((item) => (
                           <tr key={item.id} className="border-b">
-                            <td className="py-2">{item.location?.name || "Localização não definida"}</td>
+                            <td className="py-2">
+                              {item.location?.name ||
+                                "Localização não definida"}
+                            </td>
                             <td className="py-2 text-right">{item.quantity}</td>
-                            <td className="py-2 text-right">{item.min_quantity || product.min_stock}</td>
                             <td className="py-2 text-right">
-                              {item.quantity <= (item.min_quantity || product.min_stock) ? (
-                                <span className="text-red-600 font-medium">Baixo</span>
+                              {item.min_quantity || product.min_stock}
+                            </td>
+                            <td className="py-2 text-right">
+                              {item.quantity <=
+                              (item.min_quantity || product.min_stock) ? (
+                                <span className="text-red-600 font-medium">
+                                  Baixo
+                                </span>
                               ) : (
-                                <span className="text-green-600 font-medium">OK</span>
+                                <span className="text-green-600 font-medium">
+                                  OK
+                                </span>
                               )}
                             </td>
                           </tr>
@@ -351,7 +421,10 @@ export default function ProductDetailsPage() {
                         <tr className="border-t">
                           <td className="py-2 font-medium">Total:</td>
                           <td className="py-2 text-right font-bold">
-                            {stockItems.reduce((sum, item) => sum + item.quantity, 0)}
+                            {stockItems.reduce(
+                              (sum, item) => sum + item.quantity,
+                              0,
+                            )}
                           </td>
                           <td colSpan={2}></td>
                         </tr>
@@ -359,10 +432,18 @@ export default function ProductDetailsPage() {
                     </table>
                   </div>
                 ) : (
-                  <p className="text-gray-500">Este produto ainda não possui itens em estoque.</p>
+                  <p className="text-gray-500">
+                    Este produto ainda não possui itens em estoque.
+                  </p>
                 )}
                 <div className="mt-4">
-                  <Button onClick={() => router.push("/estoque/movimentacoes/novo?produto=" + product.id)}>
+                  <Button
+                    onClick={() =>
+                      router.push(
+                        "/estoque/movimentacoes/novo?produto=" + product.id,
+                      )
+                    }
+                  >
                     Registrar Movimentação
                   </Button>
                 </div>
@@ -383,15 +464,22 @@ export default function ProductDetailsPage() {
                           <tbody>
                             {components.map((comp) => (
                               <tr key={comp.id} className="border-b">
-                                <td className="py-2">{comp.component?.name || "Componente não encontrado"}</td>
-                                <td className="py-2 text-right">{comp.quantity}</td>
+                                <td className="py-2">
+                                  {comp.component?.name ||
+                                    "Componente não encontrado"}
+                                </td>
+                                <td className="py-2 text-right">
+                                  {comp.quantity}
+                                </td>
                               </tr>
                             ))}
                           </tbody>
                         </table>
                       </div>
                     ) : (
-                      <p className="text-gray-500 mb-6">Este produto não possui componentes registrados.</p>
+                      <p className="text-gray-500 mb-6">
+                        Este produto não possui componentes registrados.
+                      </p>
                     )}
 
                     <h3 className="font-medium mb-2">Insumos Diretos</h3>
@@ -407,19 +495,28 @@ export default function ProductDetailsPage() {
                           <tbody>
                             {supplies.map((supply) => (
                               <tr key={supply.id} className="border-b">
-                                <td className="py-2">{supply.supply?.name || "Insumo não encontrado"}</td>
-                                <td className="py-2 text-right">{supply.quantity}</td>
+                                <td className="py-2">
+                                  {supply.supply?.name ||
+                                    "Insumo não encontrado"}
+                                </td>
+                                <td className="py-2 text-right">
+                                  {supply.quantity}
+                                </td>
                               </tr>
                             ))}
                           </tbody>
                         </table>
                       </div>
                     ) : (
-                      <p className="text-gray-500">Este produto não possui insumos diretos registrados.</p>
+                      <p className="text-gray-500">
+                        Este produto não possui insumos diretos registrados.
+                      </p>
                     )}
                   </div>
                 ) : (
-                  <p className="text-gray-500">Este produto não é fabricado internamente.</p>
+                  <p className="text-gray-500">
+                    Este produto não é fabricado internamente.
+                  </p>
                 )}
               </TabsContent>
               <TabsContent value="description" className="mt-4">
@@ -427,7 +524,9 @@ export default function ProductDetailsPage() {
                   {product.description ? (
                     <p className="whitespace-pre-wrap">{product.description}</p>
                   ) : (
-                    <p className="text-gray-500">Nenhuma descrição registrada.</p>
+                    <p className="text-gray-500">
+                      Nenhuma descrição registrada.
+                    </p>
                   )}
                 </div>
               </TabsContent>
@@ -441,23 +540,37 @@ export default function ProductDetailsPage() {
           </CardHeader>
           <CardContent className="space-y-4">
             <div>
-              <h3 className="text-sm font-medium text-gray-500">Estoque Total</h3>
+              <h3 className="text-sm font-medium text-gray-500">
+                Estoque Total
+              </h3>
               <p className="text-2xl font-bold">
-                {stockItems.reduce((sum, item) => sum + item.quantity, 0)} {product.unit_of_measurement?.abbreviation || "un"}
+                {stockItems.reduce((sum, item) => sum + item.quantity, 0)}{" "}
+                {product.unit_of_measurement?.abbreviation || "un"}
               </p>
             </div>
             <div>
-              <h3 className="text-sm font-medium text-gray-500">Valor em Estoque</h3>
+              <h3 className="text-sm font-medium text-gray-500">
+                Valor em Estoque
+              </h3>
               <p className="text-2xl font-bold">
                 {new Intl.NumberFormat("pt-BR", {
                   style: "currency",
                   currency: "BRL",
-                }).format(stockItems.reduce((sum, item) => sum + item.quantity, 0) * product.cost)}
+                }).format(
+                  stockItems.reduce((sum, item) => sum + item.quantity, 0) *
+                    product.cost,
+                )}
               </p>
             </div>
             <div>
-              <h3 className="text-sm font-medium text-gray-500">Tipo de Produto</h3>
-              <p>{product.is_manufactured ? "Fabricação Própria" : "Revenda/Terceiros"}</p>
+              <h3 className="text-sm font-medium text-gray-500">
+                Tipo de Produto
+              </h3>
+              <p>
+                {product.is_manufactured
+                  ? "Fabricação Própria"
+                  : "Revenda/Terceiros"}
+              </p>
             </div>
           </CardContent>
           <CardFooter className="flex flex-col gap-2">
@@ -466,12 +579,15 @@ export default function ProductDetailsPage() {
               className="w-full"
               onClick={() => router.push(`/pedidos/novo?produto=${product.id}`)}
             >
-              <ShoppingCart className="mr-2 h-4 w-4" /> Criar Pedido com este Produto
+              <ShoppingCart className="mr-2 h-4 w-4" /> Criar Pedido com este
+              Produto
             </Button>
             <Button
               variant="outline"
               className="w-full"
-              onClick={() => router.push(`/producao/novo?produto=${product.id}`)}
+              onClick={() =>
+                router.push(`/producao/novo?produto=${product.id}`)
+              }
             >
               Criar Ordem de Produção
             </Button>

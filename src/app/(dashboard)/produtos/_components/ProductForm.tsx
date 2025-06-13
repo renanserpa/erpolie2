@@ -15,22 +15,59 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { InputNumber } from "@/components/ui/input-number";
 import { ProductGalleryUpload } from "./ProductGalleryUpload"; // Importando o novo componente
-import { Upload, PlusCircle, Trash2, Settings2, X, Loader2 } from "lucide-react";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import {
+  Upload,
+  PlusCircle,
+  Trash2,
+  Settings2,
+  X,
+  Loader2,
+} from "lucide-react";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+} from "@/components/ui/card";
 import { createClient } from "@/lib/supabase/client";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { Badge } from "@/components/ui/badge";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from "@/components/ui/command";
 import { Checkbox } from "@/components/ui/checkbox";
 
-// --- Schemas --- 
+// --- Schemas ---
 
 const componentSchema = z.object({
   component_id: z.string().min(1, { message: "Selecione um componente." }),
@@ -46,7 +83,9 @@ const optionValueSchema = z.object({
 const optionSchema = z.object({
   id: z.string().optional(),
   name: z.string().min(1, { message: "Nome da opção não pode ser vazio." }),
-  values: z.array(optionValueSchema).min(1, { message: "Adicione pelo menos um valor." }),
+  values: z
+    .array(optionValueSchema)
+    .min(1, { message: "Adicione pelo menos um valor." }),
 });
 
 const variantOptionSchema = z.object({
@@ -65,63 +104,95 @@ const variantSchema = z.object({
 });
 
 const productFormSchema = z.object({
-  name: z.string().min(2, { message: "Nome do produto deve ter pelo menos 2 caracteres." }),
+  name: z
+    .string()
+    .min(2, { message: "Nome do produto deve ter pelo menos 2 caracteres." }),
   sku: z.string().optional(),
   description: z.string().optional(),
-  category_id: z.string({ required_error: "Selecione uma categoria." }).min(1, "Selecione uma categoria."),
-  price: z.number().positive({ message: "Preço base deve ser positivo." }).optional(),
-  cost: z.number().positive({ message: "Custo base deve ser positivo." }).optional(),
-  stock_quantity: z.number().int().nonnegative({ message: "Estoque base não pode ser negativo." }).optional(),
+  category_id: z
+    .string({ required_error: "Selecione uma categoria." })
+    .min(1, "Selecione uma categoria."),
+  price: z
+    .number()
+    .positive({ message: "Preço base deve ser positivo." })
+    .optional(),
+  cost: z
+    .number()
+    .positive({ message: "Custo base deve ser positivo." })
+    .optional(),
+  stock_quantity: z
+    .number()
+    .int()
+    .nonnegative({ message: "Estoque base não pode ser negativo." })
+    .optional(),
   image_url: z.string().url({ message: "URL da imagem inválida." }).optional(),
-  status: z.string({ required_error: "Selecione um status." }).min(1, "Selecione um status."),
+  status: z
+    .string({ required_error: "Selecione um status." })
+    .min(1, "Selecione um status."),
   components: z.array(componentSchema).optional(),
   options: z.array(optionSchema).optional(),
   variants: z.array(variantSchema).optional(),
 });
 
-// --- Types --- 
+// --- Types ---
 
-type ProductFormValues = z.infer<typeof productFormSchema>;
+export type ProductFormValues = z.infer<typeof productFormSchema>;
 type ProductCategory = { id: string; name: string };
 type ProductStatus = { id: string; name: string };
 type AvailableComponent = { id: string; name: string; sku?: string | null };
-type ProductImage = { id?: string; url: string; order_index: number; is_main: boolean; alt_text?: string };
+type ProductImage = {
+  id?: string;
+  url: string;
+  order_index: number;
+  is_main: boolean;
+  alt_text?: string;
+};
 
-// --- Props --- 
+// --- Props ---
 
 interface ProductFormProps {
   initialData?: Partial<ProductFormValues> & { id: string };
   onSuccess?: () => void;
 }
 
-// --- Helper Functions --- 
+// --- Helper Functions ---
 
-function generateVariantCombinations(options: z.infer<typeof optionSchema>[]): z.infer<typeof variantSchema>[] {
+function generateVariantCombinations(
+  options: z.infer<typeof optionSchema>[],
+): z.infer<typeof variantSchema>[] {
   if (!options || options.length === 0) return [];
-  const optionArrays = options.map(opt => 
-    opt.values.map(val => ({ option_name: opt.name, option_value: val.value }))
+  const optionArrays = options.map((opt) =>
+    opt.values.map((val) => ({
+      option_name: opt.name,
+      option_value: val.value,
+    })),
   );
-  if (optionArrays.some(arr => arr.length === 0)) return [];
-  return optionArrays.reduce((acc, currentOptionValues) => {
-    if (acc.length === 0) return currentOptionValues.map(ov => ({ options: [ov] }));
-    const newAcc: any[] = [];
-    acc.forEach(existingVariant => {
-      currentOptionValues.forEach(currentOptionValue => {
-        newAcc.push({ options: [...existingVariant.options, currentOptionValue] });
+  if (optionArrays.some((arr) => arr.length === 0)) return [];
+  return optionArrays
+    .reduce((acc, currentOptionValues) => {
+      if (acc.length === 0)
+        return currentOptionValues.map((ov) => ({ options: [ov] }));
+      const newAcc: any[] = [];
+      acc.forEach((existingVariant) => {
+        currentOptionValues.forEach((currentOptionValue) => {
+          newAcc.push({
+            options: [...existingVariant.options, currentOptionValue],
+          });
+        });
       });
-    });
-    return newAcc;
-  }, [] as any[]).map((variant: { options: z.infer<typeof variantOptionSchema>[] }) => ({
-    ...variant,
-    sku: undefined,
-    price: undefined,
-    cost: undefined,
-    stock_quantity: 0,
-    image_url: undefined,
-  }));
+      return newAcc;
+    }, [] as any[])
+    .map((variant: { options: z.infer<typeof variantOptionSchema>[] }) => ({
+      ...variant,
+      sku: undefined,
+      price: undefined,
+      cost: undefined,
+      stock_quantity: 0,
+      image_url: undefined,
+    }));
 }
 
-// --- Component --- 
+// --- Component ---
 
 export function ProductForm({ initialData, onSuccess }: ProductFormProps) {
   const supabase = createClient();
@@ -129,10 +200,14 @@ export function ProductForm({ initialData, onSuccess }: ProductFormProps) {
   const [isLoading, setIsLoading] = useState(false);
   const [isFetchingData, setIsFetchingData] = useState(true);
   const [mainImageLoading, setMainImageLoading] = useState(false);
-  const [variantImageLoadingStates, setVariantImageLoadingStates] = useState<Record<number, boolean>>({});
+  const [variantImageLoadingStates, setVariantImageLoadingStates] = useState<
+    Record<number, boolean>
+  >({});
   const [categories, setCategories] = useState<ProductCategory[]>([]);
   const [statuses, setStatuses] = useState<ProductStatus[]>([]);
-  const [availableComponents, setAvailableComponents] = useState<AvailableComponent[]>([]);
+  const [availableComponents, setAvailableComponents] = useState<
+    AvailableComponent[]
+  >([]);
   const [productImages, setProductImages] = useState<ProductImage[]>([]);
 
   const form = useForm<ProductFormValues>({
@@ -153,12 +228,20 @@ export function ProductForm({ initialData, onSuccess }: ProductFormProps) {
     },
   });
 
-  const { fields: componentFields, append: appendComponent, remove: removeComponent } = useFieldArray({
+  const {
+    fields: componentFields,
+    append: appendComponent,
+    remove: removeComponent,
+  } = useFieldArray({
     control: form.control,
     name: "components",
   });
 
-  const { fields: optionFields, append: appendOption, remove: removeOption } = useFieldArray({
+  const {
+    fields: optionFields,
+    append: appendOption,
+    remove: removeOption,
+  } = useFieldArray({
     control: form.control,
     name: "options",
   });
@@ -178,7 +261,8 @@ export function ProductForm({ initialData, onSuccess }: ProductFormProps) {
           .from("product_categories")
           .select("id, name")
           .order("name");
-        if (catError) throw new Error(`Erro ao buscar categorias: ${catError.message}`);
+        if (catError)
+          throw new Error(`Erro ao buscar categorias: ${catError.message}`);
         setCategories(catData || []);
 
         // Fetch Statuses
@@ -186,15 +270,18 @@ export function ProductForm({ initialData, onSuccess }: ProductFormProps) {
           .from("product_statuses")
           .select("id, name")
           .order("name");
-        if (statusError) throw new Error(`Erro ao buscar status: ${statusError.message}`);
+        if (statusError)
+          throw new Error(`Erro ao buscar status: ${statusError.message}`);
         setStatuses(statusData || []);
         // Set default status if not editing
         if (!initialData?.status && statusData?.length > 0) {
-            // Find a default status like 'Ativo' or the first one
-            const defaultStatus = statusData.find(s => s.name.toLowerCase() === 'ativo') || statusData[0];
-            if (defaultStatus) {
-                form.setValue('status', defaultStatus.id);
-            }
+          // Find a default status like 'Ativo' or the first one
+          const defaultStatus =
+            statusData.find((s) => s.name.toLowerCase() === "ativo") ||
+            statusData[0];
+          if (defaultStatus) {
+            form.setValue("status", defaultStatus.id);
+          }
         }
 
         // Fetch potential components
@@ -203,7 +290,8 @@ export function ProductForm({ initialData, onSuccess }: ProductFormProps) {
           .select("id, name, sku")
           .neq("id", initialData?.id || "")
           .order("name");
-        if (compError) throw new Error(`Erro ao buscar componentes: ${compError.message}`);
+        if (compError)
+          throw new Error(`Erro ao buscar componentes: ${compError.message}`);
         setAvailableComponents(compData || []);
 
         // Fetch product images if editing
@@ -213,20 +301,24 @@ export function ProductForm({ initialData, onSuccess }: ProductFormProps) {
             .select("*")
             .eq("product_id", initialData.id)
             .order("order_index");
-          
-          if (imageError) throw new Error(`Erro ao buscar imagens do produto: ${imageError.message}`);
-          
+
+          if (imageError)
+            throw new Error(
+              `Erro ao buscar imagens do produto: ${imageError.message}`,
+            );
+
           if (imageData) {
-            setProductImages(imageData.map(img => ({
-              id: img.id,
-              url: img.url,
-              order_index: img.order_index,
-              is_main: img.is_main,
-              alt_text: img.alt_text
-            })));
+            setProductImages(
+              imageData.map((img) => ({
+                id: img.id,
+                url: img.url,
+                order_index: img.order_index,
+                is_main: img.is_main,
+                alt_text: img.alt_text,
+              })),
+            );
           }
         }
-
       } catch (error: any) {
         toast.error(error.message);
         console.error("Fetch error:", error);
@@ -238,32 +330,35 @@ export function ProductForm({ initialData, onSuccess }: ProductFormProps) {
   }, [initialData, supabase, form]);
 
   // Image Upload Logic for Variants
-  const handleVariantImageUpload = async (event: React.ChangeEvent<HTMLInputElement>, variantIndex: number) => {
+  const handleVariantImageUpload = async (
+    event: React.ChangeEvent<HTMLInputElement>,
+    variantIndex: number,
+  ) => {
     const file = event.target.files?.[0];
     if (!file) return;
-    
+
     // Validate file size (max 5MB)
     if (file.size > 5 * 1024 * 1024) {
       toast.error("A imagem deve ter no máximo 5MB.");
       return;
     }
-    
+
     // Validate file type
-    const validTypes = ['image/jpeg', 'image/png', 'image/webp'];
+    const validTypes = ["image/jpeg", "image/png", "image/webp"];
     if (!validTypes.includes(file.type)) {
       toast.error("Formato de arquivo não suportado. Use PNG, JPG ou WEBP.");
       return;
     }
-    
+
     // Set loading state for this variant
     const variantLoadingStates = { ...variantImageLoadingStates };
     variantLoadingStates[variantIndex] = true;
     setVariantImageLoadingStates(variantLoadingStates);
-    
+
     const toastId = toast.loading("Iniciando upload da imagem...");
     try {
       const timestamp = Date.now();
-      const fileName = `${timestamp}_${file.name.replace(/\s+/g, '_')}`;
+      const fileName = `${timestamp}_${file.name.replace(/\s+/g, "_")}`;
       const filePath = `public/product-images/variants/${fileName}`;
 
       const { data: uploadData, error: uploadError } = await supabase.storage
@@ -271,10 +366,15 @@ export function ProductForm({ initialData, onSuccess }: ProductFormProps) {
         .upload(filePath, file);
       if (uploadError) throw uploadError;
 
-      const { data: urlData } = supabase.storage.from("product-images").getPublicUrl(filePath);
-      if (!urlData.publicUrl) throw new Error("Não foi possível obter a URL pública da imagem.");
+      const { data: urlData } = supabase.storage
+        .from("product-images")
+        .getPublicUrl(filePath);
+      if (!urlData.publicUrl)
+        throw new Error("Não foi possível obter a URL pública da imagem.");
 
-      form.setValue(`variants.${variantIndex}.image_url`, urlData.publicUrl, { shouldValidate: true });
+      form.setValue(`variants.${variantIndex}.image_url`, urlData.publicUrl, {
+        shouldValidate: true,
+      });
       toast.success("Upload da imagem concluído!", { id: toastId });
     } catch (error: any) {
       console.error("Erro no upload da imagem:", error);
@@ -289,9 +389,9 @@ export function ProductForm({ initialData, onSuccess }: ProductFormProps) {
   // Handle gallery images update
   const handleGalleryUpdate = (images: ProductImage[]) => {
     setProductImages(images);
-    
+
     // Update main image in form if there's a main image
-    const mainImage = images.find(img => img.is_main);
+    const mainImage = images.find((img) => img.is_main);
     if (mainImage) {
       form.setValue("image_url", mainImage.url, { shouldValidate: true });
     } else if (images.length > 0) {
@@ -306,11 +406,17 @@ export function ProductForm({ initialData, onSuccess }: ProductFormProps) {
   // Variant Generation Logic
   const handleGenerateVariants = useCallback(() => {
     const currentOptions = form.getValues("options") || [];
-    const validOptions = currentOptions.filter(opt => opt.name && opt.values && opt.values.length > 0 && opt.values.every(v => v.value));
+    const validOptions = currentOptions.filter(
+      (opt) =>
+        opt.name &&
+        opt.values &&
+        opt.values.length > 0 &&
+        opt.values.every((v) => v.value),
+    );
     if (validOptions.length === 0) {
-        toast.info("Adicione opções e valores antes de gerar variações.");
-        replaceVariants([]);
-        return;
+      toast.info("Adicione opções e valores antes de gerar variações.");
+      replaceVariants([]);
+      return;
     }
     const newVariants = generateVariantCombinations(validOptions);
     replaceVariants(newVariants);
@@ -326,48 +432,74 @@ export function ProductForm({ initialData, onSuccess }: ProductFormProps) {
       let productId = initialData?.id;
 
       // Ensure numeric fields are numbers or null
-      const parseOptionalNumber = (val: any) => (val === '' || val === undefined || val === null || isNaN(Number(val))) ? null : Number(val);
+      const parseOptionalNumber = (val: any) =>
+        val === "" || val === undefined || val === null || isNaN(Number(val))
+          ? null
+          : Number(val);
       const productDataProcessed = {
-          ...productData,
-          price: parseOptionalNumber(productData.price),
-          cost: parseOptionalNumber(productData.cost),
-          stock_quantity: parseOptionalNumber(productData.stock_quantity ?? 0),
+        ...productData,
+        price: parseOptionalNumber(productData.price),
+        cost: parseOptionalNumber(productData.cost),
+        stock_quantity: parseOptionalNumber(productData.stock_quantity ?? 0),
       };
 
       // 1. Upsert Product
       const { data: savedProduct, error: productError } = await supabase
         .from("products")
-        .upsert({ ...(initialData?.id && { id: initialData.id }), ...productDataProcessed })
+        .upsert({
+          ...(initialData?.id && { id: initialData.id }),
+          ...productDataProcessed,
+        })
         .select("id")
         .single();
-      if (productError) throw new Error(`Erro ao salvar produto: ${productError.message}`);
+      if (productError)
+        throw new Error(`Erro ao salvar produto: ${productError.message}`);
       productId = savedProduct.id;
       if (!productId) throw new Error("Falha ao obter ID do produto salvo.");
 
-      // --- Handle Components (Delete/Insert) --- 
-      await supabase.from("product_components").delete().eq("product_id", productId);
+      // --- Handle Components (Delete/Insert) ---
+      await supabase
+        .from("product_components")
+        .delete()
+        .eq("product_id", productId);
       if (components && components.length > 0) {
-        const componentsToInsert = components.map(comp => ({
+        const componentsToInsert = components.map((comp) => ({
           product_id: productId,
           component_product_id: comp.component_id,
           quantity: comp.quantity,
         }));
-        const { error: compInsertError } = await supabase.from("product_components").insert(componentsToInsert);
-        if (compInsertError) throw new Error(`Erro ao salvar componentes: ${compInsertError.message}`);
+        const { error: compInsertError } = await supabase
+          .from("product_components")
+          .insert(componentsToInsert);
+        if (compInsertError)
+          throw new Error(
+            `Erro ao salvar componentes: ${compInsertError.message}`,
+          );
       }
 
-      // --- Handle Options & Values (Delete/Insert) --- 
+      // --- Handle Options & Values (Delete/Insert) ---
       // Fetch existing option IDs for this product to delete values correctly
-      const { data: existingOptionsData, error: fetchOptionsError } = await supabase
+      const { data: existingOptionsData, error: fetchOptionsError } =
+        await supabase
           .from("product_options")
           .select("id")
           .eq("product_id", productId);
-      if (fetchOptionsError) console.error("Erro ao buscar opções existentes:", fetchOptionsError.message); // Non-fatal
-      const existingOptionIds = existingOptionsData?.map(o => o.id) || [];
+      if (fetchOptionsError)
+        console.error(
+          "Erro ao buscar opções existentes:",
+          fetchOptionsError.message,
+        ); // Non-fatal
+      const existingOptionIds = existingOptionsData?.map((o) => o.id) || [];
       if (existingOptionIds.length > 0) {
-          await supabase.from("product_option_values").delete().in("option_id", existingOptionIds);
+        await supabase
+          .from("product_option_values")
+          .delete()
+          .in("option_id", existingOptionIds);
       }
-      await supabase.from("product_options").delete().eq("product_id", productId);
+      await supabase
+        .from("product_options")
+        .delete()
+        .eq("product_id", productId);
       if (options && options.length > 0) {
         for (const option of options) {
           const { data: savedOption, error: optionError } = await supabase
@@ -375,19 +507,36 @@ export function ProductForm({ initialData, onSuccess }: ProductFormProps) {
             .insert({ product_id: productId, name: option.name })
             .select("id")
             .single();
-          if (optionError) throw new Error(`Erro ao salvar opção '${option.name}': ${optionError.message}`);
+          if (optionError)
+            throw new Error(
+              `Erro ao salvar opção '${option.name}': ${optionError.message}`,
+            );
           const optionId = savedOption.id;
           if (!optionId) continue;
 
-          const valuesToInsert = option.values.map(val => ({ option_id: optionId, value: val.value }));
-          const { error: valueError } = await supabase.from("product_option_values").insert(valuesToInsert);
-          if (valueError) throw new Error(`Erro ao salvar valores para opção '${option.name}': ${valueError.message}`);
+          const valuesToInsert = option.values.map((val) => ({
+            option_id: optionId,
+            value: val.value,
+          }));
+          const { error: valueError } = await supabase
+            .from("product_option_values")
+            .insert(valuesToInsert);
+          if (valueError)
+            throw new Error(
+              `Erro ao salvar valores para opção '${option.name}': ${valueError.message}`,
+            );
         }
       }
 
-      // --- Handle Variants (Delete/Insert) --- 
-      await supabase.from("product_variant_options").delete().eq("variant_id", productId);
-      await supabase.from("product_variants").delete().eq("product_id", productId);
+      // --- Handle Variants (Delete/Insert) ---
+      await supabase
+        .from("product_variant_options")
+        .delete()
+        .eq("variant_id", productId);
+      await supabase
+        .from("product_variants")
+        .delete()
+        .eq("product_id", productId);
       if (variants && variants.length > 0) {
         for (const variant of variants) {
           const variantData = {
@@ -398,23 +547,29 @@ export function ProductForm({ initialData, onSuccess }: ProductFormProps) {
             stock_quantity: parseOptionalNumber(variant.stock_quantity) ?? 0,
             image_url: variant.image_url || null,
           };
-          
+
           const { data: savedVariant, error: variantError } = await supabase
             .from("product_variants")
             .insert(variantData)
             .select("id")
             .single();
-          if (variantError) throw new Error(`Erro ao salvar variante: ${variantError.message}`);
+          if (variantError)
+            throw new Error(`Erro ao salvar variante: ${variantError.message}`);
           const variantId = savedVariant.id;
           if (!variantId) continue;
 
-          const optionsToInsert = variant.options.map(opt => ({
+          const optionsToInsert = variant.options.map((opt) => ({
             variant_id: variantId,
             option_name: opt.option_name,
             option_value: opt.option_value,
           }));
-          const { error: optionError } = await supabase.from("product_variant_options").insert(optionsToInsert);
-          if (optionError) throw new Error(`Erro ao salvar opções da variante: ${optionError.message}`);
+          const { error: optionError } = await supabase
+            .from("product_variant_options")
+            .insert(optionsToInsert);
+          if (optionError)
+            throw new Error(
+              `Erro ao salvar opções da variante: ${optionError.message}`,
+            );
         }
       }
 
@@ -461,7 +616,7 @@ export function ProductForm({ initialData, onSuccess }: ProductFormProps) {
                   </FormItem>
                 )}
               />
-              
+
               <FormField
                 control={form.control}
                 name="sku"
@@ -475,7 +630,7 @@ export function ProductForm({ initialData, onSuccess }: ProductFormProps) {
                   </FormItem>
                 )}
               />
-              
+
               <FormField
                 control={form.control}
                 name="description"
@@ -489,15 +644,15 @@ export function ProductForm({ initialData, onSuccess }: ProductFormProps) {
                   </FormItem>
                 )}
               />
-              
+
               <FormField
                 control={form.control}
                 name="category_id"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Categoria</FormLabel>
-                    <Select 
-                      onValueChange={field.onChange} 
+                    <Select
+                      onValueChange={field.onChange}
                       defaultValue={field.value}
                       value={field.value}
                     >
@@ -518,15 +673,15 @@ export function ProductForm({ initialData, onSuccess }: ProductFormProps) {
                   </FormItem>
                 )}
               />
-              
+
               <FormField
                 control={form.control}
                 name="status"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Status</FormLabel>
-                    <Select 
-                      onValueChange={field.onChange} 
+                    <Select
+                      onValueChange={field.onChange}
                       defaultValue={field.value}
                       value={field.value}
                     >
@@ -549,7 +704,7 @@ export function ProductForm({ initialData, onSuccess }: ProductFormProps) {
               />
             </CardContent>
           </Card>
-          
+
           {/* Preço e Estoque */}
           <Card>
             <CardHeader>
@@ -563,9 +718,9 @@ export function ProductForm({ initialData, onSuccess }: ProductFormProps) {
                   <FormItem>
                     <FormLabel>Preço Base (R$)</FormLabel>
                     <FormControl>
-                      <InputNumber 
-                        placeholder="0,00" 
-                        value={field.value} 
+                      <InputNumber
+                        placeholder="0,00"
+                        value={field.value}
                         onChange={field.onChange}
                         min={0}
                         step={0.01}
@@ -577,7 +732,7 @@ export function ProductForm({ initialData, onSuccess }: ProductFormProps) {
                   </FormItem>
                 )}
               />
-              
+
               <FormField
                 control={form.control}
                 name="cost"
@@ -585,9 +740,9 @@ export function ProductForm({ initialData, onSuccess }: ProductFormProps) {
                   <FormItem>
                     <FormLabel>Custo Base (R$)</FormLabel>
                     <FormControl>
-                      <InputNumber 
-                        placeholder="0,00" 
-                        value={field.value} 
+                      <InputNumber
+                        placeholder="0,00"
+                        value={field.value}
                         onChange={field.onChange}
                         min={0}
                         step={0.01}
@@ -599,7 +754,7 @@ export function ProductForm({ initialData, onSuccess }: ProductFormProps) {
                   </FormItem>
                 )}
               />
-              
+
               <FormField
                 control={form.control}
                 name="stock_quantity"
@@ -607,9 +762,9 @@ export function ProductForm({ initialData, onSuccess }: ProductFormProps) {
                   <FormItem>
                     <FormLabel>Quantidade em Estoque</FormLabel>
                     <FormControl>
-                      <InputNumber 
-                        placeholder="0" 
-                        value={field.value} 
+                      <InputNumber
+                        placeholder="0"
+                        value={field.value}
                         onChange={field.onChange}
                         min={0}
                         step={1}
@@ -623,10 +778,10 @@ export function ProductForm({ initialData, onSuccess }: ProductFormProps) {
             </CardContent>
           </Card>
         </div>
-        
+
         {/* Galeria de Imagens */}
         {initialData?.id ? (
-          <ProductGalleryUpload 
+          <ProductGalleryUpload
             productId={initialData.id}
             initialImages={productImages}
             onSuccess={handleGalleryUpdate}
@@ -641,7 +796,7 @@ export function ProductForm({ initialData, onSuccess }: ProductFormProps) {
             </CardHeader>
           </Card>
         )}
-        
+
         {/* Componentes */}
         <Card>
           <CardHeader className="flex flex-row items-center justify-between">
@@ -650,7 +805,13 @@ export function ProductForm({ initialData, onSuccess }: ProductFormProps) {
               type="button"
               variant="outline"
               size="sm"
-              onClick={() => appendComponent({ component_id: "", component_name: "", quantity: 1 })}
+              onClick={() =>
+                appendComponent({
+                  component_id: "",
+                  component_name: "",
+                  quantity: 1,
+                })
+              }
             >
               <PlusCircle className="h-4 w-4 mr-2" />
               Adicionar Componente
@@ -679,9 +840,9 @@ export function ProductForm({ initialData, onSuccess }: ProductFormProps) {
                           name={`components.${index}.component_id`}
                           render={({ field: componentField }) => (
                             <FormItem className="space-y-0">
-                              <Popover>
-                                <PopoverTrigger asChild>
-                                  <FormControl>
+                              <FormControl>
+                                <Popover>
+                                  <PopoverTrigger asChild>
                                     <Button
                                       variant="outline"
                                       role="combobox"
@@ -689,47 +850,53 @@ export function ProductForm({ initialData, onSuccess }: ProductFormProps) {
                                     >
                                       {componentField.value
                                         ? availableComponents.find(
-                                            (component) => component.id === componentField.value
+                                            (component) =>
+                                              component.id ===
+                                              componentField.value,
                                           )?.name || "Selecione um componente"
                                         : "Selecione um componente"}
                                     </Button>
-                                  </FormControl>
-                                </PopoverTrigger>
-                                <PopoverContent className="w-[300px] p-0">
-                                  <Command>
-                                    <CommandInput placeholder="Buscar componente..." />
-                                    <CommandList>
-                                      <CommandEmpty>Nenhum componente encontrado.</CommandEmpty>
-                                      <CommandGroup>
-                                        {availableComponents.map((component) => (
-                                          <CommandItem
-                                            key={component.id}
-                                            value={component.name}
-                                            onSelect={() => {
-                                              form.setValue(
-                                                `components.${index}.component_id`,
-                                                component.id,
-                                                { shouldValidate: true }
-                                              );
-                                              form.setValue(
-                                                `components.${index}.component_name`,
-                                                component.name
-                                              );
-                                            }}
-                                          >
-                                            {component.name}
-                                            {component.sku && (
-                                              <span className="ml-2 text-xs text-muted-foreground">
-                                                ({component.sku})
-                                              </span>
-                                            )}
-                                          </CommandItem>
-                                        ))}
-                                      </CommandGroup>
-                                    </CommandList>
-                                  </Command>
-                                </PopoverContent>
-                              </Popover>
+                                  </PopoverTrigger>
+                                  <PopoverContent className="w-[300px] p-0">
+                                    <Command>
+                                      <CommandInput placeholder="Buscar componente..." />
+                                      <CommandList>
+                                        <CommandEmpty>
+                                          Nenhum componente encontrado.
+                                        </CommandEmpty>
+                                        <CommandGroup>
+                                          {availableComponents.map(
+                                            (component) => (
+                                              <CommandItem
+                                                key={component.id}
+                                                value={component.name}
+                                                onSelect={() => {
+                                                  form.setValue(
+                                                    `components.${index}.component_id`,
+                                                    component.id,
+                                                    { shouldValidate: true },
+                                                  );
+                                                  form.setValue(
+                                                    `components.${index}.component_name`,
+                                                    component.name,
+                                                  );
+                                                }}
+                                              >
+                                                {component.name}
+                                                {component.sku && (
+                                                  <span className="ml-2 text-xs text-muted-foreground">
+                                                    ({component.sku})
+                                                  </span>
+                                                )}
+                                              </CommandItem>
+                                            ),
+                                          )}
+                                        </CommandGroup>
+                                      </CommandList>
+                                    </Command>
+                                  </PopoverContent>
+                                </Popover>
+                              </FormControl>
                               <FormMessage />
                             </FormItem>
                           )}
@@ -772,7 +939,7 @@ export function ProductForm({ initialData, onSuccess }: ProductFormProps) {
             )}
           </CardContent>
         </Card>
-        
+
         {/* Opções e Variantes */}
         <Card>
           <CardHeader className="flex flex-row items-center justify-between">
@@ -782,7 +949,9 @@ export function ProductForm({ initialData, onSuccess }: ProductFormProps) {
                 type="button"
                 variant="outline"
                 size="sm"
-                onClick={() => appendOption({ name: "", values: [{ value: "" }] })}
+                onClick={() =>
+                  appendOption({ name: "", values: [{ value: "" }] })
+                }
               >
                 <PlusCircle className="h-4 w-4 mr-2" />
                 Adicionar Opção
@@ -817,7 +986,10 @@ export function ProductForm({ initialData, onSuccess }: ProductFormProps) {
                           <FormItem className="flex-1 mr-4">
                             <FormLabel>Nome da Opção</FormLabel>
                             <FormControl>
-                              <Input placeholder="Ex: Cor, Tamanho, Material" {...nameField} />
+                              <Input
+                                placeholder="Ex: Cor, Tamanho, Material"
+                                {...nameField}
+                              />
                             </FormControl>
                             <FormMessage />
                           </FormItem>
@@ -833,50 +1005,70 @@ export function ProductForm({ initialData, onSuccess }: ProductFormProps) {
                         <Trash2 className="h-4 w-4" />
                       </Button>
                     </div>
-                    
+
                     <div className="space-y-2">
                       <FormLabel>Valores</FormLabel>
-                      {form.getValues(`options.${optionIndex}.values`)?.map((_, valueIndex) => (
-                        <div key={valueIndex} className="flex items-center space-x-2">
-                          <FormField
-                            control={form.control}
-                            name={`options.${optionIndex}.values.${valueIndex}.value`}
-                            render={({ field: valueField }) => (
-                              <FormItem className="flex-1">
-                                <FormControl>
-                                  <Input placeholder="Valor da opção" {...valueField} />
-                                </FormControl>
-                                <FormMessage />
-                              </FormItem>
-                            )}
-                          />
-                          <Button
-                            type="button"
-                            variant="ghost"
-                            size="icon"
-                            onClick={() => {
-                              const currentValues = form.getValues(`options.${optionIndex}.values`);
-                              if (currentValues.length > 1) {
-                                const newValues = [...currentValues];
-                                newValues.splice(valueIndex, 1);
-                                form.setValue(`options.${optionIndex}.values`, newValues);
-                              } else {
-                                toast.info("Opção deve ter pelo menos um valor.");
-                              }
-                            }}
+                      {form
+                        .getValues(`options.${optionIndex}.values`)
+                        ?.map((_, valueIndex) => (
+                          <div
+                            key={valueIndex}
+                            className="flex items-center space-x-2"
                           >
-                            <X className="h-4 w-4" />
-                          </Button>
-                        </div>
-                      ))}
+                            <FormField
+                              control={form.control}
+                              name={`options.${optionIndex}.values.${valueIndex}.value`}
+                              render={({ field: valueField }) => (
+                                <FormItem className="flex-1">
+                                  <FormControl>
+                                    <Input
+                                      placeholder="Valor da opção"
+                                      {...valueField}
+                                    />
+                                  </FormControl>
+                                  <FormMessage />
+                                </FormItem>
+                              )}
+                            />
+                            <Button
+                              type="button"
+                              variant="ghost"
+                              size="icon"
+                              onClick={() => {
+                                const currentValues = form.getValues(
+                                  `options.${optionIndex}.values`,
+                                );
+                                if (currentValues.length > 1) {
+                                  const newValues = [...currentValues];
+                                  newValues.splice(valueIndex, 1);
+                                  form.setValue(
+                                    `options.${optionIndex}.values`,
+                                    newValues,
+                                  );
+                                } else {
+                                  toast.info(
+                                    "Opção deve ter pelo menos um valor.",
+                                  );
+                                }
+                              }}
+                            >
+                              <X className="h-4 w-4" />
+                            </Button>
+                          </div>
+                        ))}
                       <Button
                         type="button"
                         variant="outline"
                         size="sm"
                         className="mt-2"
                         onClick={() => {
-                          const currentValues = form.getValues(`options.${optionIndex}.values`) || [];
-                          form.setValue(`options.${optionIndex}.values`, [...currentValues, { value: "" }]);
+                          const currentValues =
+                            form.getValues(`options.${optionIndex}.values`) ||
+                            [];
+                          form.setValue(`options.${optionIndex}.values`, [
+                            ...currentValues,
+                            { value: "" },
+                          ]);
                         }}
                       >
                         <PlusCircle className="h-4 w-4 mr-2" />
@@ -887,11 +1079,13 @@ export function ProductForm({ initialData, onSuccess }: ProductFormProps) {
                 ))}
               </div>
             )}
-            
+
             {/* Variantes */}
             {variantFields.length > 0 && (
               <div className="mt-6">
-                <h3 className="text-lg font-medium mb-4">Variantes ({variantFields.length})</h3>
+                <h3 className="text-lg font-medium mb-4">
+                  Variantes ({variantFields.length})
+                </h3>
                 <div className="space-y-4">
                   {variantFields.map((field, variantIndex) => (
                     <div key={field.id} className="border rounded-md p-4">
@@ -902,7 +1096,7 @@ export function ProductForm({ initialData, onSuccess }: ProductFormProps) {
                           </Badge>
                         ))}
                       </div>
-                      
+
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <FormField
                           control={form.control}
@@ -911,13 +1105,16 @@ export function ProductForm({ initialData, onSuccess }: ProductFormProps) {
                             <FormItem>
                               <FormLabel>SKU da Variante</FormLabel>
                               <FormControl>
-                                <Input placeholder="SKU da variante" {...skuField} />
+                                <Input
+                                  placeholder="SKU da variante"
+                                  {...skuField}
+                                />
                               </FormControl>
                               <FormMessage />
                             </FormItem>
                           )}
                         />
-                        
+
                         <FormField
                           control={form.control}
                           name={`variants.${variantIndex}.price`}
@@ -925,9 +1122,9 @@ export function ProductForm({ initialData, onSuccess }: ProductFormProps) {
                             <FormItem>
                               <FormLabel>Preço (R$)</FormLabel>
                               <FormControl>
-                                <InputNumber 
-                                  placeholder="0,00" 
-                                  value={priceField.value} 
+                                <InputNumber
+                                  placeholder="0,00"
+                                  value={priceField.value}
                                   onChange={priceField.onChange}
                                   min={0}
                                   step={0.01}
@@ -939,7 +1136,7 @@ export function ProductForm({ initialData, onSuccess }: ProductFormProps) {
                             </FormItem>
                           )}
                         />
-                        
+
                         <FormField
                           control={form.control}
                           name={`variants.${variantIndex}.cost`}
@@ -947,9 +1144,9 @@ export function ProductForm({ initialData, onSuccess }: ProductFormProps) {
                             <FormItem>
                               <FormLabel>Custo (R$)</FormLabel>
                               <FormControl>
-                                <InputNumber 
-                                  placeholder="0,00" 
-                                  value={costField.value} 
+                                <InputNumber
+                                  placeholder="0,00"
+                                  value={costField.value}
                                   onChange={costField.onChange}
                                   min={0}
                                   step={0.01}
@@ -961,7 +1158,7 @@ export function ProductForm({ initialData, onSuccess }: ProductFormProps) {
                             </FormItem>
                           )}
                         />
-                        
+
                         <FormField
                           control={form.control}
                           name={`variants.${variantIndex}.stock_quantity`}
@@ -969,9 +1166,9 @@ export function ProductForm({ initialData, onSuccess }: ProductFormProps) {
                             <FormItem>
                               <FormLabel>Estoque</FormLabel>
                               <FormControl>
-                                <InputNumber 
-                                  placeholder="0" 
-                                  value={stockField.value} 
+                                <InputNumber
+                                  placeholder="0"
+                                  value={stockField.value}
                                   onChange={stockField.onChange}
                                   min={0}
                                   step={1}
@@ -983,7 +1180,7 @@ export function ProductForm({ initialData, onSuccess }: ProductFormProps) {
                           )}
                         />
                       </div>
-                      
+
                       <div className="mt-4">
                         <FormField
                           control={form.control}
@@ -1004,8 +1201,16 @@ export function ProductForm({ initialData, onSuccess }: ProductFormProps) {
                                       variant="destructive"
                                       size="icon"
                                       className="absolute top-1 right-1 h-6 w-6"
-                                      onClick={() => form.setValue(`variants.${variantIndex}.image_url`, undefined)}
-                                      disabled={isLoading || variantImageLoadingStates[variantIndex]}
+                                      onClick={() =>
+                                        form.setValue(
+                                          `variants.${variantIndex}.image_url`,
+                                          undefined,
+                                        )
+                                      }
+                                      disabled={
+                                        isLoading ||
+                                        variantImageLoadingStates[variantIndex]
+                                      }
                                     >
                                       <X className="h-4 w-4" />
                                     </Button>
@@ -1017,7 +1222,9 @@ export function ProductForm({ initialData, onSuccess }: ProductFormProps) {
                                     ) : (
                                       <div className="text-center">
                                         <Upload className="h-6 w-6 mx-auto mb-1 text-muted-foreground" />
-                                        <span className="text-xs text-muted-foreground">Sem imagem</span>
+                                        <span className="text-xs text-muted-foreground">
+                                          Sem imagem
+                                        </span>
                                       </div>
                                     )}
                                   </div>
@@ -1028,14 +1235,28 @@ export function ProductForm({ initialData, onSuccess }: ProductFormProps) {
                                     id={`variant-image-${variantIndex}`}
                                     className="hidden"
                                     accept="image/*"
-                                    onChange={(e) => handleVariantImageUpload(e, variantIndex)}
-                                    disabled={isLoading || variantImageLoadingStates[variantIndex]}
+                                    onChange={(e) =>
+                                      handleVariantImageUpload(e, variantIndex)
+                                    }
+                                    disabled={
+                                      isLoading ||
+                                      variantImageLoadingStates[variantIndex]
+                                    }
                                   />
                                   <Button
                                     type="button"
                                     variant="outline"
-                                    onClick={() => document.getElementById(`variant-image-${variantIndex}`)?.click()}
-                                    disabled={isLoading || variantImageLoadingStates[variantIndex]}
+                                    onClick={() =>
+                                      document
+                                        .getElementById(
+                                          `variant-image-${variantIndex}`,
+                                        )
+                                        ?.click()
+                                    }
+                                    disabled={
+                                      isLoading ||
+                                      variantImageLoadingStates[variantIndex]
+                                    }
                                   >
                                     {variantImageLoadingStates[variantIndex] ? (
                                       <>
@@ -1045,7 +1266,9 @@ export function ProductForm({ initialData, onSuccess }: ProductFormProps) {
                                     ) : (
                                       <>
                                         <Upload className="h-4 w-4 mr-2" />
-                                        {imageField.value ? "Trocar Imagem" : "Enviar Imagem"}
+                                        {imageField.value
+                                          ? "Trocar Imagem"
+                                          : "Enviar Imagem"}
                                       </>
                                     )}
                                   </Button>
@@ -1063,7 +1286,7 @@ export function ProductForm({ initialData, onSuccess }: ProductFormProps) {
             )}
           </CardContent>
         </Card>
-        
+
         <div className="flex justify-end space-x-4">
           <Button
             type="button"
