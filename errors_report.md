@@ -272,46 +272,6 @@ src/app/(dashboard)/kits/_components/KitsTable.tsx(161,17): error TS7053: Elemen
   Property '0' does not exist on type '{ price: number | null; discount_percentage: number | null; name: string; description: string; active: boolean; }'.
 src/app/(dashboard)/kits/_components/KitsTable.tsx(178,24): error TS2304: Cannot find name 'createClient'.
 src/app/(dashboard)/kits/_components/KitsTable.tsx(211,24): error TS2304: Cannot find name 'createClient'.
-src/app/(dashboard)/logistica/[id]/page.tsx(112,20): error TS2345: Argument of type '{ id: any; product_id: any; product: { name: any; sku: any; }[]; quantity: any; order_item_id: any; }[]' is not assignable to parameter of type 'SetStateAction<DeliveryItem[]>'.
-  Type '{ id: any; product_id: any; product: { name: any; sku: any; }[]; quantity: any; order_item_id: any; }[]' is not assignable to type 'DeliveryItem[]'.
-    Type '{ id: any; product_id: any; product: { name: any; sku: any; }[]; quantity: any; order_item_id: any; }' is not assignable to type 'DeliveryItem'.
-      Types of property 'product' are incompatible.
-        Type '{ name: any; sku: any; }[]' is missing the following properties from type '{ name: string; sku: string; }': name, sku
-src/app/(dashboard)/logistica/_components/DeliveryColumns.tsx(79,70): error TS2571: Object is of type 'unknown'.
-src/app/(dashboard)/logistica/_components/DeliveryColumns.tsx(125,52): error TS2339: Property 'viewDetails' does not exist on type 'TableMeta<Delivery>'.
-src/app/(dashboard)/logistica/_components/DeliveryColumns.tsx(128,52): error TS2339: Property 'updateStatus' does not exist on type 'TableMeta<Delivery>'.
-src/app/(dashboard)/logistica/_components/DeliveryColumns.tsx(131,52): error TS2339: Property 'editDelivery' does not exist on type 'TableMeta<Delivery>'.
-src/app/(dashboard)/logistica/_components/DeliveryColumns.tsx(136,36): error TS2339: Property 'deleteDelivery' does not exist on type 'TableMeta<Delivery>'.
-src/app/(dashboard)/logistica/_components/DeliveryRouteColumns.tsx(78,42): error TS2339: Property 'delivery_date' does not exist on type 'DeliveryRoute'.
-src/app/(dashboard)/logistica/_components/DeliveryRouteColumns.tsx(109,53): error TS2538: Type 'undefined' cannot be used as an index type.
-src/app/(dashboard)/logistica/_components/UpdateDeliveryStatusDialog.tsx(68,20): error TS2304: Cannot find name 'user'.
-src/app/(dashboard)/logistica/_components/UpdateDeliveryStatusDialog.tsx(105,5): error TS2322: Type 'Resolver<{ status_id: string; notes?: string | undefined; notify_customer?: boolean | undefined; }, any, { status_id: string; notify_customer: boolean; notes?: string | undefined; }>' is not assignable to type 'Resolver<{ status_id: string; notify_customer: boolean; notes?: string | undefined; }, any, { status_id: string; notify_customer: boolean; notes?: string | undefined; }>'.
-  Types of parameters 'options' and 'options' are incompatible.
-    Type 'ResolverOptions<{ status_id: string; notify_customer: boolean; notes?: string | undefined; }>' is not assignable to type 'ResolverOptions<{ status_id: string; notes?: string | undefined; notify_customer?: boolean | undefined; }>'.
-      Type 'boolean | undefined' is not assignable to type 'boolean'.
-        Type 'undefined' is not assignable to type 'boolean'.
-src/app/(dashboard)/logistica/_components/UpdateDeliveryStatusDialog.tsx(213,45): error TS2345: Argument of type '(values: { status_id: string; notify_customer: boolean; notes?: string | undefined; }) => Promise<void>' is not assignable to parameter of type 'SubmitHandler<TFieldValues>'.
-  Types of parameters 'values' and 'data' are incompatible.
-    Type 'TFieldValues' is not assignable to type '{ status_id: string; notify_customer: boolean; notes?: string | undefined; }'.
-      Type 'FieldValues' is missing the following properties from type '{ status_id: string; notify_customer: boolean; notes?: string | undefined; }': status_id, notify_customer
-src/app/(dashboard)/logistica/_components/UpdateDeliveryStatusDialog.tsx(228,15): error TS2322: Type 'Control<{ status_id: string; notify_customer: boolean; notes?: string | undefined; }, any, TFieldValues>' is not assignable to type 'Control<{ status_id: string; notify_customer: boolean; notes?: string | undefined; }, any, { status_id: string; notify_customer: boolean; notes?: string | undefined; }>'.
-  The types of '_options.resolver' are incompatible between these types.
-    Type 'Resolver<{ status_id: string; notify_customer: boolean; notes?: string | undefined; }, any, TFieldValues> | undefined' is not assignable to type 'Resolver<{ status_id: string; notify_customer: boolean; notes?: string | undefined; }, any, { status_id: string; notify_customer: boolean; notes?: string | undefined; }> | undefined'.
-      Type 'Resolver<{ status_id: string; notify_customer: boolean; notes?: string | undefined; }, any, TFieldValues>' is not assignable to type 'Resolver<{ status_id: string; notify_customer: boolean; notes?: string | undefined; }, any, { status_id: string; notify_customer: boolean; notes?: string | undefined; }>'.
-        Type 'TFieldValues' is not assignable to type '{ status_id: string; notify_customer: boolean; notes?: string | undefined; }'.
-          Type 'FieldValues' is missing the following properties from type '{ status_id: string; notify_customer: boolean; notes?: string | undefined; }': status_id, notify_customer
-src/app/(dashboard)/logistica/_components/UpdateDeliveryStatusDialog.tsx(267,15): error TS2322: Type 'Control<{ status_id: string; notify_customer: boolean; notes?: string | undefined; }, any, TFieldValues>' is not assignable to type 'Control<{ status_id: string; notify_customer: boolean; notes?: string | undefined; }, any, { status_id: string; notify_customer: boolean; notes?: string | undefined; }>'.
-  The types of '_options.resolver' are incompatible between these types.
-    Type 'Resolver<{ status_id: string; notify_customer: boolean; notes?: string | undefined; }, any, TFieldValues> | undefined' is not assignable to type 'Resolver<{ status_id: string; notify_customer: boolean; notes?: string | undefined; }, any, { status_id: string; notify_customer: boolean; notes?: string | undefined; }> | undefined'.
-      Type 'Resolver<{ status_id: string; notify_customer: boolean; notes?: string | undefined; }, any, TFieldValues>' is not assignable to type 'Resolver<{ status_id: string; notify_customer: boolean; notes?: string | undefined; }, any, { status_id: string; notify_customer: boolean; notes?: string | undefined; }>'.
-        Type 'TFieldValues' is not assignable to type '{ status_id: string; notify_customer: boolean; notes?: string | undefined; }'.
-          Type 'FieldValues' is missing the following properties from type '{ status_id: string; notify_customer: boolean; notes?: string | undefined; }': status_id, notify_customer
-src/app/(dashboard)/logistica/_components/UpdateDeliveryStatusDialog.tsx(286,15): error TS2322: Type 'Control<{ status_id: string; notify_customer: boolean; notes?: string | undefined; }, any, TFieldValues>' is not assignable to type 'Control<{ status_id: string; notify_customer: boolean; notes?: string | undefined; }, any, { status_id: string; notify_customer: boolean; notes?: string | undefined; }>'.
-  The types of '_options.resolver' are incompatible between these types.
-    Type 'Resolver<{ status_id: string; notify_customer: boolean; notes?: string | undefined; }, any, TFieldValues> | undefined' is not assignable to type 'Resolver<{ status_id: string; notify_customer: boolean; notes?: string | undefined; }, any, { status_id: string; notify_customer: boolean; notes?: string | undefined; }> | undefined'.
-      Type 'Resolver<{ status_id: string; notify_customer: boolean; notes?: string | undefined; }, any, TFieldValues>' is not assignable to type 'Resolver<{ status_id: string; notify_customer: boolean; notes?: string | undefined; }, any, { status_id: string; notify_customer: boolean; notes?: string | undefined; }>'.
-        Type 'TFieldValues' is not assignable to type '{ status_id: string; notify_customer: boolean; notes?: string | undefined; }'.
-          Type 'FieldValues' is missing the following properties from type '{ status_id: string; notify_customer: boolean; notes?: string | undefined; }': status_id, notify_customer
 src/app/(dashboard)/page.tsx(9,51): error TS2305: Module '"@/lib/data-hooks"' has no exported member 'getOrders'.
 src/app/(dashboard)/producao/[id]/edit/page.tsx(29,28): error TS2345: Argument of type 'OrdemDeProducao | undefined' is not assignable to parameter of type 'SetStateAction<Partial<OrdemDeProducao> | null>'.
   Type 'undefined' is not assignable to type 'SetStateAction<Partial<OrdemDeProducao> | null>'.
