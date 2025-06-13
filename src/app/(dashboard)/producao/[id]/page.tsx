@@ -63,8 +63,8 @@ interface ProductionSupply {
   };
 }
 
-export default function ProductionOrderDetailsPage() {
-  const params = useParams();
+export default function ProductionOrderDetailsPage(): React.ReactElement | null {
+  const params = useParams<{ id: string }>();
   const router = useRouter();
   const supabase = createSupabaseClient();
 

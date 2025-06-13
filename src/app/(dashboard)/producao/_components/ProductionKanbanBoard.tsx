@@ -1,7 +1,7 @@
 "use client";
 
 import React from 'react';
-import type { OrdemDeProducaoDetalhada } from '@/modules/producao/producao.types';
+import type { OrdemDeProducaoDetalhada, Optional } from '@/modules/producao/producao.types';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 
@@ -13,7 +13,7 @@ interface KanbanColumn {
 }
 
 interface ProductionKanbanBoardProps {
-  orders: OrdemDeProducaoDetalhada[];
+  orders: Optional<OrdemDeProducaoDetalhada, 'priority_name' | 'order_ref'>[];
   statuses: KanbanColumn[]; // Pass the statuses to define columns
   loading: boolean;
 }
@@ -28,7 +28,7 @@ const formatBriefDate = (dateString: string | null | undefined) => {
   }
 };
 
-export function ProductionKanbanBoard({ orders, statuses, loading }: ProductionKanbanBoardProps) {
+export function ProductionKanbanBoard({ orders, statuses, loading }: ProductionKanbanBoardProps): React.ReactElement {
 
   if (loading) {
     return <p className="text-muted-foreground text-center py-10">Carregando ordens...</p>;
@@ -65,7 +65,10 @@ export function ProductionKanbanBoard({ orders, statuses, loading }: ProductionK
                         <span className="text-xs font-semibold text-primary">OP #{order.id.substring(0, 8)}</span>
                         {order.priority_name && <Badge variant="outline" className="text-xs">{order.priority_name}</Badge>}
                       </div>
-                      <p className="text-sm font-medium leading-none truncate" title={order.order_ref}> {/* Show order ref */}
+                      <p
+                        className="text-sm font-medium leading-none truncate"
+                        title={order.order_ref ?? undefined}
+                      >
                         {order.order_ref || "Pedido não vinculado"}
                       </p>
                       <div className="flex justify-between items-center text-xs text-muted-foreground pt-1">

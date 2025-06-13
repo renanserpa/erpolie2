@@ -48,12 +48,12 @@ interface UpdateProductionStatusDialogProps {
   onSuccess: () => void; // Callback on successful update
 }
 
-export function UpdateProductionStatusDialog({ 
-  productionOrder, 
-  open, 
-  onOpenChange, 
-  onSuccess 
-}: UpdateProductionStatusDialogProps) {
+export function UpdateProductionStatusDialog({
+  productionOrder,
+  open,
+  onOpenChange,
+  onSuccess
+}: UpdateProductionStatusDialogProps): React.ReactElement {
   const supabase = createSupabaseClient();
   const [statuses, setStatuses] = React.useState<Status[]>([]);
   const [loadingStatuses, setLoadingStatuses] = React.useState(true);

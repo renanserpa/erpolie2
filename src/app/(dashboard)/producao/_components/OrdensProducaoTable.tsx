@@ -42,7 +42,7 @@ interface OrdemProducao {
   } | null;
 }
 
-export default function OrdensProducaoTable() {
+export default function OrdensProducaoTable(): React.ReactElement {
   const supabase = createClient();
   const [ordensProducao, setOrdensProducao] = useState<OrdemProducao[]>([]);
   const [produtos, setProdutos] = useState<{ id: string; name: string }[]>([]);
