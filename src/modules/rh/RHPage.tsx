@@ -11,7 +11,7 @@ import { ColaboradorForm } from './components/ColaboradorForm';
 import { colaboradorColumns, type ColaboradorRow } from './components/ColaboradoresTable';
 import { fetchColaboradores } from './RHService';
 
-export default function RHPage() {
+export default function RHPage(): React.ReactElement {
   const [searchQuery, setSearchQuery] = useState('');
   const [isLoading, setIsLoading] = useState(true);
   const [colaboradores, setColaboradores] = useState<ColaboradorRow[]>([]);

@@ -1,12 +1,13 @@
 "use client";
 
+import React from 'react';
 import type { HistoricoProducao } from '../rh.types';
 
 interface HistoricoProdutividadeProps {
   historico: HistoricoProducao[];
 }
 
-export function HistoricoProdutividade({ historico }: HistoricoProdutividadeProps) {
+export function HistoricoProdutividade({ historico }: HistoricoProdutividadeProps): React.ReactElement {
   return (
     <table className="w-full text-sm">
       <thead>
