@@ -3,6 +3,7 @@
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm, type SubmitHandler } from "react-hook-form";
+import type { FC } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Loader2 } from "lucide-react";
@@ -37,7 +38,7 @@ const credentialsSchema = z.object({
 
 export type CredentialsSchema = z.infer<typeof credentialsSchema>;
 
-export default function LoginForm(): JSX.Element {
+const LoginForm: FC = () => {
   const router = useRouter();
   const supabase = createClient();
 
@@ -147,5 +148,7 @@ export default function LoginForm(): JSX.Element {
       </Card>
     </div>
   );
-}
+};
+
+export default LoginForm;
 
