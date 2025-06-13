@@ -18,6 +18,7 @@ export type Insumo = {
   group_id?: string | null;
   location_id?: string | null;
   unit_of_measurement_id?: string | null;
+  supplier_id?: string | null;
   quantity: number;
   min_quantity?: number | null;
   cost_price?: number | null;
@@ -37,6 +38,10 @@ export type Insumo = {
     id: string;
     name: string;
     symbol: string;
+  } | null;
+  supplier?: {
+    id: string;
+    name: string;
   } | null;
 };
 

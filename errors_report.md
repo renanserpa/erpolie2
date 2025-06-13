@@ -2,16 +2,9 @@
 > olie-erp-nextjs@0.1.0 type-check
 > tsc --noEmit
 
-src/app/(dashboard)/componentes/page.tsx(340,70): error TS2345: Argument of type 'string | undefined' is not assignable to parameter of type 'string'.
-  Type 'undefined' is not assignable to type 'string'.
-src/app/(dashboard)/configuracoes/_components/ConfiguracoesGlobaisTable.tsx(73,7): error TS2448: Block-scoped variable 'fetchConfiguracoes' used before its declaration.
-src/app/(dashboard)/configuracoes/_components/ConfiguracoesGlobaisTable.tsx(73,7): error TS2454: Variable 'fetchConfiguracoes' is used before being assigned.
-src/app/(dashboard)/configuracoes/auditoria/page.tsx(369,19): error TS2322: Type '(range: DateRange) => void' is not assignable to type '(date: DateRange | undefined) => void'.
-  Types of parameters 'range' and 'date' are incompatible.
-    Type 'DateRange | undefined' is not assignable to type 'DateRange'.
-      Type 'undefined' is not assignable to type 'DateRange'.
-src/app/(dashboard)/configuracoes/auditoria/page.tsx(370,46): error TS2322: Type 'DateRange' is not assignable to type '{ from: Date | undefined; to: Date | undefined; }'.
-  Property 'to' is optional in type 'DateRange' but required in type '{ from: Date | undefined; to: Date | undefined; }'.
+src/app/(auth)/login/components/LoginForm.tsx(40,38): error TS2503: Cannot find namespace 'JSX'.
+src/app/(dashboard)/configuracoes/auditoria/page.tsx(370,46): error TS2322: Type 'DateRange | undefined' is not assignable to type '{ from: Date | undefined; to: Date | undefined; }'.
+  Type 'undefined' is not assignable to type '{ from: Date | undefined; to: Date | undefined; }'.
 src/app/(dashboard)/estoque/_components/EstoqueTable.tsx(63,27): error TS2686: 'React' refers to a UMD global, but the current file is a module. Consider adding an import instead.
 src/app/(dashboard)/estoque/_components/StockItemForm.tsx(78,5): error TS2322: Type 'Resolver<{ name: string; location_id?: string | undefined; group_id?: string | undefined; is_active?: boolean | undefined; min_quantity?: number | undefined; quantity?: number | undefined; unit_of_measurement_id?: string | undefined; sku?: string | undefined; }, any, { ...; }>' is not assignable to type 'Resolver<{ is_active: boolean; name: string; quantity: number; location_id?: string | undefined; group_id?: string | undefined; min_quantity?: number | undefined; unit_of_measurement_id?: string | undefined; sku?: string | undefined; }, any, { ...; }>'.
   Types of parameters 'options' and 'options' are incompatible.
@@ -243,66 +236,15 @@ src/app/(dashboard)/insumos/_components/InsumoForm.tsx(312,11): error TS2719: Ty
       Type 'import("/workspace/erpolie2/node_modules/react-hook-form/dist/types/resolvers").Resolver<{ is_active: boolean; name: string; min_quantity: number; quantity: number; unit_of_measure: string; location_id?: string | null | undefined; group_id?: string | null | undefined; description?: string | ... 1 more ... | undefine...' is not assignable to type 'import("/workspace/erpolie2/node_modules/react-hook-form/dist/types/resolvers").Resolver<{ is_active: boolean; name: string; min_quantity: number; quantity: number; unit_of_measure: string; location_id?: string | null | undefined; group_id?: string | null | undefined; description?: string | ... 1 more ... | undefine...'. Two different types with this name exist, but they are unrelated.
         Type 'TFieldValues' is not assignable to type '{ is_active: boolean; name: string; min_quantity: number; quantity: number; unit_of_measure: string; location_id?: string | null | undefined; group_id?: string | null | undefined; description?: string | ... 1 more ... | undefined; sku?: string | ... 1 more ... | undefined; cost_price?: number | ... 1 more ... | unde...'.
           Type 'FieldValues' is missing the following properties from type '{ is_active: boolean; name: string; min_quantity: number; quantity: number; unit_of_measure: string; location_id?: string | null | undefined; group_id?: string | null | undefined; description?: string | ... 1 more ... | undefined; sku?: string | ... 1 more ... | undefined; cost_price?: number | ... 1 more ... | unde...': is_active, name, min_quantity, quantity, unit_of_measure
-src/app/(dashboard)/insumos/page.tsx(78,25): error TS2345: Argument of type '(insumo: import("/workspace/erpolie2/src/modules/estoque/estoque.types").Insumo) => void' is not assignable to parameter of type '(insumo: import("/workspace/erpolie2/src/app/(dashboard)/insumos/_components/InsumoColumns").Insumo) => void'.
-  Types of parameters 'insumo' and 'insumo' are incompatible.
-    Type 'import("/workspace/erpolie2/src/app/(dashboard)/insumos/_components/InsumoColumns").Insumo' is not assignable to type 'import("/workspace/erpolie2/src/modules/estoque/estoque.types").Insumo'.
-      Types of property 'is_active' are incompatible.
-        Type 'boolean | null | undefined' is not assignable to type 'boolean'.
-          Type 'undefined' is not assignable to type 'boolean'.
-src/app/(dashboard)/insumos/page.tsx(125,13): error TS2741: Property 'id' is missing in type '{ name: string; symbol: string; }' but required in type '{ id: string; name: string; symbol: string; }'.
-src/app/(dashboard)/insumos/page.tsx(138,13): error TS2741: Property 'id' is missing in type '{ name: string; symbol: string; }' but required in type '{ id: string; name: string; symbol: string; }'.
-src/app/(dashboard)/insumos/page.tsx(169,30): error TS2339: Property 'supplier' does not exist on type 'Insumo'.
-src/app/(dashboard)/insumos/page.tsx(192,24): error TS7006: Parameter 'results' implicitly has an 'any' type.
-src/app/(dashboard)/insumos/page.tsx(203,15): error TS7006: Parameter 'error' implicitly has an 'any' type.
-src/app/(dashboard)/insumos/page.tsx(304,17): error TS2322: Type '{ options: FilterOption[]; onFilterChange: Dispatch<SetStateAction<Record<string, unknown>>>; columnOptions: { id: string; label: string; }[]; visibleColumns: string[]; onVisibleColumnsChange: Dispatch<...>; }' is not assignable to type 'IntrinsicAttributes & AdvancedFiltersProps'.
-  Property 'options' does not exist on type 'IntrinsicAttributes & AdvancedFiltersProps'.
-src/app/(dashboard)/insumos/page.tsx(326,68): error TS2345: Argument of type 'string | undefined' is not assignable to parameter of type 'string'.
-  Type 'undefined' is not assignable to type 'string'.
-src/app/(dashboard)/page.tsx(9,51): error TS2305: Module '"@/lib/data-hooks"' has no exported member 'getOrders'.
-src/app/(dashboard)/producao/[id]/edit/page.tsx(29,28): error TS2345: Argument of type 'OrdemDeProducao | undefined' is not assignable to parameter of type 'SetStateAction<Partial<OrdemDeProducao> | null>'.
-  Type 'undefined' is not assignable to type 'SetStateAction<Partial<OrdemDeProducao> | null>'.
-src/app/(dashboard)/producao/[id]/edit/page.tsx(33,11): error TS2322: Type 'string | string[]' is not assignable to type 'string | undefined'.
-  Type 'string[]' is not assignable to type 'string'.
-src/app/(dashboard)/producao/[id]/edit/page.tsx(34,11): error TS2322: Type 'null' is not assignable to type 'string | undefined'.
-src/app/(dashboard)/producao/[id]/edit/page.tsx(116,15): error TS2322: Type 'Partial<OrdemDeProducao>' is not assignable to type 'Partial<{ order_id: string; status_id: string; priority_id?: string | undefined; end_date?: Date | undefined; start_date?: Date | undefined; allocations?: { component_product_id: string; required_quantity: number; insumo_id: string; allocated_quantity: number; component_name?: string | undefined; }[] | undefined; }>...'.
-  Type 'Partial<OrdemDeProducao>' is not assignable to type 'Partial<{ order_id: string; status_id: string; priority_id?: string | undefined; end_date?: Date | undefined; start_date?: Date | undefined; allocations?: { component_product_id: string; required_quantity: number; insumo_id: string; allocated_quantity: number; component_name?: string | undefined; }[] | undefined; }>'.
-    Types of property 'status_id' are incompatible.
-      Type 'string | null | undefined' is not assignable to type 'string | undefined'.
-        Type 'null' is not assignable to type 'string | undefined'.
-src/app/(dashboard)/producao/_components/ProductionKanbanBoard.tsx(68,80): error TS2322: Type 'string | null | undefined' is not assignable to type 'string | undefined'.
-  Type 'null' is not assignable to type 'string | undefined'.
-src/app/(dashboard)/producao/_components/ProductionKanbanBoard.tsx(72,62): error TS2339: Property 'start_date' does not exist on type 'OrdemDeProducaoDetalhada'.
-src/app/(dashboard)/producao/_components/ProductionKanbanBoard.tsx(73,59): error TS2339: Property 'end_date' does not exist on type 'OrdemDeProducaoDetalhada'.
-src/app/(dashboard)/producao/_components/ProductionOrderForm.tsx(198,10): error TS2352: Conversion of type '{ product_id: any; component_product_id: any; quantity: any; products: { name: any; }[]; }[]' to type '(ProductComponent & { products?: { name?: string | undefined; } | null | undefined; })[]' may be a mistake because neither type sufficiently overlaps with the other. If this was intentional, convert the expression to 'unknown' first.
-  Type '{ product_id: any; component_product_id: any; quantity: any; products: { name: any; }[]; }' is not comparable to type 'ProductComponent & { products?: { name?: string | undefined; } | null | undefined; }'.
-    Type '{ product_id: any; component_product_id: any; quantity: any; products: { name: any; }[]; }' is not comparable to type 'ProductComponent'.
-      Types of property 'products' are incompatible.
-        Property 'name' is missing in type '{ name: any; }[]' but required in type '{ name: string; }'.
-src/app/(dashboard)/producao/_components/ProductionOrderForm.tsx(199,61): error TS2551: Property 'product_id' does not exist on type 'ProductComponent & { products?: { name?: string | undefined; } | null | undefined; }'. Did you mean 'products'?
-src/app/(dashboard)/producao/_components/UpdateProductionStatusDialog.tsx(64,7): error TS2322: Type 'string | null' is not assignable to type 'string | undefined'.
-  Type 'null' is not assignable to type 'string | undefined'.
-src/app/(dashboard)/producao/_components/UpdateProductionStatusDialog.tsx(91,20): error TS2322: Type 'string | null' is not assignable to type 'string | undefined'.
-  Type 'null' is not assignable to type 'string | undefined'.
-src/app/(dashboard)/producao/_components/UpdateProductionStatusDialog.tsx(137,45): error TS2345: Argument of type '(values: { status_id: string; notes?: string | undefined; }) => Promise<void>' is not assignable to parameter of type 'SubmitHandler<TFieldValues>'.
-  Types of parameters 'values' and 'data' are incompatible.
-    Type 'TFieldValues' is not assignable to type '{ status_id: string; notes?: string | undefined; }'.
-      Property 'status_id' is missing in type 'FieldValues' but required in type '{ status_id: string; notes?: string | undefined; }'.
-src/app/(dashboard)/producao/_components/UpdateProductionStatusDialog.tsx(139,15): error TS2322: Type 'Control<{ status_id: string; notes?: string | undefined; }, any, TFieldValues>' is not assignable to type 'Control<{ status_id: string; notes?: string | undefined; }, any, { status_id: string; notes?: string | undefined; }>'.
-  The types of '_options.resolver' are incompatible between these types.
-    Type 'Resolver<{ status_id: string; notes?: string | undefined; }, any, TFieldValues> | undefined' is not assignable to type 'Resolver<{ status_id: string; notes?: string | undefined; }, any, { status_id: string; notes?: string | undefined; }> | undefined'.
-      Type 'Resolver<{ status_id: string; notes?: string | undefined; }, any, TFieldValues>' is not assignable to type 'Resolver<{ status_id: string; notes?: string | undefined; }, any, { status_id: string; notes?: string | undefined; }>'.
-        Type 'TFieldValues' is not assignable to type '{ status_id: string; notes?: string | undefined; }'.
-          Property 'status_id' is missing in type 'FieldValues' but required in type '{ status_id: string; notes?: string | undefined; }'.
-src/app/(dashboard)/producao/_components/UpdateProductionStatusDialog.tsx(168,15): error TS2322: Type 'Control<{ status_id: string; notes?: string | undefined; }, any, TFieldValues>' is not assignable to type 'Control<{ status_id: string; notes?: string | undefined; }, any, { status_id: string; notes?: string | undefined; }>'.
-  The types of '_options.resolver' are incompatible between these types.
-    Type 'Resolver<{ status_id: string; notes?: string | undefined; }, any, TFieldValues> | undefined' is not assignable to type 'Resolver<{ status_id: string; notes?: string | undefined; }, any, { status_id: string; notes?: string | undefined; }> | undefined'.
-      Type 'Resolver<{ status_id: string; notes?: string | undefined; }, any, TFieldValues>' is not assignable to type 'Resolver<{ status_id: string; notes?: string | undefined; }, any, { status_id: string; notes?: string | undefined; }>'.
-        Type 'TFieldValues' is not assignable to type '{ status_id: string; notes?: string | undefined; }'.
-          Property 'status_id' is missing in type 'FieldValues' but required in type '{ status_id: string; notes?: string | undefined; }'.
+src/app/(dashboard)/insumos/page.tsx(192,38): error TS2694: Namespace '"papaparse"' has no exported member 'ParseResult'.
+src/app/(dashboard)/insumos/page.tsx(203,27): error TS2694: Namespace '"papaparse"' has no exported member 'ParseError'.
+src/app/(dashboard)/page.tsx(163,37): error TS2339: Property 'data' does not exist on type '{ readonly success: false; readonly error: string; } | { success: true; data: Order[]; }'.
+  Property 'data' does not exist on type '{ readonly success: false; readonly error: string; }'.
+src/app/(dashboard)/page.tsx(164,38): error TS2339: Property 'data' does not exist on type '{ readonly success: false; readonly error: string; } | { success: boolean; data: any[]; }'.
+  Property 'data' does not exist on type '{ readonly success: false; readonly error: string; }'.
+src/app/(dashboard)/page.tsx(165,41): error TS2339: Property 'data' does not exist on type '{ readonly success: false; readonly error: string; } | { success: boolean; data: any[]; }'.
+  Property 'data' does not exist on type '{ readonly success: false; readonly error: string; }'.
+src/app/(dashboard)/page.tsx(166,38): error TS2339: Property 'data' does not exist on type '{ readonly success: false; readonly error: string; } | { success: true; data: Order[]; }'.
+  Property 'data' does not exist on type '{ readonly success: false; readonly error: string; }'.
 src/modules/clientes/ClientesPage.tsx(130,38): error TS2694: Namespace '"papaparse"' has no exported member 'ParseResult'.
-src/modules/clientes/ClientesPage.tsx(139,15): error TS7006: Parameter 'error' implicitly has an 'any' type.
-src/modules/estoque/EstoquePage.tsx(168,33): error TS2709: Cannot use namespace 'ParseResult' as a type.
-src/modules/estoque/EstoquePage.tsx(179,15): error TS7006: Parameter 'error' implicitly has an 'any' type.
-src/modules/fornecedores/FornecedoresPage.tsx(122,5): error TS2347: Untyped function calls may not accept type arguments.
-src/modules/fornecedores/FornecedoresPage.tsx(124,18): error TS7006: Parameter 'results' implicitly has an 'any' type.
-src/modules/fornecedores/FornecedoresPage.tsx(128,15): error TS7006: Parameter 'error' implicitly has an 'any' type.
+src/modules/estoque/EstoquePage.tsx(167,38): error TS2694: Namespace '"papaparse"' has no exported member 'ParseResult'.

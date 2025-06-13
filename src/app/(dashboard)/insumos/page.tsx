@@ -11,12 +11,12 @@ import { Plus, FileDown, FileUp, Filter } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { useDebounce } from "@/hooks/use-debounce";
 import { AdvancedFilters, type FilterOption } from "@/components/ui/advanced-filters";
-import Papa from 'papaparse';
+import * as Papa from 'papaparse';
 import { saveAs } from 'file-saver';
 import { toast } from "sonner";
 import { InsumoForm } from "./_components/InsumoForm";
 import { getSupplies, useSupabaseData } from "@/lib/data-hooks";
-import type { Insumo } from "@/modules/estoque/estoque.types";
+import type { Insumo } from "./_components/InsumoColumns";
 
 export default function InsumosPage() {
   const router = useRouter();
@@ -122,9 +122,9 @@ export default function InsumosPage() {
             quantity: 200,
             min_quantity: 50,
             unit_of_measurement_id: '1',
-            unit_of_measurement: { name: 'Metro', symbol: 'm' },
+            unit_of_measurement: { id: '1', name: 'Metro', symbol: 'm' },
             supplier_id: '1',
-            supplier: { name: 'Fornecedor Têxtil Ltda' },
+            supplier: { id: '1', name: 'Fornecedor Têxtil Ltda' },
             is_active: true,
             created_at: new Date().toISOString()
           },
@@ -135,9 +135,9 @@ export default function InsumosPage() {
             quantity: 30,
             min_quantity: 100,
             unit_of_measurement_id: '2',
-            unit_of_measurement: { name: 'Unidade', symbol: 'un' },
+            unit_of_measurement: { id: '2', name: 'Unidade', symbol: 'un' },
             supplier_id: '2',
-            supplier: { name: 'Distribuidora de Tecidos Nacional S.A.' },
+            supplier: { id: '2', name: 'Distribuidora de Tecidos Nacional S.A.' },
             is_active: true,
             created_at: new Date().toISOString()
           }
@@ -189,7 +189,7 @@ export default function InsumosPage() {
 
     Papa.parse(file, {
       header: true,
-      complete: async (results) => {
+      complete: async (results: Papa.ParseResult<Record<string, string>>) => {
         try {
           // Aqui você implementaria a lógica para salvar os insumos importados
           // Por enquanto, apenas mostramos uma mensagem de sucesso
@@ -200,7 +200,7 @@ export default function InsumosPage() {
           toast.error('Erro ao importar insumos.');
         }
       },
-      error: (error) => {
+      error: (error: Papa.ParseError) => {
         console.error('Erro ao processar arquivo CSV:', error);
         toast.error('Erro ao processar arquivo CSV.');
       }
@@ -301,7 +301,7 @@ export default function InsumosPage() {
           {isFiltersOpen && (
             <div className="mb-6">
               <AdvancedFilters
-                options={filterOptions}
+                filterOptions={filterOptions}
                 onFilterChange={setActiveFilters}
                 columnOptions={columnOptions}
                 visibleColumns={visibleColumns}
@@ -323,7 +323,7 @@ export default function InsumosPage() {
           )}
 
           <DataTable
-            columns={columns.filter(col => visibleColumns.includes(col.id))}
+            columns={columns.filter(col => col.id && visibleColumns.includes(col.id))}
             data={insumos}
             loading={isLoading}
             onRowClick={(row) => handleInsumoClick(row.id)}

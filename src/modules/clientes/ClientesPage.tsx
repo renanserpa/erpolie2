@@ -17,8 +17,7 @@ import {
 } from "@/components/ui/dialog";
 import { useDebounce } from "@/hooks/use-debounce";
 import { AdvancedFilters, type FilterOption } from "@/components/ui/advanced-filters";
-import Papa from "papaparse";
-import type { ParseResult } from "papaparse";
+import * as Papa from "papaparse";
 import { saveAs } from "file-saver";
 import { toast } from "sonner";
 import { ClientForm } from "@/app/(dashboard)/clientes/_components/ClientForm";
@@ -128,7 +127,7 @@ export default function ClientesPage() {
 
     Papa.parse(file, {
       header: true,
-      complete: async (results: ParseResult<unknown>) => {
+      complete: async (results: Papa.ParseResult<unknown>) => {
         try {
           toast.success(`${results.data.length} clientes importados com sucesso!`);
           fetchClients();

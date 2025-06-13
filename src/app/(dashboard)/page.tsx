@@ -6,7 +6,9 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { AlertCircle, ArrowRight, BarChart3, Package, ShoppingCart, Users } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { getStockItems, getClients, getSuppliers, getOrders } from "@/lib/data-hooks";
+import { getStockItems, getClients, getSuppliers } from "@/lib/data-hooks";
+import { fetchPedidos } from "@/modules/pedidos/PedidosService";
+import type { Order } from "@/types/schema";
 import { toast } from "sonner";
 
 // Componente para exibir alertas de estoque baixo
@@ -122,13 +124,20 @@ export function LowStockAlerts() {
 
 // Componente para o dashboard principal
 export default function Dashboard() {
-  const [stats, setStats] = useState({
+  const [stats, setStats] = useState<{
+    totalClients: number;
+    totalSuppliers: number;
+    totalOrders: number;
+    totalProducts: number;
+    lowStockCount: number;
+    recentOrders: Order[];
+  }>({
     totalClients: 0,
     totalSuppliers: 0,
     totalOrders: 0,
     totalProducts: 0,
     lowStockCount: 0,
-    recentOrders: []
+    recentOrders: [],
   });
   const [isLoading, setIsLoading] = useState(true);
   const router = useRouter();
@@ -142,19 +151,19 @@ export default function Dashboard() {
         const [clientsResult, suppliersResult, ordersResult, stockResult, lowStockResult] = await Promise.all([
           getClients({}),
           getSuppliers({}),
-          getOrders({}),
+          fetchPedidos({}),
           getStockItems({}),
           getStockItems({ low_stock: true })
         ]);
         
         // Atualizar estatísticas
         setStats({
-          totalClients: clientsResult.success ? clientsResult.data.length : 25,
-          totalSuppliers: suppliersResult.success ? suppliersResult.data.length : 12,
-          totalOrders: ordersResult.success ? ordersResult.data.length : 87,
-          totalProducts: stockResult.success ? stockResult.data.length : 156,
-          lowStockCount: lowStockResult.success ? lowStockResult.data.length : 2,
-          recentOrders: ordersResult.success ? ordersResult.data.slice(0, 5) : []
+          totalClients: clientsResult.data?.length ?? 25,
+          totalSuppliers: suppliersResult.data?.length ?? 12,
+          totalOrders: ordersResult.data?.length ?? 87,
+          totalProducts: stockResult.data?.length ?? 156,
+          lowStockCount: lowStockResult.data?.length ?? 2,
+          recentOrders: ordersResult.data?.slice(0, 5) ?? [],
         });
       } catch (error) {
         console.error("Erro ao buscar dados do dashboard:", error);
