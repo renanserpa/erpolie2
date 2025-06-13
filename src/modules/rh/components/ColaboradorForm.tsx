@@ -15,7 +15,7 @@ interface ColaboradorFormProps {
   onSuccess?: () => void;
 }
 
-export function ColaboradorForm({ initialData, onSuccess }: ColaboradorFormProps) {
+export function ColaboradorForm({ initialData, onSuccess }: ColaboradorFormProps): React.ReactElement {
   const form = useForm<ColaboradorFormValues>({
     resolver: zodResolver(colaboradorSchema),
     defaultValues: initialData || { name: '' },

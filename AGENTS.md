@@ -129,3 +129,4 @@ Data | Autor | Descrição
 2025-06-30 | CODEX | Produtos module fully typed & build-clean
 2025-06-30 | CODEX | Kits module fully typed & build-clean
 2025-07-01 | CODEX | Reapplied fixes to Fornecedores module with typed CSV import.
+2025-07-01 | CODEX | RH module typing updated; explicit return types added.

@@ -118,3 +118,4 @@ Este arquivo centraliza os checklists de tarefas, validações e revisões para 
 2025-06-30: Produtos module fully typed & build-clean (CODEX)
 2025-06-30: Kits module fully typed & build-clean (CODEX)
 2025-07-01: Fornecedores module refactored after reset (CODEX)
+2025-07-01: RH module return types clarified and lint clean (CODEX)
