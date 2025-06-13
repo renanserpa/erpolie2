@@ -72,3 +72,4 @@ Apesar das correções adicionais nos formulários de receitas e despesas, o `ty
 2025-07-01: Fornecedores module revalidated with CSV import typing.
 2025-07-01: RH module typed with explicit React return types.
 2025-07-02: BI module typed with charts validated and services updated.
+2025-07-02: Login page reescrita com React Hook Form e validação.
