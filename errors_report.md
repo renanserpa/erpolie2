@@ -258,20 +258,6 @@ src/app/(dashboard)/insumos/page.tsx(304,17): error TS2322: Type '{ options: Fil
   Property 'options' does not exist on type 'IntrinsicAttributes & AdvancedFiltersProps'.
 src/app/(dashboard)/insumos/page.tsx(326,68): error TS2345: Argument of type 'string | undefined' is not assignable to parameter of type 'string'.
   Type 'undefined' is not assignable to type 'string'.
-src/app/(dashboard)/kits/[id]/page.tsx(80,23): error TS2345: Argument of type '{ id: any; product_id: any; product: { name: any; sku: any; price: any; }[]; quantity: any; }[]' is not assignable to parameter of type 'SetStateAction<KitProduct[]>'.
-  Type '{ id: any; product_id: any; product: { name: any; sku: any; price: any; }[]; quantity: any; }[]' is not assignable to type 'KitProduct[]'.
-    Type '{ id: any; product_id: any; product: { name: any; sku: any; price: any; }[]; quantity: any; }' is not assignable to type 'KitProduct'.
-      Types of property 'product' are incompatible.
-        Type '{ name: any; sku: any; price: any; }[]' is missing the following properties from type '{ name: string; sku: string; price: number; }': name, sku, price
-src/app/(dashboard)/kits/[id]/page.tsx(98,57): error TS2339: Property 'id' does not exist on type '{ id: any; order_number: any; order_date: any; total: any; status: any; }[]'.
-src/app/(dashboard)/kits/[id]/page.tsx(98,71): error TS2339: Property 'id' does not exist on type '{ id: any; order_number: any; order_date: any; total: any; status: any; }[]'.
-src/app/(dashboard)/kits/[id]/page.tsx(101,21): error TS2345: Argument of type '{ id: any; order_number: any; order_date: any; total: any; status: any; }[][]' is not assignable to parameter of type 'SetStateAction<Order[]>'.
-  Type '{ id: any; order_number: any; order_date: any; total: any; status: any; }[][]' is not assignable to type 'Order[]'.
-    Type '{ id: any; order_number: any; order_date: any; total: any; status: any; }[]' is missing the following properties from type 'Order': id, order_number, order_date, total, status
-src/app/(dashboard)/kits/_components/KitsTable.tsx(161,17): error TS7053: Element implicitly has an 'any' type because expression of type '0' can't be used to index type '{ price: number | null; discount_percentage: number | null; name: string; description: string; active: boolean; }'.
-  Property '0' does not exist on type '{ price: number | null; discount_percentage: number | null; name: string; description: string; active: boolean; }'.
-src/app/(dashboard)/kits/_components/KitsTable.tsx(178,24): error TS2304: Cannot find name 'createClient'.
-src/app/(dashboard)/kits/_components/KitsTable.tsx(211,24): error TS2304: Cannot find name 'createClient'.
 src/app/(dashboard)/page.tsx(9,51): error TS2305: Module '"@/lib/data-hooks"' has no exported member 'getOrders'.
 src/app/(dashboard)/producao/[id]/edit/page.tsx(29,28): error TS2345: Argument of type 'OrdemDeProducao | undefined' is not assignable to parameter of type 'SetStateAction<Partial<OrdemDeProducao> | null>'.
   Type 'undefined' is not assignable to type 'SetStateAction<Partial<OrdemDeProducao> | null>'.

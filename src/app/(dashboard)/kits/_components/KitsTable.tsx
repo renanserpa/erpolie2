@@ -13,6 +13,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { useSupabaseData, createRecord, updateRecord, deleteRecord } from "@/lib/data-hooks";
+import { createClient } from "@/lib/supabase/client";
 import { Loader2, Plus, Pencil, Trash2, Search, Package } from "lucide-react";
 import { toast } from "sonner";
 
@@ -149,16 +150,12 @@ export default function KitsTable() {
         discount_percentage: formData.discount_percentage ? parseFloat(formData.discount_percentage) : null
       };
 
-      let kitId;
-      
       if (currentItem) {
         // Atualizar kit existente
         const result = await updateRecord('produtos_compostos', currentItem.id, numericData);
-        kitId = currentItem.id;
       } else {
         // Criar novo kit
-        const result = await createRecord('produtos_compostos', numericData);
-        kitId = result.data?.[0]?.id;
+        await createRecord('produtos_compostos', numericData);
       }
       
       // Fechar diálogo e atualizar lista
