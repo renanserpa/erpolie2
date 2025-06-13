@@ -52,6 +52,8 @@ export default function KitDetailsPage() {
   const [activeTab, setActiveTab] = useState("details");
 
   useEffect(() => {
+    if (!params?.id) return;
+
     const fetchKitDetails = async () => {
       setLoading(true);
       try {
@@ -77,7 +79,7 @@ export default function KitDetailsPage() {
           .eq("kit_id", params.id);
 
         if (!productsError && productsData) {
-          setProducts(productsData);
+          setProducts(productsData as unknown as KitProduct[]);
         }
 
         // Buscar pedidos relacionados
@@ -92,13 +94,14 @@ export default function KitDetailsPage() {
 
         if (!ordersError && ordersData) {
           // Filtrar pedidos únicos
-          const uniqueOrders = ordersData
-            .map(item => item.orders)
-            .filter((order, index, self) => 
-              order && index === self.findIndex(o => o?.id === order?.id)
+          const uniqueOrders = (ordersData as unknown as { orders: Order | null }[])
+            .map((item) => item.orders as Order)
+            .filter(
+              (order, index, self) =>
+                order && index === self.findIndex((o) => o?.id === order?.id)
             );
-          
-          setOrders(uniqueOrders || []);
+
+          setOrders(uniqueOrders as Order[]);
         }
       } catch (error) {
         console.error("Erro ao buscar detalhes do kit:", error);
@@ -108,10 +111,10 @@ export default function KitDetailsPage() {
       }
     };
 
-    if (params.id) {
-      fetchKitDetails();
-    }
-  }, [params.id, supabase]);
+    fetchKitDetails();
+  }, [params?.id, supabase]);
+
+  if (!params?.id) return null;
 
   const handleEdit = () => {
     // Abrir modal de edição ou navegar para página de edição

@@ -116,3 +116,4 @@ Este arquivo centraliza os checklists de tarefas, validações e revisões para 
 2025-06-30: Pedidos module fully typed & build-clean (CODEX)
 2025-06-30: Logistica module fully typed & build-clean (CODEX)
 2025-06-30: Produtos module fully typed & build-clean (CODEX)
+2025-06-30: Kits module fully typed & build-clean (CODEX)
