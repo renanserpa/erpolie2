@@ -67,3 +67,4 @@ Apesar das correções adicionais nos formulários de receitas e despesas, o `ty
 2025-06-30: Compras module fully typed e build sem erros
 2025-06-30: Pedidos module fully typed & build-clean (CODEX)
 2025-06-30: Logistica module fully typed & build-clean (CODEX)
+2025-06-30: Produtos module fully typed & build-clean (CODEX)
