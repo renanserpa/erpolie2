@@ -70,7 +70,6 @@ export default function DeliveryDetailsPage() {
   const params = useParams();
   const router = useRouter();
   const supabase = createSupabaseClient();
-  if (!params?.id) return null;
   const [delivery, setDelivery] = useState<Delivery | null>(null);
   const [items, setItems] = useState<DeliveryItem[]>([]);
   const [statusHistory, setStatusHistory] = useState<DeliveryStatus[]>([]);
@@ -96,7 +95,7 @@ export default function DeliveryDetailsPage() {
           .returns<Delivery>();
 
         if (deliveryError) throw deliveryError;
-        setDelivery(deliveryData);
+        setDelivery(deliveryData as Delivery | null);
 
         // Buscar itens da entrega
         const { data: itemsData, error: itemsError } = await supabase
@@ -190,6 +189,14 @@ export default function DeliveryDetailsPage() {
         return 'bg-gray-100 text-gray-800';
     }
   };
+
+  if (!params?.id) {
+    return (
+      <div className="flex items-center justify-center h-full">
+        <p>ID da entrega não informado.</p>
+      </div>
+    );
+  }
 
   if (loading) {
     return (

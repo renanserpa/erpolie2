@@ -125,3 +125,4 @@ Data | Autor | Descrição
 2025-06-30 | CODEX | Produção module fully typed & build-clean
 2025-06-30 | CODEX | Compras module fully typed & build-clean
 2025-06-30 | CODEX | Pedidos module fully typed & build-clean
+2025-06-30 | CODEX | Logistica module fully typed & build-clean
