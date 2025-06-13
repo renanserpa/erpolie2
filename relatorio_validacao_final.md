@@ -71,3 +71,4 @@ Apesar das correções adicionais nos formulários de receitas e despesas, o `ty
 2025-06-30: Kits module fully typed & build-clean (CODEX)
 2025-07-01: Fornecedores module revalidated with CSV import typing.
 2025-07-01: RH module typed with explicit React return types.
+2025-07-02: BI module typed with charts validated and services updated.

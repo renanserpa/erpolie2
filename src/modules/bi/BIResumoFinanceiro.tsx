@@ -1,12 +1,12 @@
 "use client";
-import React from 'react';
+import * as React from 'react';
 import { Bar, BarChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
 
 interface ResumoFinanceiroProps {
   data: { receitas: number; despesas: number; saldo: number };
 }
 
-export function BIResumoFinanceiro({ data }: ResumoFinanceiroProps) {
+export function BIResumoFinanceiro({ data }: ResumoFinanceiroProps): React.ReactElement {
   const chartData = [
     { name: 'Receitas', value: data.receitas },
     { name: 'Despesas', value: data.despesas },
