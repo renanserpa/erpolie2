@@ -17,7 +17,15 @@ import {
 } from "@/components/ui/dialog";
 import { useDebounce } from "@/hooks/use-debounce";
 import { AdvancedFilters, type FilterOption } from "@/components/ui/advanced-filters";
-import Papa, { type ParseError, type ParseResult } from "papaparse";
+import Papa from "papaparse";
+
+interface CSVParseResult<T> {
+  data: T[];
+}
+
+interface CSVParseError {
+  message: string;
+}
 import { saveAs } from "file-saver";
 import { toast } from "sonner";
 import { SupplierForm } from "@/app/(dashboard)/fornecedores/_components/SupplierForm";
@@ -119,13 +127,13 @@ export default function FornecedoresPage() {
   const importFromCSV = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (!file) return;
-    Papa.parse<Record<string, unknown>>(file, {
+    Papa.parse(file, {
       header: true,
-      complete: (results) => {
+      complete: (results: CSVParseResult<Record<string, unknown>>) => {
         toast.success(`${results.data.length} fornecedores importados com sucesso!`);
         fetchSuppliers();
       },
-      error: (error) => {
+      error: (error: CSVParseError) => {
         console.error("Erro ao processar arquivo CSV:", error);
         toast.error("Erro ao processar arquivo CSV.");
       },

@@ -69,3 +69,4 @@ Apesar das correções adicionais nos formulários de receitas e despesas, o `ty
 2025-06-30: Logistica module fully typed & build-clean (CODEX)
 2025-06-30: Produtos module fully typed & build-clean (CODEX)
 2025-06-30: Kits module fully typed & build-clean (CODEX)
+2025-07-01: Fornecedores module revalidated with CSV import typing.
