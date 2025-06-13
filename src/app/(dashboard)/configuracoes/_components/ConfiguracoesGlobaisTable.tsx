@@ -68,10 +68,6 @@ export default function ConfiguracoesGlobaisTable() {
     { value: 'senha', label: 'Senha' }
   ];
 
-  useEffect(() => {
-    fetchConfiguracoes();
-  }, [fetchConfiguracoes]);
-
   const fetchConfiguracoes = useCallback(async () => {
     try {
       setLoading(true);
@@ -91,6 +87,10 @@ export default function ConfiguracoesGlobaisTable() {
       setLoading(false);
     }
   }, [supabase]);
+
+  useEffect(() => {
+    fetchConfiguracoes();
+  }, [fetchConfiguracoes]);
 
   const handleOpenCreateDialog = () => {
     setCurrentConfiguracao(null);

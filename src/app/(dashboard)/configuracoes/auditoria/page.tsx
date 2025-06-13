@@ -366,7 +366,7 @@ export default function AuditLogPage() {
                 <Calendar className="h-4 w-4 mr-2 text-muted-foreground" />
                 <DateRangePicker
                   date={filters.dateRange}
-                  onDateChange={(range: DateRange) =>
+                  onDateChange={(range: DateRange | undefined) =>
                     setFilters({ ...filters, dateRange: range })
                   }
                 />

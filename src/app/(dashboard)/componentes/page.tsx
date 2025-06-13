@@ -23,7 +23,7 @@ import {
   AdvancedFilters,
   type FilterOption,
 } from "@/components/ui/advanced-filters";
-import Papa, { type ParseResult } from "papaparse";
+import * as Papa from "papaparse";
 import { saveAs } from "file-saver";
 import { toast } from "sonner";
 import { ComponentForm } from "./_components/ComponentForm";
@@ -337,7 +337,7 @@ export default function ComponentesPage() {
           )}
 
           <DataTable<TableComponent, unknown>
-            columns={columns.filter((col) => visibleColumns.includes(col.id))}
+            columns={columns.filter((col) => col.id && visibleColumns.includes(col.id))}
             data={components}
             loading={isLoading}
             onRowClick={(row: TableComponent) => handleComponentClick(row.id!)}
