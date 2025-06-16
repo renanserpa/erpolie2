@@ -1,10 +1,10 @@
 // src/app/(auth)/login/page.tsx
 "use client";
 
-import type { FC } from "react";
+import * as React from "react";
 import LoginForm from "./components/LoginForm";
 
-const LoginPage: FC = () => {
+const LoginPage: React.FC = (): React.ReactElement => {
   return <LoginForm />;
 };
 

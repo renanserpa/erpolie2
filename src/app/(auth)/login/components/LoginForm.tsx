@@ -1,9 +1,9 @@
 "use client";
 
+import * as React from "react";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm, type SubmitHandler } from "react-hook-form";
-import type { FC } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Loader2 } from "lucide-react";
@@ -38,7 +38,7 @@ const credentialsSchema = z.object({
 
 export type CredentialsSchema = z.infer<typeof credentialsSchema>;
 
-const LoginForm: FC = () => {
+const LoginForm: React.FC = (): React.ReactElement => {
   const router = useRouter();
   const supabase = createClient();
 
@@ -61,12 +61,14 @@ const LoginForm: FC = () => {
     }
 
     try {
-      type RoleQueryResult = { role: { name: string } | null } | null;
-      const { data: roleData } = await supabase
+      type RoleQueryResult = { role: { name: string } | null };
+      const roleQuery = await supabase
         .from("user_roles")
         .select("role:roles(name)")
         .eq("user_id", data.user.id)
-        .single<RoleQueryResult>();
+        .returns<RoleQueryResult>()
+        .maybeSingle();
+      const roleData = roleQuery.data as RoleQueryResult | null;
 
       const roleName = roleData?.role?.name;
       if (roleName) {

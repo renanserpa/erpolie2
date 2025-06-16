@@ -83,3 +83,4 @@ Um novo ciclo de refatoracao sera necessario para zerar o `type-check` e estabil
 2025-06-16: lib + hooks fully typed – 2025-06-16
 2025-06-16 – components (non-ui) fully typed – 2025-06-16
 2025-07-03: Kits module fully typed – build clean (CODEX)
+2025-07-04: Auth, layouts and root pages fully typed (CODEX)
