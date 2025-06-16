@@ -17,36 +17,79 @@ import { createClient } from "@/lib/supabase/client";
 import { Loader2, Plus, Pencil, Trash2, Search, Package } from "lucide-react";
 import { toast } from "sonner";
 
+interface Kit {
+  id: string;
+  name: string;
+  description?: string | null;
+  price?: number | null;
+  discount_percentage?: number | null;
+  active?: boolean | null;
+}
+
+interface KitFormValues {
+  name: string;
+  description: string;
+  price: string;
+  discount_percentage: string;
+  active: boolean;
+}
+
+interface Product {
+  id: string;
+  name: string;
+  price?: number | null;
+}
+
+interface KitItem {
+  product_id: string;
+  quantity: number;
+}
+
 export default function KitsTable() {
   const [isOpen, setIsOpen] = useState(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [isItemsDialogOpen, setIsItemsDialogOpen] = useState(false);
-  const [currentItem, setCurrentItem] = useState<any>(null);
+  const [currentItem, setCurrentItem] = useState<Kit | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<KitFormValues>({
     name: '',
     description: '',
     price: '',
     discount_percentage: '',
-    active: true
+    active: true,
   });
   const [selectedProducts, setSelectedProducts] = useState<string[]>([]);
   const [productQuantities, setProductQuantities] = useState<{[key: string]: number}>({});
 
   // Buscar dados de kits
-  const { data: kits, loading, error, refresh } = useSupabaseData('produtos_compostos', 'name');
+  const {
+    data: kits,
+    loading,
+    error,
+    refresh,
+  } = useSupabaseData('produtos_compostos', 'name') as {
+    data: Kit[];
+    loading: boolean;
+    error: string | null;
+    refresh: () => Promise<void>;
+  };
   
   // Buscar produtos para o select
-  const { data: products } = useSupabaseData('products', 'name');
+  const { data: products } = useSupabaseData('products', 'name') as {
+    data: Product[];
+  };
   
   // Buscar itens de kits para o produto atual
   const { data: kitItems, refresh: refreshKitItems } = useSupabaseData(
-    'itens_produto_composto', 
+    'itens_produto_composto',
     'created_at',
-    { 
-      filters: currentItem ? [{ column: 'kit_id', operator: 'eq', value: currentItem?.id }] : [] 
+    {
+      filters: currentItem ? [{ column: 'kit_id', operator: 'eq', value: currentItem?.id }] : []
     }
-  );
+  ) as {
+    data: KitItem[];
+    refresh: () => Promise<void>;
+  };
 
   // Filtrar kits com base no termo de busca
   const filteredKits = kits.filter(item => 
@@ -54,7 +97,7 @@ export default function KitsTable() {
     item.description?.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  const handleOpenDialog = (item?: any) => {
+  const handleOpenDialog = (item?: Kit) => {
     if (item) {
       setCurrentItem(item);
       setFormData({
@@ -77,7 +120,7 @@ export default function KitsTable() {
     setIsOpen(true);
   };
 
-  const handleOpenItemsDialog = (item: any) => {
+  const handleOpenItemsDialog = (item: Kit) => {
     setCurrentItem(item);
     
     // Preparar os produtos selecionados e suas quantidades
@@ -96,7 +139,7 @@ export default function KitsTable() {
     setIsItemsDialogOpen(true);
   };
 
-  const handleOpenDeleteDialog = (item: any) => {
+  const handleOpenDeleteDialog = (item: Kit) => {
     setCurrentItem(item);
     setIsDeleteDialogOpen(true);
   };
@@ -152,10 +195,10 @@ export default function KitsTable() {
 
       if (currentItem) {
         // Atualizar kit existente
-        const result = await updateRecord('produtos_compostos', currentItem.id, numericData);
+        await updateRecord<Kit>('produtos_compostos', currentItem.id, numericData);
       } else {
         // Criar novo kit
-        await createRecord('produtos_compostos', numericData);
+        await createRecord<Kit>('produtos_compostos', numericData);
       }
       
       // Fechar diálogo e atualizar lista
