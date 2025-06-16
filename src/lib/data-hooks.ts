@@ -8,7 +8,8 @@ import {
   Client,
   Supplier,
   StockItem,
-  Component
+  Component,
+  Supply
 } from '@/types/schema';
 
 export { useSupabaseData } from './utils/data-hooks';
@@ -56,7 +57,8 @@ export const createRecord = async <T>(
       .from(table)
       .insert(cleanData)
       .select()
-      .single();
+      .single()
+      .returns<T>();
     
     if (error) {
       return handleSupabaseError(error);
@@ -93,7 +95,8 @@ export const updateRecord = async <T>(
       .update(cleanData)
       .eq('id', id)
       .select()
-      .single();
+      .single()
+      .returns<T>();
     
     if (error) {
       return handleSupabaseError(error);
@@ -269,7 +272,8 @@ export const getStockItems = async (query: Record<string, unknown> = {}) => {
       const { data, error } = await supabase
         .from('stock_items')
         .select('*, group:group_id(*), location:location_id(*), unit_of_measurement:unit_of_measurement_id(*)')
-        .lt('quantity', supabase.rpc('get_field_ref', { table_name: 'stock_items', row_id: 'id', field_name: 'min_quantity' }));
+        .lt('quantity', supabase.rpc('get_field_ref', { table_name: 'stock_items', row_id: 'id', field_name: 'min_quantity' }))
+        .returns<StockItem[]>();
       
       if (error) {
         return handleSupabaseError(error);
@@ -328,7 +332,7 @@ export const getStockItems = async (query: Record<string, unknown> = {}) => {
       }
     });
     
-    const { data, error } = await queryBuilder;
+    const { data, error } = await queryBuilder.returns<StockItem[]>();
     
     if (error) {
       return handleSupabaseError(error);
@@ -348,7 +352,8 @@ export const getStockItemById = async (id: string) => {
       .from('stock_items')
       .select('*, group:group_id(*), location:location_id(*), unit_of_measurement:unit_of_measurement_id(*)')
       .eq('id', id)
-      .single();
+      .single()
+      .returns<StockItem>();
     
     if (error) {
       return handleSupabaseError(error);
@@ -419,7 +424,7 @@ export const getComponents = async (query: Record<string, unknown> = {}) => {
       }
     });
     
-    const { data, error } = await queryBuilder;
+    const { data, error } = await queryBuilder.returns<Component[]>();
     
     if (error) {
       return handleSupabaseError(error);
@@ -439,7 +444,8 @@ export const getComponentById = async (id: string) => {
       .from('components')
       .select('*, category:category_id(*), unit_of_measurement:unit_of_measurement_id(*)')
       .eq('id', id)
-      .single();
+      .single()
+      .returns<Component>();
     
     if (error) {
       return handleSupabaseError(error);
@@ -474,7 +480,8 @@ export const getSupplies = async (query: Record<string, unknown> = {}) => {
       const { data, error } = await supabase
         .from('supplies')
         .select('*, supplier:supplier_id(*), unit_of_measurement:unit_of_measurement_id(*)')
-        .lt('quantity', supabase.rpc('get_field_ref', { table_name: 'supplies', row_id: 'id', field_name: 'min_quantity' }));
+        .lt('quantity', supabase.rpc('get_field_ref', { table_name: 'supplies', row_id: 'id', field_name: 'min_quantity' }))
+        .returns<Supply[]>();
       
       if (error) {
         return handleSupabaseError(error);
@@ -533,7 +540,7 @@ export const getSupplies = async (query: Record<string, unknown> = {}) => {
       }
     });
     
-    const { data, error } = await queryBuilder;
+    const { data, error } = await queryBuilder.returns<Supply[]>();
     
     if (error) {
       return handleSupabaseError(error);

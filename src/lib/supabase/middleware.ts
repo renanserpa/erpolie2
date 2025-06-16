@@ -1,8 +1,11 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
+import type { SupabaseClient } from "@supabase/supabase-js";
 import type { ExtendedDatabase } from "@/types/extended-supabase";
 
-export async function createSupabaseMiddlewareClient(req: NextRequest) {
+export async function createSupabaseMiddlewareClient(
+  req: NextRequest
+): Promise<{ supabase: SupabaseClient<ExtendedDatabase>; response: NextResponse }> {
   // Cria uma resposta inicial
   const response = NextResponse.next();
 
