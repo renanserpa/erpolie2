@@ -1,6 +1,6 @@
 "use client";
 
-import React from 'react';
+import * as React from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { 
@@ -21,7 +21,7 @@ import {
   Briefcase
 } from 'lucide-react';
 
-const Sidebar = () => {
+const Sidebar: React.FC = () => {
   const pathname = usePathname();
 
   const menuItems = [

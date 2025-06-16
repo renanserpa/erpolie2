@@ -81,3 +81,4 @@ A validacao total do repositorio nao foi possivel dentro do escopo atual devido 
 Um novo ciclo de refatoracao sera necessario para zerar o `type-check` e estabilizar 100% do codigo.
 2025-06-16 – UI components folder typed and validated
 2025-06-16: lib + hooks fully typed – 2025-06-16
+2025-06-16 – components (non-ui) fully typed – 2025-06-16
