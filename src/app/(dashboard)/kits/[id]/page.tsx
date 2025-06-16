@@ -62,6 +62,7 @@ export default function KitDetailsPage() {
           .from("kits")
           .select("*")
           .eq("id", params.id)
+          .returns<Kit>()
           .single();
 
         if (kitError) throw kitError;
@@ -76,10 +77,11 @@ export default function KitDetailsPage() {
             product:product_id (name, sku, price),
             quantity
           `)
-          .eq("kit_id", params.id);
+          .eq("kit_id", params.id)
+          .returns<KitProduct[]>();
 
         if (!productsError && productsData) {
-          setProducts(productsData as unknown as KitProduct[]);
+          setProducts(productsData);
         }
 
         // Buscar pedidos relacionados
@@ -90,18 +92,19 @@ export default function KitDetailsPage() {
             orders:order_id (id, order_number, order_date, total, status)
           `)
           .eq("kit_id", params.id)
-          .order("created_at", { ascending: false });
+          .order("created_at", { ascending: false })
+          .returns<{ orders: Order | null }[]>();
 
         if (!ordersError && ordersData) {
-          // Filtrar pedidos únicos
-          const uniqueOrders = (ordersData as unknown as { orders: Order | null }[])
-            .map((item) => item.orders as Order)
+          const uniqueOrders = ordersData
+            .map((item) => item.orders)
+            .filter((o): o is Order => !!o)
             .filter(
               (order, index, self) =>
-                order && index === self.findIndex((o) => o?.id === order?.id)
+                index === self.findIndex((o) => o.id === order.id)
             );
 
-          setOrders(uniqueOrders as Order[]);
+          setOrders(uniqueOrders);
         }
       } catch (error) {
         console.error("Erro ao buscar detalhes do kit:", error);
