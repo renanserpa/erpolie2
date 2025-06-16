@@ -85,3 +85,16 @@ Um novo ciclo de refatoracao sera necessario para zerar o `type-check` e estabil
 2025-07-03: Kits module fully typed – build clean (CODEX)
 2025-07-04: Auth, layouts and root pages fully typed (CODEX)
 2025-06-16: Final type-check cleanup (CODEX)
+
+## Status Atual – 2025-07-05
+
+Todos os dashboards foram tipados manualmente, p\u00E1gina por p\u00E1gina. `npm run build`, `npm test` e `npm run type-check` executam parcialmente, ainda registrando falhas nos m\u00F3dulos de insumos, produ\u00E7\u00E3o e login. O `lint` acusa erros de ordem de hooks que exigem refatora\u00E7\u00E3o.
+
+### M\u00F3dulos com erros pendentes
+
+- Insumos
+- Produ\u00E7\u00E3o (p\u00E1ginas auxiliares)
+- Login e componentes de autentica\u00E7\u00E3o
+- Componentes reutiliz\u00E1veis isolados
+
+Projeto pronto para iniciar refatora\u00E7\u00E3o global, divis\u00E3o em pacotes e prepara\u00E7\u00E3o de deploy.
