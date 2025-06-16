@@ -79,11 +79,23 @@ Sempre atualize a documentação relacionada às alterações.
 
 ## Status Atual
 
-O projeto est\u00E1 funcional em produ\u00E7\u00E3o parcial. A maior parte dos m\u00F3dulos principais j\u00E1 est\u00E1 validada para build, mas a tipagem total do projeto ainda exige refinamento.
+O ciclo de tipagem manual dos dashboards foi conclu\u00EDdo. Cada p\u00E1gina passou por revis\u00E3o individual de tipos.
 
-- ✅ Lint e build passam sem erros cr\u00EDticos
-- ⚠️ `npm run type-check` ainda falha com dezenas de erros em m\u00F3dulos como insumos, produ\u00E7\u00E3o, login e componentes reutiliz\u00E1veis
-- 📌 A recomenda\u00E7\u00E3o \u00E9 dividir os m\u00F3dulos restantes em subtarefas semanais de valida\u00E7\u00E3o incremental
+- 🔧 `npm run build`, `npm test` e `npm run type-check` executam parcialmente e ainda apresentam falhas em alguns m\u00F3dulos.
+- ❌ `npm run lint` retorna erros de ordem de hooks que necessitam refatora\u00E7\u00F5es profundas.
+- 🚀 Projeto liberado para refatora\u00E7\u00E3o global, divis\u00E3o por pacotes e prepara\u00E7\u00E3o de deploy.
+
+## Pontos t\u00E9cnicos pendentes
+
+- Resolver avisos do ESLint relacionados \u00E0 ordem de hooks.
+- Finalizar corre\u00E7\u00F5es de tipagem restantes at\u00E9 que o `type-check` passe sem erros.
+- Ajustar scripts de teste e build para execu\u00E7\u00E3o completa em CI.
+
+## Sugest\u00E3o de pr\u00F3ximos passos
+
+1. Planejar refatora\u00E7\u00E3o global priorizando limpeza de hooks e padroniza\u00E7\u00E3o.
+2. Separar m\u00F3dulos em pacotes (monorepo) para facilitar manuten\u00E7\u00E3o.
+3. Definir pipeline de deploy e publica\u00E7\u00E3o.
 
 ## 📄 Licença
 Este projeto é privado para o Ateliê Olie. Não distribua sem autorização.

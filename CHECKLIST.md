@@ -133,3 +133,4 @@ Um novo ciclo de refatoracao sera necessario para zerar o `type-check` e estabil
 2025-07-03: Kits module fully typed – CODEX
 2025-07-04: Auth, layouts and root pages fully typed (CODEX)
 2025-06-16: Final type-check cleanup (CODEX)
+2025-07-05: Encerramento da Sprint de Tipagem. Build, test e type-check parcialmente funcionais; lint requer refatoracao de hooks.
