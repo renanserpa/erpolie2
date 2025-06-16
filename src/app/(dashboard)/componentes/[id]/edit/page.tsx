@@ -17,8 +17,6 @@ export default function EditComponentPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  if (!params?.id) return null;
-
   const fetchComponent = useCallback(async () => {
     try {
       setLoading(true);
@@ -50,6 +48,8 @@ export default function EditComponentPage() {
   useEffect(() => {
     fetchComponent();
   }, [fetchComponent]);
+
+  if (!params?.id) return null;
 
   const handleSuccess = () => {
     toast.success("Componente atualizado com sucesso");
