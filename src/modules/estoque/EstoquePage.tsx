@@ -11,19 +11,20 @@ import { Plus, FileDown, FileUp, Filter } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { useDebounce } from "@/hooks/use-debounce";
 import { AdvancedFilters, type FilterOption } from "@/components/ui/advanced-filters";
-import * as Papa from 'papaparse';
+import Papa from 'papaparse';
+import type { ParseResult, ParseError } from 'papaparse';
 import { saveAs } from 'file-saver';
 import { toast } from "sonner";
 import { StockItemForm } from "@/app/(dashboard)/estoque/_components/StockItemForm";
 import { useSupabaseData } from "@/lib/data-hooks";
 import { fetchStockItems } from "./EstoqueService";
-import type { Insumo } from "./estoque.types";
+import type { StockItem } from "@/types/schema";
 
 export default function EstoquePage() {
   const router = useRouter();
   const [searchQuery, setSearchQuery] = useState("");
   const [isLoading, setIsLoading] = useState(true);
-  const [stockItems, setStockItems] = useState<Insumo[]>([]);
+  const [stockItems, setStockItems] = useState<StockItem[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
   const [isFiltersOpen, setIsFiltersOpen] = useState(false);
@@ -65,11 +66,11 @@ export default function EstoquePage() {
     { id: "actions", label: "Ações" }
   ];
 
-  const handleEdit = useCallback((item: Insumo) => {
+  const handleEdit = useCallback((item: StockItem) => {
     router.push(`/estoque/${item.id}?edit=1`);
   }, [router]);
 
-  const handleDelete = useCallback(async (item: Insumo) => {
+  const handleDelete = useCallback(async (item: StockItem) => {
     if (confirm(`Excluir item "${item.name}"?`)) {
       toast.info('Funcionalidade de exclusão não implementada');
     }
@@ -164,7 +165,7 @@ export default function EstoquePage() {
 
     Papa.parse(file, {
       header: true,
-      complete: async (results: Papa.ParseResult<Record<string, unknown>>) => {
+      complete: async (results: ParseResult<Record<string, unknown>>) => {
         try {
           // Aqui você implementaria a lógica para salvar os itens importados
           // Por enquanto, apenas mostramos uma mensagem de sucesso
@@ -175,7 +176,7 @@ export default function EstoquePage() {
           toast.error('Erro ao importar itens de estoque.');
         }
       },
-      error: (error: Error) => {
+      error: (error: ParseError) => {
         console.error('Erro ao processar arquivo CSV:', error);
         toast.error('Erro ao processar arquivo CSV.');
       }

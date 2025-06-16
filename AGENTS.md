@@ -143,3 +143,4 @@ Um novo ciclo de refatoracao sera necessario para zerar o `type-check` e estabil
 2025-06-16 | CODEX | components (non-ui) fully typed – 2025-06-16
 2025-07-03 | CODEX | kits module fully typed – 2025-07-03
 2025-07-04 | CODEX | auth, layouts and root pages fully typed – 2025-07-04
+2025-06-16 | CODEX | Final type-check cleanup – 2025-06-16

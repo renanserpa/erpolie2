@@ -8,9 +8,12 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Badge } from "@/components/ui/badge";
 import Link from "next/link";
-import type { Insumo } from "@/modules/estoque/estoque.types";
+import type { StockItem } from "@/types/schema";
 
-export const stockItemColumns = (onEdit: (item: Insumo) => void, onDelete: (item: Insumo) => void): ColumnDef<Insumo>[] => [
+export const stockItemColumns = (
+  onEdit: (item: StockItem) => void,
+  onDelete: (item: StockItem) => void,
+): ColumnDef<StockItem>[] => [
   {
     id: "select",
     header: ({ table }) => (

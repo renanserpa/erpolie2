@@ -10,11 +10,13 @@ import { getRecordById } from '@/lib/data-hooks';
 import { FinancialTransactionForm } from '../../_components/FinancialTransactionForm';
 
 export default function EditFinancialTransactionPage() {
-  const params = useParams();
+  const params = useParams<{ id?: string }>();
   const router = useRouter();
-  const [transaction, setTransaction] = useState<any>(null);
+  const [transaction, setTransaction] = useState<Partial<FinancialTransaction> | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+
+  if (!params?.id) return null;
 
   const fetchTransaction = async () => {
     try {

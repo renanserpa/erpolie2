@@ -11,11 +11,13 @@ import type { Client } from '@/types/schema';
 import { ClientForm } from '../../_components/ClientForm';
 
 export default function EditClientPage() {
-  const params = useParams();
+  const params = useParams<{ id?: string }>();
   const router = useRouter();
   const [client, setClient] = useState<Client | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+
+  if (!params?.id) return null;
 
   const fetchClient = useCallback(async () => {
     try {
