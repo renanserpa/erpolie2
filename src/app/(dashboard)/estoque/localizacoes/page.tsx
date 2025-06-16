@@ -22,8 +22,8 @@ async function getLocations(): Promise<LocalizacaoEstoque[]> {
   console.log("Fetching stock locations...");
   // Example structure matching potential columns
   return [
-    { id: 'uuid-loc-1', name: 'Almoxarifado Principal', description: 'Localização central de estoque', address: 'Rua Principal, 123', created_at: new Date().toISOString() },
-    { id: 'uuid-loc-2', name: 'Estoque Loja A', description: 'Estoque da filial A', address: 'Av. Secundária, 456', created_at: new Date(Date.now() - 86400000).toISOString() },
+    { id: 'uuid-loc-1', name: 'Almoxarifado Principal', description: 'Localização central de estoque', created_at: new Date().toISOString() },
+    { id: 'uuid-loc-2', name: 'Estoque Loja A', description: 'Estoque da filial A', created_at: new Date(Date.now() - 86400000).toISOString() },
     { id: 'uuid-loc-3', name: 'Estoque Produção', description: 'Área de estoque na produção', created_at: new Date(Date.now() - 172800000).toISOString() },
   ];
   /* Replace with actual Supabase fetch:
@@ -34,7 +34,6 @@ async function getLocations(): Promise<LocalizacaoEstoque[]> {
       id,
       name,
       description,
-      address,
       created_at
     `)
     .order('name', { ascending: true });

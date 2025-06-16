@@ -11,7 +11,8 @@ import { Plus, FileDown, FileUp, Filter } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { useDebounce } from "@/hooks/use-debounce";
 import { AdvancedFilters, type FilterOption } from "@/components/ui/advanced-filters";
-import * as Papa from 'papaparse';
+import Papa from 'papaparse';
+import type { ParseError, ParseResult } from 'papaparse';
 import { saveAs } from 'file-saver';
 import { toast } from "sonner";
 import { InsumoForm } from "./_components/InsumoForm";
@@ -189,7 +190,7 @@ export default function InsumosPage() {
 
     Papa.parse(file, {
       header: true,
-      complete: async (results: Papa.ParseResult<Record<string, string>>) => {
+      complete: async (results: ParseResult<Record<string, string>>) => {
         try {
           // Aqui você implementaria a lógica para salvar os insumos importados
           // Por enquanto, apenas mostramos uma mensagem de sucesso
@@ -200,7 +201,7 @@ export default function InsumosPage() {
           toast.error('Erro ao importar insumos.');
         }
       },
-      error: (error: Papa.ParseError) => {
+      error: (error: ParseError) => {
         console.error('Erro ao processar arquivo CSV:', error);
         toast.error('Erro ao processar arquivo CSV.');
       }

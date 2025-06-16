@@ -11,11 +11,13 @@ import type { Component } from "@/types/schema";
 import { ComponentForm } from "../../_components/ComponentForm";
 
 export default function EditComponentPage() {
-  const params = useParams<{ id: string }>();
+  const params = useParams<{ id?: string }>();
   const router = useRouter();
   const [component, setComponent] = useState<Component | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+
+  if (!params?.id) return null;
 
   const fetchComponent = useCallback(async () => {
     try {

@@ -11,11 +11,13 @@ import { SupplierForm } from '../../_components/SupplierForm';
 import type { Supplier } from '@/types/schema';
 
 export default function EditSupplierPage() {
-  const params = useParams();
+  const params = useParams<{ id?: string }>();
   const router = useRouter();
   const [supplier, setSupplier] = useState<Supplier | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+
+  if (!params?.id) return null;
 
   const fetchSupplier = async () => {
     try {
