@@ -14,4 +14,4 @@ export function createClient(): SupabaseClient<ExtendedDatabase> {
   return createBrowserClient<ExtendedDatabase>(url, anonKey);
 }
 
-export const createSupabaseClient = createClient;
+export const createSupabaseClient: () => SupabaseClient<ExtendedDatabase> = createClient;
