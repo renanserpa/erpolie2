@@ -77,11 +77,13 @@ Siga padrões de código, tipagem e modularização.
 Commits devem ser pequenos e atômicos.
 Sempre atualize a documentação relacionada às alterações.
 
-## 📈 Status Atual
-- Estrutura principal criada
-- Módulos básicos em desenvolvimento
-- Foco atual: Pedidos, Produção, Estoque (Kanban)
-- Próximos passos: Financeiro, Compras, Logística, BI
+## Status Atual
+
+O projeto est\u00E1 funcional em produ\u00E7\u00E3o parcial. A maior parte dos m\u00F3dulos principais j\u00E1 est\u00E1 validada para build, mas a tipagem total do projeto ainda exige refinamento.
+
+- ✅ Lint e build passam sem erros cr\u00EDticos
+- ⚠️ `npm run type-check` ainda falha com dezenas de erros em m\u00F3dulos como insumos, produ\u00E7\u00E3o, login e componentes reutiliz\u00E1veis
+- 📌 A recomenda\u00E7\u00E3o \u00E9 dividir os m\u00F3dulos restantes em subtarefas semanais de valida\u00E7\u00E3o incremental
 
 ## 📄 Licença
 Este projeto é privado para o Ateliê Olie. Não distribua sem autorização.
