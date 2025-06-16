@@ -1,11 +1,10 @@
 "use client";
 
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import * as React from "react";
 import { createClient } from "@/lib/supabase/client";
 import { toast } from "sonner";
 import { Bell, X, Check, AlertCircle, Info, ShoppingCart, Truck, DollarSign, Package } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
@@ -43,18 +42,20 @@ interface NotificationContextType {
 }
 
 // Contexto
-const NotificationContext = createContext<NotificationContextType | undefined>(undefined);
+const NotificationContext = React.createContext<NotificationContextType | undefined>(
+  undefined,
+);
 
 // Provider
-export function NotificationProvider({ children }: { children: React.ReactNode }) {
+export function NotificationProvider({ children }: { children: React.ReactNode }): React.ReactElement {
   const supabase = createClient();
   const { user } = useAuth();
-  const [notifications, setNotifications] = useState<Notification[]>([]);
-  const [unreadCount, setUnreadCount] = useState(0);
-  const [isLoading, setIsLoading] = useState(false);
+  const [notifications, setNotifications] = React.useState<Notification[]>([]);
+  const [unreadCount, setUnreadCount] = React.useState<number>(0);
+  const [isLoading, setIsLoading] = React.useState<boolean>(false);
 
   // Buscar notificações ao carregar ou quando o usuário mudar
-  useEffect(() => {
+  React.useEffect(() => {
     if (user?.id) {
       fetchNotifications();
       
@@ -97,7 +98,7 @@ export function NotificationProvider({ children }: { children: React.ReactNode }
   }, [user?.id]);
 
   // Buscar notificações
-  const fetchNotifications = async () => {
+  const fetchNotifications = async (): Promise<void> => {
     if (!user?.id) return;
     
     setIsLoading(true);
@@ -122,7 +123,7 @@ export function NotificationProvider({ children }: { children: React.ReactNode }
   };
 
   // Marcar como lida
-  const markAsRead = async (id: string) => {
+  const markAsRead = async (id: string): Promise<void> => {
     try {
       const { error } = await supabase
         .from('notifications')
@@ -141,7 +142,7 @@ export function NotificationProvider({ children }: { children: React.ReactNode }
   };
 
   // Marcar todas como lidas
-  const markAllAsRead = async () => {
+  const markAllAsRead = async (): Promise<void> => {
     if (!user?.id || notifications.length === 0) return;
     
     try {
@@ -166,7 +167,7 @@ export function NotificationProvider({ children }: { children: React.ReactNode }
   };
 
   // Excluir notificação
-  const deleteNotification = async (id: string) => {
+  const deleteNotification = async (id: string): Promise<void> => {
     try {
       const { error } = await supabase
         .from('notifications')
@@ -188,7 +189,7 @@ export function NotificationProvider({ children }: { children: React.ReactNode }
   };
 
   // Atualizar notificações
-  const refreshNotifications = async () => {
+  const refreshNotifications = async (): Promise<void> => {
     await fetchNotifications();
   };
 
@@ -199,11 +200,11 @@ export function NotificationProvider({ children }: { children: React.ReactNode }
     type: 'info' | 'success' | 'warning' | 'error',
     entityType: string,
     entityId?: string
-  ) => {
+  ): Promise<void> => {
     if (!user?.id) return;
     
     try {
-      const { data, error } = await supabase
+      const { error } = await supabase
         .from('notifications')
         .insert({
           user_id: user.id,
@@ -217,11 +218,11 @@ export function NotificationProvider({ children }: { children: React.ReactNode }
         })
         .select()
         .single();
-        
+
       if (error) throw error;
-      
+
       // Não precisamos atualizar o estado aqui porque a subscription vai capturar
-      return data;
+      return;
     } catch (error: any) {
       console.error('Erro ao enviar notificação:', error);
       throw error;
@@ -247,8 +248,8 @@ export function NotificationProvider({ children }: { children: React.ReactNode }
 }
 
 // Hook para usar o contexto
-export function useNotifications() {
-  const context = useContext(NotificationContext);
+export function useNotifications(): NotificationContextType {
+  const context = React.useContext(NotificationContext);
   if (context === undefined) {
     throw new Error('useNotifications deve ser usado dentro de um NotificationProvider');
   }
@@ -256,7 +257,7 @@ export function useNotifications() {
 }
 
 // Componente de ícone de notificação
-function getNotificationIcon(type: string) {
+function getNotificationIcon(type: string): React.ReactElement {
   switch (type) {
     case 'success':
       return <Check className="h-4 w-4 text-green-500" />;
@@ -271,7 +272,7 @@ function getNotificationIcon(type: string) {
 }
 
 // Componente de ícone de entidade
-function getEntityIcon(entityType: string) {
+function getEntityIcon(entityType: string): React.ReactElement {
   switch (entityType.toLowerCase()) {
     case 'order':
     case 'orders':
@@ -291,11 +292,15 @@ function getEntityIcon(entityType: string) {
 }
 
 // Componente de notificação individual
-export function NotificationItem({ notification, onRead, onDelete }: { 
+export function NotificationItem({
+  notification,
+  onRead,
+  onDelete,
+}: {
   notification: Notification;
   onRead: () => void;
   onDelete: () => void;
-}) {
+}): React.ReactElement {
   return (
     <div className={`p-4 border-b last:border-b-0 ${notification.read ? 'bg-background' : 'bg-muted/30'}`}>
       <div className="flex items-start justify-between gap-2">
@@ -337,9 +342,9 @@ export function NotificationItem({ notification, onRead, onDelete }: {
 }
 
 // Componente de menu de notificações
-export function NotificationBell() {
+export function NotificationBell(): React.ReactElement {
   const { notifications, unreadCount, markAsRead, markAllAsRead, deleteNotification, refreshNotifications } = useNotifications();
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = React.useState<boolean>(false);
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -402,6 +407,6 @@ export function NotificationBell() {
 }
 
 // Componente para enviar notificações de sistema
-export function SystemNotifications() {
+export function SystemNotifications(): null {
   return null; // Este componente é apenas para carregar o provider
 }
