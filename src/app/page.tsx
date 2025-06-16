@@ -1,11 +1,12 @@
 "use client";
 
+import * as React from "react";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Loader2 } from "lucide-react";
 import { useAuth } from "@/contexts/auth-context";
 
-export default function Home() {
+const Home: React.FC = (): React.ReactElement => {
   const router = useRouter();
   const { user, isLoading } = useAuth();
   const [loadingTimeout, setLoadingTimeout] = useState(false);
@@ -148,4 +149,6 @@ export default function Home() {
       </div>
     </div>
   );
-}
+};
+
+export default Home;
