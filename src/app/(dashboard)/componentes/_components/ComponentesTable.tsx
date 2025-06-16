@@ -145,7 +145,9 @@ export default function ComponentesTable() {
             placeholder="Buscar componentes..."
             className="pl-8"
             value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+              setSearchTerm(e.target.value)
+            }
           />
         </div>
         <Button onClick={() => handleOpenDialog()}>

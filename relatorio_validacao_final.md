@@ -85,6 +85,7 @@ Um novo ciclo de refatoracao sera necessario para zerar o `type-check` e estabil
 2025-07-03: Kits module fully typed – build clean (CODEX)
 2025-07-04: Auth, layouts and root pages fully typed (CODEX)
 2025-06-16: Final type-check cleanup (CODEX)
+2025-06-16: Componentes module typed and validated (CODEX)
 
 ## Status Atual – 2025-07-05
 

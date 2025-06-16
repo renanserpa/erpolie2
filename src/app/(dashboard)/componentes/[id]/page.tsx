@@ -45,8 +45,22 @@ interface Product {
   quantity: number;
 }
 
+interface SupplyQuery {
+  id: string;
+  supply_id: string;
+  supplies: { name: string } | null;
+  quantity: number;
+}
+
+interface ProductQuery {
+  id: string;
+  product_id: string;
+  products: { name: string } | null;
+  quantity: number;
+}
+
 export default function ComponentDetailsPage() {
-  const params = useParams<{ id: string }>();
+  const params = useParams<{ id?: string }>();
   const router = useRouter();
   const supabase = createSupabaseClient();
   const [component, setComponent] = useState<Component | null>(null);
@@ -85,15 +99,15 @@ export default function ComponentDetailsPage() {
             quantity
           `,
           )
-          .eq("component_id", params.id);
+          .eq("component_id", params.id)
+          .returns<SupplyQuery[]>();
 
         if (!suppliesError && suppliesData) {
           setSupplies(
             suppliesData.map((item) => ({
               id: item.id,
               supply_id: item.supply_id,
-              supply_name:
-                (item.supplies as any)?.name || "Insumo desconhecido",
+              supply_name: item.supplies?.name || "Insumo desconhecido",
               quantity: item.quantity,
             })),
           );
@@ -110,15 +124,15 @@ export default function ComponentDetailsPage() {
             quantity
           `,
           )
-          .eq("component_id", params.id);
+          .eq("component_id", params.id)
+          .returns<ProductQuery[]>();
 
         if (!productsError && productsData) {
           setProducts(
             productsData.map((item) => ({
               id: item.id,
               product_id: item.product_id,
-              product_name:
-                (item.products as any)?.name || "Produto desconhecido",
+              product_name: item.products?.name || "Produto desconhecido",
               quantity: item.quantity,
             })),
           );
@@ -171,6 +185,8 @@ export default function ComponentDetailsPage() {
   const handleBack = () => {
     router.back();
   };
+
+  if (!params?.id) return null;
 
   if (loading) {
     return (

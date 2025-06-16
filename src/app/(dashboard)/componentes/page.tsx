@@ -23,12 +23,18 @@ import {
   AdvancedFilters,
   type FilterOption,
 } from "@/components/ui/advanced-filters";
-import * as Papa from "papaparse";
+import { parse, unparse } from "papaparse";
 import { saveAs } from "file-saver";
 import { toast } from "sonner";
 import { ComponentForm } from "./_components/ComponentForm";
 import { getComponents, useSupabaseData } from "@/lib/data-hooks";
 import type { Component } from "@/types/schema";
+
+interface CSVParseResult<T> {
+  data: T[];
+  errors: unknown[];
+  meta: unknown;
+}
 
 export default function ComponentesPage() {
   const router = useRouter();
@@ -179,7 +185,7 @@ export default function ComponentesPage() {
         ),
       }));
 
-      const csv = Papa.unparse(dataToExport);
+      const csv = unparse(dataToExport);
       const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
       saveAs(blob, `componentes_${new Date().toISOString().split("T")[0]}.csv`);
 
@@ -195,9 +201,9 @@ export default function ComponentesPage() {
     const file = event.target.files?.[0];
     if (!file) return;
 
-    Papa.parse(file, {
+    parse(file, {
       header: true,
-      complete: async (results: any) => {
+      complete: async (results: CSVParseResult<Record<string, string>>) => {
         try {
           // Aqui você implementaria a lógica para salvar os componentes importados
           // Por enquanto, apenas mostramos uma mensagem de sucesso
@@ -285,7 +291,9 @@ export default function ComponentesPage() {
               <Input
                 placeholder="Buscar componentes..."
                 value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                  setSearchQuery(e.target.value)
+                }
                 className="pl-10"
               />
               <svg
