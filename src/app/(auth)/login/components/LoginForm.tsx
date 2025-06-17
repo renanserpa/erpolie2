@@ -7,7 +7,6 @@ import { useForm, type SubmitHandler } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Loader2 } from "lucide-react";
-import { createClient } from "@/lib/supabase/client";
 import {
   Button,
 } from "@/components/ui/button";
@@ -29,7 +28,6 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { toast } from "sonner";
-import type { SupabaseAuthError } from "@/types/auth";
 
 const credentialsSchema = z.object({
   email: z.string().email("Email inválido"),
@@ -40,7 +38,6 @@ export type CredentialsSchema = z.infer<typeof credentialsSchema>;
 
 const LoginForm: React.FC = (): React.ReactElement => {
   const router = useRouter();
-  const supabase = createClient();
 
   const form = useForm<CredentialsSchema>({
     resolver: zodResolver(credentialsSchema),
@@ -48,34 +45,20 @@ const LoginForm: React.FC = (): React.ReactElement => {
   });
 
   const onSubmit: SubmitHandler<CredentialsSchema> = async (values) => {
-    const { data, error }: { data: any; error: SupabaseAuthError | null } =
-      await supabase.auth.signInWithPassword({
+    const response = await fetch("/api/auth/login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
         email: values.email.trim(),
         password: values.password.trim(),
-      });
+      }),
+    });
 
-    if (error) {
+    if (!response.ok) {
+      const { error } = await response.json();
       toast.error("Falha no login. Verifique seu e-mail e senha.");
-      console.error("Login error:", error.message);
+      console.error("Login error:", error);
       return;
-    }
-
-    try {
-      type RoleQueryResult = { role: { name: string } | null };
-      const roleQuery = await supabase
-        .from("user_roles")
-        .select("role:roles(name)")
-        .eq("user_id", data.user.id)
-        .returns<RoleQueryResult>()
-        .maybeSingle();
-      const roleData = roleQuery.data as RoleQueryResult | null;
-
-      const roleName = roleData?.role?.name;
-      if (roleName) {
-        await supabase.auth.updateUser({ data: { role: roleName } });
-      }
-    } catch (e) {
-      console.error("Erro ao atribuir role na sessão:", e);
     }
 
     toast.success("Login realizado com sucesso");

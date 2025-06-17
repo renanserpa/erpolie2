@@ -1,12 +1,13 @@
 "use client";
 
 import { SessionContextProvider } from "@supabase/auth-helpers-react";
-import { createBrowserClient } from "@supabase/ssr";
+import { createBrowserClient } from "@supabase/auth-helpers-nextjs";
 import { useState, type ReactNode } from "react";
 import type { Database } from "@/types/supabase";
+import type { Session } from "@supabase/supabase-js";
 
 interface SupabaseSessionProviderProps {
-  initialSession: any;
+  initialSession: Session | null;
   children: ReactNode;
 }
 
