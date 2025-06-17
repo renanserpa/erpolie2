@@ -17,7 +17,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
-import { createRecord, updateRecord } from "@/lib/utils/data-hooks";
+import { createRecord, updateRecord } from "@/lib/data-hooks";
 import type { Client } from "@/types/schema";
 import { Switch } from "@/components/ui/switch";
 

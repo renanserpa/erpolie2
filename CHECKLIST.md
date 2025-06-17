@@ -137,3 +137,4 @@ Um novo ciclo de refatoracao sera necessario para zerar o `type-check` e estabil
 2025-06-16: Componentes module typed and validated – CODEX
 2025-06-16: Insumos module typed and validated – CODEX
 - 2025-07-06: Hooks and lint fixes by CODEX
+- 2025-07-07: Data hooks restored and build stabilized (CODEX)

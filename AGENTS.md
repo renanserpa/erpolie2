@@ -148,3 +148,4 @@ Um novo ciclo de refatoracao sera necessario para zerar o `type-check` e estabil
 2025-06-16 | CODEX | Componentes module typed and validated – 2025-06-16
 2025-06-16 | CODEX | Insumos module typed and validated – 2025-06-16
 \n2025-07-06 | CODEX | Hooks and lint adjustments; skeleton component added
+2025-07-07 | CODEX | Restored data-hooks exports and build passing
