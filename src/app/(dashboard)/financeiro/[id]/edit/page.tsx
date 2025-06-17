@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -16,14 +16,14 @@ export default function EditFinancialTransactionPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  if (!params?.id) return null;
-
-  const fetchTransaction = async () => {
+  const transactionId = params?.id;
+  const fetchTransaction = useCallback(async () => {
     try {
       setLoading(true);
       setError(null);
-      
-      const result = await getRecordById('financial_transactions', params.id as string);
+
+      if (!transactionId) return;
+      const result = await getRecordById('financial_transactions', transactionId);
       
       if (result.success) {
         setTransaction(result.data);
@@ -61,11 +61,15 @@ export default function EditFinancialTransactionPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [transactionId]);
 
   useEffect(() => {
     fetchTransaction();
-  }, [params.id]);
+  }, [fetchTransaction]);
+
+  if (!transactionId) {
+    return <div>Transação financeira não encontrada.</div>;
+  }
 
   const handleSuccess = () => {
     toast.success('Transação financeira atualizada com sucesso');

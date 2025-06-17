@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { createClient } from "@/lib/supabase/client";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { DateRangePicker } from "@/components/ui/date-range-picker";
@@ -106,10 +106,10 @@ export function FinancialReport({ className }: FinancialReportProps) {
     };
     
     fetchInitialData();
-  }, []);
+  }, [fetchTransactions, fetchMonthlyData, supabase]);
   
   // Buscar transações com base nos filtros
-  const fetchTransactions = async () => {
+  const fetchTransactions = useCallback(async () => {
     setIsLoading(true);
     try {
       // Construir a query base
@@ -172,10 +172,10 @@ export function FinancialReport({ className }: FinancialReportProps) {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [supabase, categoryFilter, typeFilter, divisionFilter, dateRange]);
   
   // Buscar dados mensais para gráficos
-  const fetchMonthlyData = async () => {
+  const fetchMonthlyData = useCallback(async () => {
     try {
       // Obter os últimos 12 meses
       const months = Array.from({ length: 12 }, (_, i) => {
@@ -235,7 +235,7 @@ export function FinancialReport({ className }: FinancialReportProps) {
       console.error("Erro ao buscar dados mensais:", error);
       toast.error(`Erro ao carregar gráficos: ${error.message}`);
     }
-  };
+  }, [supabase, divisionFilter]);
   
   // Aplicar filtros
   const handleApplyFilters = () => {

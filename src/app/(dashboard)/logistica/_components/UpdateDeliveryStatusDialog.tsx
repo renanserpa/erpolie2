@@ -139,11 +139,11 @@ export function UpdateDeliveryStatusDialog({
   }, [open, supabase, delivery.status_id, form]);
 
   // Update selected status when status_id changes
+  const statusId = form.watch("status_id");
   React.useEffect(() => {
-    const statusId = form.watch("status_id");
     const status = statuses.find(s => s.id === statusId);
     setSelectedStatus(status || null);
-  }, [form.watch("status_id"), statuses]);
+  }, [statusId, statuses]);
 
   async function onSubmit(values: UpdateDeliveryStatusFormValues) {
     if (values.status_id === delivery.status_id) {

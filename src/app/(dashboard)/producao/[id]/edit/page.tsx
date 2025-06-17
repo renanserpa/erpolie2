@@ -17,7 +17,7 @@ export default function EditProductionOrderPage(): React.ReactElement | null {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  const fetchProductionOrder = async () => {
+  const fetchProductionOrder = useCallback(async () => {
     try {
       setLoading(true);
       setError(null);
@@ -55,13 +55,13 @@ export default function EditProductionOrderPage(): React.ReactElement | null {
     } finally {
       setLoading(false);
     }
-  };
+  }, [params.id]);
 
   useEffect(() => {
     if (params?.id) {
       fetchProductionOrder();
     }
-  }, [params.id]);
+  }, [fetchProductionOrder, params.id]);
 
   if (!params?.id) return null;
 

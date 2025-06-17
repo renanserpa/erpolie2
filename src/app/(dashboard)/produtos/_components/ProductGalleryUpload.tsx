@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Button } from "@/components/ui/button";
 import { ImageUpload } from "@/components/ui/image-upload";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -30,14 +30,7 @@ export function ProductGalleryUpload({ productId, initialImages = [], onSuccess 
   const [isLoading, setIsLoading] = useState(false);
   const [uploadingIndex, setUploadingIndex] = useState<number | null>(null);
 
-  useEffect(() => {
-    // Carregar imagens existentes do produto se não foram fornecidas
-    if (initialImages.length === 0 && productId) {
-      fetchProductImages();
-    }
-  }, [productId]);
-
-  const fetchProductImages = async () => {
+  const fetchProductImages = useCallback(async () => {
     try {
       const { data, error } = await supabase
         .from("product_images")
@@ -46,21 +39,29 @@ export function ProductGalleryUpload({ productId, initialImages = [], onSuccess 
         .order("order_index", { ascending: true });
 
       if (error) throw error;
-      
+
       if (data) {
-        setImages(data.map(img => ({
-          id: img.id,
-          url: img.url,
-          order_index: img.order_index,
-          is_main: img.is_main,
-          alt_text: img.alt_text
-        })));
+        setImages(
+          data.map(img => ({
+            id: img.id,
+            url: img.url,
+            order_index: img.order_index,
+            is_main: img.is_main,
+            alt_text: img.alt_text,
+          }))
+        );
       }
     } catch (error: any) {
       console.error("Erro ao carregar imagens:", error);
       toast.error(`Erro ao carregar imagens: ${error.message}`);
     }
-  };
+  }, [productId, supabase]);
+
+  useEffect(() => {
+    if (initialImages.length === 0 && productId) {
+      fetchProductImages();
+    }
+  }, [productId, initialImages.length, fetchProductImages]);
 
   const handleImageUpload = async (event: React.ChangeEvent<HTMLInputElement>, index?: number) => {
     const file = event.target.files?.[0];

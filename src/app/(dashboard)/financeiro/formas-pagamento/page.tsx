@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useRouter } from "next/navigation";
 import { Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -20,12 +20,7 @@ export default function PaymentMethodsPage() {
   const [selectedMethod, setSelectedMethod] = useState<PaymentMethod | undefined>(undefined);
 
   // Fetch payment methods on component mount
-  useEffect(() => {
-    fetchPaymentMethods();
-  }, []);
-
-  // Function to fetch payment methods from Supabase
-  const fetchPaymentMethods = async () => {
+  const fetchPaymentMethods = useCallback(async () => {
     setLoading(true);
     try {
       const { data, error } = await supabase
@@ -41,7 +36,11 @@ export default function PaymentMethodsPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [supabase]);
+
+  useEffect(() => {
+    fetchPaymentMethods();
+  }, [fetchPaymentMethods]);
 
   // Function to handle payment method deletion
   const handleDeletePaymentMethod = async (methodId: string, methodName: string) => {

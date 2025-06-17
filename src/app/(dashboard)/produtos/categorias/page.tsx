@@ -69,13 +69,13 @@ export default function CategoriasProdutoPage() {
   const [categories, setCategories] = React.useState<ProductCategory[]>([]);
   const [editingCategory, setEditingCategory] = React.useState<ProductCategory | null>(null);
 
-  const fetchAndSetCategories = () => {
+  const fetchAndSetCategories = React.useCallback(() => {
     getCategories().then(setCategories);
-  };
+  }, []);
 
   React.useEffect(() => {
     fetchAndSetCategories();
-  }, []);
+  }, [fetchAndSetCategories]);
 
   const handleSuccess = () => {
     setIsFormOpen(false);
@@ -84,12 +84,12 @@ export default function CategoriasProdutoPage() {
     // TODO: Add toast notification for success
   };
 
-  const handleEdit = (category: ProductCategory) => {
+  const handleEdit = React.useCallback((category: ProductCategory) => {
     setEditingCategory(category);
     setIsFormOpen(true);
-  };
+  }, []);
 
-  const handleDelete = async (categoryId: string, categoryName: string) => {
+  const handleDelete = React.useCallback(async (categoryId: string, categoryName: string) => {
     if (window.confirm(`Tem certeza que deseja excluir a categoria "${categoryName}"? Esta ação pode afetar produtos associados.`)) {
       try {
         await deleteCategoryAPI(categoryId);
@@ -103,7 +103,7 @@ export default function CategoriasProdutoPage() {
         // TODO: Add toast notification for error
       }
     }
-  };
+  }, [fetchAndSetCategories]);
 
   // Memoize columns
   const columns = React.useMemo(() => categoryColumns(handleEdit, handleDelete), [handleEdit, handleDelete]);

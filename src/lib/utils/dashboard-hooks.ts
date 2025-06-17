@@ -25,7 +25,7 @@ export const useDashboardData = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  const fetchDashboardData = async () => {
+  const fetchDashboardData = React.useCallback(async () => {
     try {
       setLoading(true);
       setError(null);
@@ -67,11 +67,11 @@ export const useDashboardData = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, []); 
 
   useEffect(() => {
     fetchDashboardData();
-  }, []);
+  }, [fetchDashboardData]);
 
   return { dashboardData, loading, error, refresh: fetchDashboardData };
 };
@@ -83,7 +83,7 @@ export const useLowStockAlerts = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  const fetchLowStockAlerts = async () => {
+  const fetchLowStockAlerts = React.useCallback(async () => {
     try {
       setLoading(true);
       setError(null);
@@ -135,11 +135,11 @@ export const useLowStockAlerts = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [supabase]);
 
   useEffect(() => {
     fetchLowStockAlerts();
-  }, []);
+  }, [fetchLowStockAlerts]);
 
   return { lowStockItems, loading, error, refresh: fetchLowStockAlerts };
 };

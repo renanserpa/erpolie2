@@ -136,3 +136,4 @@ Um novo ciclo de refatoracao sera necessario para zerar o `type-check` e estabil
 2025-07-05: Encerramento da Sprint de Tipagem. Build, test e type-check parcialmente funcionais; lint requer refatoracao de hooks.
 2025-06-16: Componentes module typed and validated – CODEX
 2025-06-16: Insumos module typed and validated – CODEX
+- 2025-07-06: Hooks and lint fixes by CODEX

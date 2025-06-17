@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -17,17 +17,14 @@ export default function EditSupplierPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  if (!params?.id) return null;
-
-  const fetchSupplier = async () => {
+  const supplierId = params?.id;
+  const fetchSupplier = useCallback(async () => {
     try {
       setLoading(true);
       setError(null);
       
-      const result = await getRecordById<Supplier>(
-        'suppliers',
-        params.id as string
-      );
+      if (!supplierId) return;
+      const result = await getRecordById<Supplier>('suppliers', supplierId);
       
       if (result.success) {
         setSupplier(result.data ?? null);
@@ -45,11 +42,15 @@ export default function EditSupplierPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [supplierId]);
 
   useEffect(() => {
     fetchSupplier();
-  }, [params.id]);
+  }, [fetchSupplier]);
+
+  if (!supplierId) {
+    return <div>Fornecedor não encontrado.</div>;
+  }
 
   const handleSuccess = () => {
     toast.success('Fornecedor atualizado com sucesso');

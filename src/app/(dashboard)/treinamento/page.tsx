@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
+import Image from 'next/image';
 import { createClient } from "@/lib/supabase/client";
 import { useAuth } from "@/contexts/auth-context";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
@@ -385,9 +386,11 @@ export default function TrainingPage() {
                 <Card key={course.id} className="overflow-hidden">
                   {course.cover_image && (
                     <div className="aspect-video w-full overflow-hidden">
-                      <img 
-                        src={course.cover_image} 
-                        alt={course.title} 
+                      <Image
+                        src={course.cover_image}
+                        alt={course.title}
+                        width={960}
+                        height={540}
                         className="w-full h-full object-cover"
                       />
                     </div>

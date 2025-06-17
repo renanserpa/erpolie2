@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useCallback } from "react";
+import Image from "next/image";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm, useFieldArray, Controller } from "react-hook-form";
 import * as z from "zod";
@@ -1191,9 +1192,11 @@ export function ProductForm({ initialData, onSuccess }: ProductFormProps) {
                               <div className="flex items-center space-x-4">
                                 {imageField.value ? (
                                   <div className="relative w-24 h-24 border rounded-md overflow-hidden">
-                                    <img
+                                    <Image
                                       src={imageField.value}
                                       alt={`Variante ${variantIndex + 1}`}
+                                      width={96}
+                                      height={96}
                                       className="object-cover w-full h-full"
                                     />
                                     <Button
