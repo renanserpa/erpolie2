@@ -10,6 +10,7 @@ import { createClient } from "@/lib/supabase/client";
 import { toast } from "sonner";
 
 const formSchema = z.object({
+  id: z.string().optional(), // necessário para update
   name: z.string().min(1, "Nome obrigatório"),
   description: z.string().optional(),
   quantity: z.coerce.number().nonnegative(),
@@ -33,6 +34,7 @@ export function InsumoForm({ initialData, onSuccess }: InsumoFormProps): React.J
   } = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
+      id: initialData?.id ?? undefined,
       name: initialData?.name ?? "",
       description: initialData?.description ?? "",
       quantity: initialData?.quantity ?? 0,
@@ -40,11 +42,21 @@ export function InsumoForm({ initialData, onSuccess }: InsumoFormProps): React.J
     },
   });
 
-  async function onSubmit(data: FormValues) {
+  async function onSubmit(data: FormValues): Promise<void> {
+    if (!data.id) {
+      toast.error("ID do insumo ausente.");
+      return;
+    }
+
     const { error } = await supabase
       .from("stock_items")
-      .update(data)
-      .eq("name", data.name);
+      .update({
+        name: data.name,
+        description: data.description,
+        quantity: data.quantity,
+        unit: data.unit,
+      })
+      .eq("id", data.id);
 
     if (error) {
       toast.error("Erro ao salvar insumo");
