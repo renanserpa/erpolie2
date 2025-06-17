@@ -1,8 +1,11 @@
 import "./globals.css";
 import * as React from "react";
 import { Inter } from "next/font/google";
+import { cookies } from "next/headers";
+import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
 import { AuthProvider } from "@/contexts/auth-context";
 import { ProvidersWrapper } from "@/contexts/providers-wrapper";
+import { SupabaseSessionProvider } from "@/contexts/supabase-session-provider";
 import { Toaster } from "@/components/ui/toaster";
 
 const inter = Inter({ subsets: ['latin'] })
@@ -16,16 +19,23 @@ export interface LayoutProps {
   children: React.ReactNode;
 }
 
-const RootLayout: React.FC<LayoutProps> = ({ children }): React.ReactElement => {
+const RootLayout = async ({ children }: LayoutProps): Promise<React.ReactElement> => {
+  const supabase = createServerComponentClient({ cookies });
+  const {
+    data: { session },
+  } = await supabase.auth.getSession();
+
   return (
     <html lang="pt-BR">
       <body className={inter.className}>
-        <AuthProvider>
-          <ProvidersWrapper>
-            {children}
-            <Toaster />
-          </ProvidersWrapper>
-        </AuthProvider>
+        <SupabaseSessionProvider initialSession={session}>
+          <AuthProvider>
+            <ProvidersWrapper>
+              {children}
+              <Toaster />
+            </ProvidersWrapper>
+          </AuthProvider>
+        </SupabaseSessionProvider>
       </body>
     </html>
   );

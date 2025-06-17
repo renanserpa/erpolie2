@@ -1,13 +1,15 @@
 import { type NextRequest, NextResponse } from "next/server";
-import { createSupabaseMiddlewareClient } from "@/lib/supabase/middleware";
+import { createMiddlewareSupabaseClient } from "@supabase/auth-helpers-nextjs";
 import { canAccessRoute } from "@/lib/auth/roles";
 
 export async function middleware(request: NextRequest) {
   try {
-    const { supabase, response } = await createSupabaseMiddlewareClient(request);
+    const response = NextResponse.next();
+    const supabase = createMiddlewareSupabaseClient({ req: request, res: response });
 
-    // Obter usuário autenticado de forma segura
-    const { data: { user } } = await supabase.auth.getUser();
+    const {
+      data: { session },
+    } = await supabase.auth.getSession();
 
     // Define public routes (accessible without login)
     const publicRoutes = ["/login", "/register", "/password-reset", "/403"];
@@ -16,18 +18,18 @@ export async function middleware(request: NextRequest) {
     const isPublicRoute = publicRoutes.some(route => request.nextUrl.pathname.startsWith(route));
 
     // If user is not logged in and trying to access a protected route, redirect to login
-    if (!user && !isPublicRoute) {
+    if (!session && !isPublicRoute) {
       return NextResponse.redirect(new URL("/login", request.url));
     }
 
     // If user is logged in and trying to access the login page, redirect to dashboard
-    if (user && request.nextUrl.pathname.startsWith("/login")) {
+    if (session && request.nextUrl.pathname.startsWith("/login")) {
       return NextResponse.redirect(new URL("/", request.url));
     }
 
     // Controle de acesso por perfil
-    if (user) {
-      const userRole = user.user_metadata?.role as string | null;
+    if (session) {
+      const userRole = session.user.user_metadata?.role as string | null;
       if (!canAccessRoute(request.nextUrl.pathname, userRole)) {
         return NextResponse.redirect(new URL("/403", request.url));
       }

@@ -1,38 +1,8 @@
-import { createServerClient, type CookieOptions } from "@supabase/ssr";
+import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
 import { cookies } from "next/headers";
 import type { SupabaseClient } from "@supabase/supabase-js";
 import type { ExtendedDatabase } from "@/types/extended-supabase";
 
 export async function createSupabaseServerClient(): Promise<SupabaseClient<ExtendedDatabase>> {
-  const cookieStore = await cookies();
-
-  return createServerClient<ExtendedDatabase>(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-    {
-      cookies: {
-        async get(name: string) {
-          return cookieStore.get(name)?.value;
-        },
-        async set(name: string, value: string, options: CookieOptions) {
-          try {
-            cookieStore.set({ name, value, ...options });
-          } catch {
-            // The `set` method was called from a Server Component.
-            // This can be ignored if you have middleware refreshing
-            // user sessions.
-          }
-        },
-        async remove(name: string, options: CookieOptions) {
-          try {
-            cookieStore.set({ name, value: "", ...options });
-          } catch {
-            // The `delete` method was called from a Server Component.
-            // This can be ignored if you have middleware refreshing
-            // user sessions.
-          }
-        },
-      },
-    }
-  );
+  return createServerComponentClient<ExtendedDatabase>({ cookies });
 }
