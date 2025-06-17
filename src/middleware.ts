@@ -1,11 +1,11 @@
 import { type NextRequest, NextResponse } from "next/server";
-import { createMiddlewareSupabaseClient } from "@supabase/auth-helpers-nextjs";
+import { createMiddlewareClient } from "@supabase/auth-helpers-nextjs";
 import { canAccessRoute } from "@/lib/auth/roles";
 
 export async function middleware(request: NextRequest) {
   try {
     const response = NextResponse.next();
-    const supabase = createMiddlewareSupabaseClient({ req: request, res: response });
+    const supabase = createMiddlewareClient({ req: request, res: response });
 
     const {
       data: { session },

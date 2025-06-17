@@ -3,6 +3,7 @@ import * as React from "react";
 import { Inter } from "next/font/google";
 import { cookies } from "next/headers";
 import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
+import type { Database } from "@/types/supabase";
 import { AuthProvider } from "@/contexts/auth-context";
 import { ProvidersWrapper } from "@/contexts/providers-wrapper";
 import { SupabaseSessionProvider } from "@/contexts/supabase-session-provider";
@@ -20,7 +21,10 @@ export interface LayoutProps {
 }
 
 const RootLayout = async ({ children }: LayoutProps): Promise<React.ReactElement> => {
-  const supabase = createServerComponentClient({ cookies });
+  const cookieStore = await cookies();
+  const supabase = createServerComponentClient<Database>({
+    cookies: () => cookieStore,
+  });
   const {
     data: { session },
   } = await supabase.auth.getSession();
