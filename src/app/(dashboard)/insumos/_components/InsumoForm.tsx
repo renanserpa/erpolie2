@@ -1,69 +1,83 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
+import React from "react";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 import { createClient } from "@/lib/supabase/client";
-import { InsumoForm } from "@/app/(dashboard)/insumos/_components/InsumoForm";
-import type { Insumo } from "@/modules/estoque/estoque.types";
-import { Skeleton } from "@/components/ui/skeleton";
 import { toast } from "sonner";
 
-interface PageProps {
-  params: { id?: string };
+const formSchema = z.object({
+  name: z.string().min(1, "Nome obrigatório"),
+  description: z.string().optional(),
+  quantity: z.coerce.number().nonnegative(),
+  unit: z.string().min(1, "Unidade obrigatória"),
+});
+
+type FormValues = z.infer<typeof formSchema>;
+
+interface InsumoFormProps {
+  initialData?: Partial<FormValues>;
+  onSuccess: () => void;
 }
 
-export default function EditarInsumoPage({ params }: PageProps): React.JSX.Element {
+export function InsumoForm({ initialData, onSuccess }: InsumoFormProps): React.JSX.Element {
   const supabase = createClient();
-  const router = useRouter();
-  const [initialData, setInitialData] = useState<Insumo | null>(null);
-  const [loading, setLoading] = useState<boolean>(true);
 
-  useEffect(() => {
-    async function fetchData() {
-      if (!params?.id) {
-        toast.error("ID do insumo não encontrado.");
-        router.push("/dashboard/insumos");
-        return;
-      }
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+  } = useForm<FormValues>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      name: initialData?.name ?? "",
+      description: initialData?.description ?? "",
+      quantity: initialData?.quantity ?? 0,
+      unit: initialData?.unit ?? "",
+    },
+  });
 
-      const { data, error } = await supabase
-        .from("stock_items")
-        .select("*")
-        .eq("id", params.id)
-        .single();
+  async function onSubmit(data: FormValues) {
+    const { error } = await supabase
+      .from("stock_items")
+      .update(data)
+      .eq("name", data.name);
 
-      if (error || !data) {
-        toast.error("Erro ao carregar insumo.");
-        router.push("/dashboard/insumos");
-        return;
-      }
-
-      setInitialData(data as Insumo);
-      setLoading(false);
+    if (error) {
+      toast.error("Erro ao salvar insumo");
+    } else {
+      toast.success("Insumo salvo com sucesso");
+      onSuccess();
     }
-
-    fetchData();
-  }, [params?.id, supabase, router]);
-
-  if (loading) {
-    return (
-      <div className="space-y-4">
-        <Skeleton className="h-10 w-full" />
-        <Skeleton className="h-10 w-full" />
-        <Skeleton className="h-80 w-full" />
-      </div>
-    );
   }
 
   return (
-    <div className="space-y-4">
-      <h1 className="text-2xl font-semibold">Editar Insumo</h1>
-      {initialData && (
-        <InsumoForm
-          initialData={initialData}
-          onSuccess={() => router.push("/dashboard/insumos")}
-        />
-      )}
-    </div>
+    <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+      <div>
+        <label className="block text-sm font-medium">Nome</label>
+        <Input {...register("name")} />
+        {errors.name && <p className="text-sm text-red-500">{errors.name.message}</p>}
+      </div>
+      <div>
+        <label className="block text-sm font-medium">Descrição</label>
+        <Input {...register("description")} />
+      </div>
+      <div>
+        <label className="block text-sm font-medium">Quantidade</label>
+        <Input type="number" {...register("quantity", { valueAsNumber: true })} />
+        {errors.quantity && <p className="text-sm text-red-500">{errors.quantity.message}</p>}
+      </div>
+      <div>
+        <label className="block text-sm font-medium">Unidade</label>
+        <Input {...register("unit")} />
+        {errors.unit && <p className="text-sm text-red-500">{errors.unit.message}</p>}
+      </div>
+      <Button type="submit" disabled={isSubmitting}>
+        {isSubmitting ? "Salvando..." : "Salvar"}
+      </Button>
+    </form>
   );
 }
