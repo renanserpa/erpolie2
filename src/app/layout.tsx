@@ -2,7 +2,7 @@ import { SupabaseSessionProvider } from '@/contexts/supabase-session-provider'
 import { createClient } from '@/lib/supabase/server'
 
 export default async function RootLayout({ children }) {
-  const supabase = createClient()
+  const supabase = await createClient()
   const { data: { session } } = await supabase.auth.getSession()
 
   return (
