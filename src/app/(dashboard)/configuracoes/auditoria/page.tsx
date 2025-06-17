@@ -123,7 +123,7 @@ export default function AuditLogPage() {
   };
   
   // Visualizar detalhes do log
-  const viewLogDetails = async (logId: string) => {
+  const viewLogDetails = React.useCallback(async (logId: string) => {
     try {
       const { data, error } = await auditService.getAuditLogDetails(logId);
       
@@ -140,7 +140,7 @@ export default function AuditLogPage() {
       toast.error('Erro ao buscar detalhes do log');
       console.error('Erro ao buscar detalhes:', error);
     }
-  };
+  }, [auditService]);
   
   // Exportar logs
   const exportLogs = async () => {

@@ -17,7 +17,7 @@ export default function EditOrderPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  const fetchOrder = async () => {
+  const fetchOrder = useCallback(async () => {
     try {
       setLoading(true);
       setError(null);
@@ -63,11 +63,11 @@ export default function EditOrderPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [params.id]);
 
   useEffect(() => {
     fetchOrder();
-  }, [params.id]);
+  }, [fetchOrder]);
 
   if (!params?.id) return null;
 

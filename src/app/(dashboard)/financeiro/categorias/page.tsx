@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useRouter } from "next/navigation";
 import { Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -20,12 +20,7 @@ export default function FinancialCategoriesPage() {
   const [selectedCategory, setSelectedCategory] = useState<FinancialCategory | undefined>(undefined);
 
   // Fetch categories on component mount
-  useEffect(() => {
-    fetchCategories();
-  }, []);
-
-  // Function to fetch categories from Supabase
-  const fetchCategories = async () => {
+  const fetchCategories = useCallback(async () => {
     setLoading(true);
     try {
       const { data, error } = await supabase
@@ -41,7 +36,11 @@ export default function FinancialCategoriesPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [supabase]);
+
+  useEffect(() => {
+    fetchCategories();
+  }, [fetchCategories]);
 
   // Function to handle category deletion
   const handleDeleteCategory = async (categoryId: string, categoryName: string) => {

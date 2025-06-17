@@ -17,14 +17,15 @@ export default function EditClientPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  if (!params?.id) return null;
+  const clientId = params?.id;
 
   const fetchClient = useCallback(async () => {
     try {
       setLoading(true);
       setError(null);
-      
-      const result = await getRecordById<Client>('clients', params.id as string);
+
+      if (!clientId) return;
+      const result = await getRecordById<Client>('clients', clientId);
       
       if (result.success) {
         setClient(result.data || null);
@@ -42,11 +43,15 @@ export default function EditClientPage() {
     } finally {
       setLoading(false);
     }
-  }, [params.id]);
+  }, [clientId]);
 
   useEffect(() => {
     fetchClient();
   }, [fetchClient]);
+
+  if (!clientId) {
+    return <div>Cliente não encontrado.</div>;
+  }
 
   const handleSuccess = () => {
     toast.success('Cliente atualizado com sucesso');

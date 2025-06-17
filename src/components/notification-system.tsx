@@ -54,6 +54,30 @@ export function NotificationProvider({ children }: { children: React.ReactNode }
   const [unreadCount, setUnreadCount] = React.useState<number>(0);
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
 
+  const fetchNotifications = React.useCallback(async (): Promise<void> => {
+    if (!user?.id) return;
+
+    setIsLoading(true);
+    try {
+      const { data, error } = await supabase
+        .from('notifications')
+        .select('*')
+        .eq('user_id', user.id)
+        .order('created_at', { ascending: false })
+        .limit(50);
+
+      if (error) throw error;
+
+      const notificationsData = Array.isArray(data) ? data : [];
+      setNotifications(notificationsData);
+      setUnreadCount(notificationsData.filter(n => !n.read).length);
+    } catch (error: any) {
+      console.error('Erro ao buscar notificações:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  }, [supabase, user?.id]);
+
   // Buscar notificações ao carregar ou quando o usuário mudar
   React.useEffect(() => {
     if (user?.id) {
@@ -95,32 +119,7 @@ export function NotificationProvider({ children }: { children: React.ReactNode }
         supabase.removeChannel(channel);
       };
     }
-  }, [user?.id]);
-
-  // Buscar notificações
-  const fetchNotifications = async (): Promise<void> => {
-    if (!user?.id) return;
-    
-    setIsLoading(true);
-    try {
-      const { data, error } = await supabase
-        .from('notifications')
-        .select('*')
-        .eq('user_id', user.id)
-        .order('created_at', { ascending: false })
-        .limit(50);
-        
-      if (error) throw error;
-      
-      const notificationsData = Array.isArray(data) ? data : [];
-      setNotifications(notificationsData);
-      setUnreadCount(notificationsData.filter(n => !n.read).length);
-    } catch (error: any) {
-      console.error('Erro ao buscar notificações:', error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  }, [user?.id, fetchNotifications, supabase]);
 
   // Marcar como lida
   const markAsRead = async (id: string): Promise<void> => {

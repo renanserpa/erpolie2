@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
@@ -63,12 +63,7 @@ export default function OrdensProducaoTable(): React.ReactElement {
     observacoes: ''
   });
 
-  useEffect(() => {
-    fetchOrdensProducao();
-    fetchProdutos();
-  }, []);
-
-  const fetchOrdensProducao = async () => {
+  const fetchOrdensProducao = useCallback(async () => {
     try {
       setLoading(true);
       const { data, error } = await supabase
@@ -79,7 +74,7 @@ export default function OrdensProducaoTable(): React.ReactElement {
           order_item:order_item_id(id, order_id, order:order_id(id, codigo))
         `)
         .order('created_at', { ascending: false });
-      
+
       if (error) throw error;
       setOrdensProducao(data || []);
     } catch (error: any) {
@@ -88,23 +83,29 @@ export default function OrdensProducaoTable(): React.ReactElement {
     } finally {
       setLoading(false);
     }
-  };
+  }, [supabase]);
 
-  const fetchProdutos = async () => {
+  const fetchProdutos = useCallback(async () => {
     try {
       const { data, error } = await supabase
         .from('products')
         .select('id, name')
         .eq('is_active', true)
         .order('name');
-      
+
       if (error) throw error;
       setProdutos(data || []);
     } catch (error: any) {
       console.error("Erro ao buscar produtos:", error);
       toast.error(`Erro ao buscar produtos: ${error.message}`);
     }
-  };
+  }, [supabase]);
+
+  useEffect(() => {
+    fetchOrdensProducao();
+    fetchProdutos();
+  }, [fetchOrdensProducao, fetchProdutos]);
+
 
   const handleOpenCreateDialog = () => {
     setCurrentOrdemProducao(null);

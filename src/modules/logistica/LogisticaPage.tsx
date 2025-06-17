@@ -448,16 +448,16 @@ export default function LogisticaPage() {
     toast.warning("Funcionalidade de visualização de detalhes ainda não implementada completamente.");
   };
 
-  const handleEditRoute = (route: DeliveryRoute) => {
+  const handleEditRoute = React.useCallback((route: DeliveryRoute) => {
     toast.info(`Edição da rota ${route.id.substring(0, 8)}... solicitada.`);
     toast.warning("Funcionalidade de edição ainda não implementada completamente.");
-  };
+  }, []);
 
-  const handleDeleteRoute = (route: DeliveryRoute) => {
+  const handleDeleteRoute = React.useCallback((route: DeliveryRoute) => {
     if (confirm(`Excluir a rota ${route.route_name}?`)) {
       toast.warning("Funcionalidade de exclusão ainda não implementada completamente.");
     }
-  };
+  }, []);
 
   const routeColumns = React.useMemo(
     () => deliveryRouteColumns(handleEditRoute, handleDeleteRoute),

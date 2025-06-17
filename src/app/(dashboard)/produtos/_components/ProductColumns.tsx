@@ -3,6 +3,7 @@
 import React from "react";
 import { ColumnDef } from "@tanstack/react-table";
 import { ArrowUpDown, MoreHorizontal, Trash2, Image as ImageIcon } from "lucide-react"; // Add ImageIcon
+import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
@@ -79,7 +80,7 @@ export const productColumns: ColumnDef<Product>[] = [
       const imageUrl = row.original.image_url;
       // TODO: Use Next/Image for optimization if possible
       return imageUrl ? (
-        <img src={imageUrl} alt={row.original.name} className="h-10 w-10 object-cover rounded" />
+        <Image src={imageUrl} alt={row.original.name} width={40} height={40} className="h-10 w-10 object-cover rounded" />
       ) : (
         <div className="h-10 w-10 flex items-center justify-center bg-muted rounded">
           <ImageIcon className="h-5 w-5 text-muted-foreground" />

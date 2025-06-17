@@ -92,7 +92,7 @@ export default function InsumosPage() {
   );
 
   // Carregar dados dos insumos
-  const fetchInsumos = async () => {
+  const fetchInsumos = useCallback(async () => {
     try {
       setIsLoading(true);
       setError(null);
@@ -164,11 +164,11 @@ export default function InsumosPage() {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [debouncedSearchQuery, activeFilters]);
 
   useEffect(() => {
     fetchInsumos();
-  }, [debouncedSearchQuery, activeFilters]);
+  }, [fetchInsumos]);
 
   // Função para exportar insumos para CSV
   const exportToCSV = () => {
