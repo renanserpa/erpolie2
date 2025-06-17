@@ -20,11 +20,7 @@ export function useAuth(): User | null {
     void getInitialUser();
 
     const { data: listener } = supabase.auth.onAuthStateChange((event, session) => {
-      if (
-        event === "INITIAL_SESSION" ||
-        event === "SIGNED_IN" ||
-        event === "TOKEN_REFRESHED"
-      ) {
+      if (event === "INITIAL_SESSION" || event === "SIGNED_IN") {
         setUser(session?.user ?? null);
       } else if (event === "SIGNED_OUT") {
         setUser(null);

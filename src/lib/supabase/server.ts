@@ -1,11 +1,17 @@
-import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
-import { cookies } from "next/headers";
-import type { SupabaseClient } from "@supabase/supabase-js";
-import type { ExtendedDatabase } from "@/types/extended-supabase";
+import { cookies } from 'next/headers'
+import { createServerClient } from '@supabase/ssr'
+import type { Database } from '@/lib/database.types'
 
-export async function createSupabaseServerClient(): Promise<SupabaseClient<ExtendedDatabase>> {
-  const cookieStore = await cookies();
-  return createServerComponentClient<ExtendedDatabase>({
-    cookies: () => cookieStore,
-  });
+export const createClient = () => {
+  const cookieStore = cookies()
+  return createServerClient<Database>(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    {
+      cookies: {
+        getAll: () => cookieStore.getAll().map(c => ({ name: c.name, value: c.value })),
+        setAll: () => {}
+      }
+    }
+  )
 }

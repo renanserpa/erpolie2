@@ -1,19 +1,27 @@
-import { NextResponse } from "next/server";
-import { createRouteHandlerClient } from "@supabase/auth-helpers-nextjs";
-import { cookies } from "next/headers";
-import type { Database } from "@/types/supabase";
+import { NextResponse } from 'next/server'
+import { cookies } from 'next/headers'
+import { createServerClient } from '@supabase/ssr'
+import type { Database } from '@/lib/database.types'
 
-export async function POST(request: Request) {
-  const { email, password } = await request.json();
-  const cookieStore = await cookies();
-  const supabase = createRouteHandlerClient<Database>({
-    cookies: () => cookieStore,
-  });
-  const { error } = await supabase.auth.signInWithPassword({ email, password });
+export async function POST(req: Request) {
+  const cookieStore = cookies()
+  const supabase = createServerClient<Database>(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    {
+      cookies: {
+        getAll: () => cookieStore.getAll().map(c => ({ name: c.name, value: c.value })),
+        setAll: cookies => {
+          cookies.forEach(c => cookieStore.set(c.name, c.value))
+        }
+      }
+    }
+  )
 
-  if (error) {
-    return NextResponse.json({ error: error.message }, { status: 400 });
-  }
+  const { email, password } = await req.json()
+  const { error } = await supabase.auth.signInWithPassword({ email, password })
 
-  return NextResponse.json({ success: true });
+  if (error) return NextResponse.json({ error: error.message }, { status: 401 })
+
+  return NextResponse.json({ success: true }, { status: 200 })
 }
