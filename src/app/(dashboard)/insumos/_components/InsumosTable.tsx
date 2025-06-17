@@ -16,12 +16,33 @@ import { useSupabaseData, createRecord, updateRecord, deleteRecord } from "@/lib
 import { Loader2, Plus, Pencil, Trash2, Search } from "lucide-react";
 import { toast } from "sonner";
 
+interface InsumoRecord {
+  id?: string;
+  name: string;
+  description?: string | null;
+  unit_id?: string;
+  cost?: number | null;
+  stock_quantity?: number | null;
+  min_stock?: number | null;
+  supplier_id?: string;
+}
+
+interface InsumoFormData {
+  name: string;
+  description: string;
+  unit_id: string;
+  cost: string;
+  stock_quantity: string;
+  min_stock: string;
+  supplier_id: string;
+}
+
 export default function InsumosTable() {
-  const [isOpen, setIsOpen] = useState(false);
-  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
-  const [currentItem, setCurrentItem] = useState<any>(null);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [formData, setFormData] = useState({
+  const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState<boolean>(false);
+  const [currentItem, setCurrentItem] = useState<InsumoRecord | null>(null);
+  const [searchTerm, setSearchTerm] = useState<string>('');
+  const [formData, setFormData] = useState<InsumoFormData>({
     name: '',
     description: '',
     unit_id: '',
@@ -46,7 +67,7 @@ export default function InsumosTable() {
     item.description?.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  const handleOpenDialog = (item?: any) => {
+  const handleOpenDialog = (item?: InsumoRecord) => {
     if (item) {
       setCurrentItem(item);
       setFormData({
@@ -73,7 +94,7 @@ export default function InsumosTable() {
     setIsOpen(true);
   };
 
-  const handleOpenDeleteDialog = (item: any) => {
+  const handleOpenDeleteDialog = (item: InsumoRecord) => {
     setCurrentItem(item);
     setIsDeleteDialogOpen(true);
   };

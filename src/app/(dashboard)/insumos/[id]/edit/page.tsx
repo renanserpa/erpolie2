@@ -14,7 +14,7 @@ export default function EditInsumoPage() {
   const params = useParams();
   const router = useRouter();
   const [insumo, setInsumo] = useState<Insumo | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
   const fetchInsumo = async () => {
@@ -44,9 +44,10 @@ export default function EditInsumoPage() {
         
         console.warn('Usando dados mockados para insumo');
       }
-    } catch (err: any) {
-      console.error('Error fetching insumo details:', err);
-      setError(err.message || 'Erro ao carregar detalhes do insumo');
+    } catch (err: unknown) {
+      const error = err as Error;
+      console.error('Error fetching insumo details:', error);
+      setError(error.message || 'Erro ao carregar detalhes do insumo');
       toast.error('Erro ao carregar detalhes do insumo.');
     } finally {
       setLoading(false);

@@ -54,8 +54,8 @@ export default function SupplyDetailsPage() {
   const [supply, setSupply] = useState<Supply | null>(null);
   const [components, setComponents] = useState<Component[]>([]);
   const [stockMovements, setStockMovements] = useState<StockMovement[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [activeTab, setActiveTab] = useState("details");
+  const [loading, setLoading] = useState<boolean>(true);
+  const [activeTab, setActiveTab] = useState<string>("details");
 
   useEffect(() => {
     const fetchSupplyDetails = async () => {
@@ -106,7 +106,7 @@ export default function SupplyDetailsPage() {
         if (!movementsError) {
           setStockMovements(movementsData || []);
         }
-      } catch (error) {
+      } catch (error: unknown) {
         console.error("Erro ao buscar detalhes do insumo:", error);
         // TODO: Mostrar mensagem de erro
       } finally {
@@ -140,7 +140,7 @@ export default function SupplyDetailsPage() {
         if (error) throw error;
         
         router.push("/insumos");
-      } catch (error) {
+      } catch (error: unknown) {
         console.error("Erro ao excluir insumo:", error);
         alert("Não foi possível excluir o insumo. Verifique se não há registros relacionados.");
       }
