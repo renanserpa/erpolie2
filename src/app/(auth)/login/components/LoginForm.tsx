@@ -48,6 +48,7 @@ const LoginForm: React.FC = (): React.ReactElement => {
     const response = await fetch("/api/auth/login", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
+      credentials: "same-origin",
       body: JSON.stringify({
         email: values.email.trim(),
         password: values.password.trim(),
