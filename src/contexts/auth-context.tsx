@@ -71,15 +71,17 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const loadUserAndPermissions = async () => {
       setIsLoading(true);
       try {
-        // Verificar usuário autenticado de forma segura
-        const { data: { user }, error: userError } = await supabase.auth.getUser();
+        // Verificar sessão do usuário de forma segura
+        const { data: { session }, error: sessionError } = await supabase.auth.getSession();
 
-        if (userError) {
-          console.error("Erro ao obter usuário:", userError);
+        if (sessionError) {
+          console.error("Erro ao obter sessão:", sessionError);
           setIsAuthenticated(false);
           setIsLoading(false);
           return;
         }
+
+        const user = session?.user;
 
         if (!user) {
           setUser(null);
