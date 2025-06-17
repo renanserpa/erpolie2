@@ -19,14 +19,25 @@ import { InsumoForm } from "./_components/InsumoForm";
 import { getSupplies, useSupabaseData } from "@/lib/data-hooks";
 import type { Insumo } from "./_components/InsumoColumns";
 
+interface CSVInsumoParseResult {
+  Nome: string;
+  SKU: string;
+  Quantidade: string;
+  "Quantidade Mínima": string;
+  Unidade: string;
+  Fornecedor: string;
+  Status: string;
+  "Data de Cadastro": string;
+}
+
 export default function InsumosPage() {
   const router = useRouter();
-  const [searchQuery, setSearchQuery] = useState("");
-  const [isLoading, setIsLoading] = useState(true);
+  const [searchQuery, setSearchQuery] = useState<string>("");
+  const [isLoading, setIsLoading] = useState<boolean>(true);
   const [insumos, setInsumos] = useState<Insumo[]>([]);
   const [error, setError] = useState<string | null>(null);
-  const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
-  const [isFiltersOpen, setIsFiltersOpen] = useState(false);
+  const [isCreateDialogOpen, setIsCreateDialogOpen] = useState<boolean>(false);
+  const [isFiltersOpen, setIsFiltersOpen] = useState<boolean>(false);
   const [activeFilters, setActiveFilters] = useState<Record<string, unknown>>({});
   const [visibleColumns, setVisibleColumns] = useState<string[]>([
     "name", "sku", "quantity", "min_quantity", "unit_of_measurement_id", "supplier_id", "is_active", "actions"
@@ -87,7 +98,7 @@ export default function InsumosPage() {
       setError(null);
       
       // Construir query com filtros
-      const query: Record<string, any> = {};
+      const query: Record<string, string | number | boolean> = {};
       
       if (debouncedSearchQuery) {
         query.name = `ilike.%${debouncedSearchQuery}%`;
@@ -145,9 +156,10 @@ export default function InsumosPage() {
         ]);
         console.warn('Usando dados mockados para insumos');
       }
-    } catch (err: any) {
-      console.error('Error fetching supplies:', err);
-      setError(err.message || 'Erro ao carregar insumos');
+    } catch (err: unknown) {
+      const error = err as Error;
+      console.error('Error fetching supplies:', error);
+      setError(error.message || 'Erro ao carregar insumos');
       toast.error('Erro ao carregar lista de insumos.');
     } finally {
       setIsLoading(false);
@@ -177,7 +189,7 @@ export default function InsumosPage() {
       saveAs(blob, `insumos_${new Date().toISOString().split('T')[0]}.csv`);
       
       toast.success('Insumos exportados com sucesso!');
-    } catch (error) {
+    } catch (error: unknown) {
       console.error('Erro ao exportar insumos:', error);
       toast.error('Erro ao exportar insumos.');
     }
@@ -188,15 +200,15 @@ export default function InsumosPage() {
     const file = event.target.files?.[0];
     if (!file) return;
 
-    Papa.parse(file, {
+    Papa.parse<CSVInsumoParseResult>(file, {
       header: true,
-      complete: async (results: ParseResult<Record<string, string>>) => {
+      complete: async (results: ParseResult<CSVInsumoParseResult>) => {
         try {
           // Aqui você implementaria a lógica para salvar os insumos importados
           // Por enquanto, apenas mostramos uma mensagem de sucesso
           toast.success(`${results.data.length} insumos importados com sucesso!`);
           fetchInsumos(); // Recarregar a lista após importação
-        } catch (error) {
+        } catch (error: unknown) {
           console.error('Erro ao importar insumos:', error);
           toast.error('Erro ao importar insumos.');
         }
