@@ -20,6 +20,8 @@ import { toast } from "sonner";
 import { createRecord, updateRecord } from "@/lib/data-hooks";
 import type { Client } from "@/types/schema";
 import { Switch } from "@/components/ui/switch";
+import { createClient } from "@/lib/supabase/client";
+import { useRouter } from "next/navigation";
 
 // Define Zod schema para validação do formulário de cliente
 const clientFormSchema = z.object({
@@ -59,6 +61,9 @@ export function ClientForm({ initialData, onSuccess }: ClientFormProps) {
     },
   });
 
+  const supabase = createClient();
+  const router = useRouter();
+
   async function onSubmit(values: ClientFormValues) {
     try {
       // Preparar dados para envio
@@ -67,21 +72,27 @@ export function ClientForm({ initialData, onSuccess }: ClientFormProps) {
         updated_at: new Date().toISOString()
       };
       
-      let result;
-      
       if (initialData?.id) {
         // Atualizar cliente existente
-        result = await updateRecord('clients', initialData.id, clientData);
+        const result = await updateRecord('clients', initialData.id, clientData);
+        if (result.success) {
+          toast.success('Cliente atualizado com sucesso!');
+          onSuccess?.();
+        } else {
+          toast.error('Erro ao salvar cliente');
+        }
       } else {
-        // Criar novo cliente
-        result = await createRecord('clients', clientData);
-      }
-      
-      if (result.success) {
-        toast.success(initialData ? "Cliente atualizado com sucesso" : "Cliente criado com sucesso");
-        onSuccess?.();
-      } else {
-        toast.error("Erro ao salvar cliente");
+        // Criar novo cliente diretamente via Supabase
+        const { error } = await supabase.from('clients').insert(clientData);
+
+        if (error) {
+          toast.error('Erro ao salvar cliente: ' + error.message);
+          console.warn('Erro Supabase insert:', error);
+        } else {
+          toast.success('Cliente salvo com sucesso!');
+          router.push('/clientes');
+          onSuccess?.();
+        }
       }
     } catch (error) {
       console.error("Erro ao salvar cliente:", error);
