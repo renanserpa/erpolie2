@@ -97,60 +97,53 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         setIsAuthenticated(true);
         
         try {
-          // Carregar perfil do usuário
+          // Validar usuário autenticado e carregar perfil
+          const { data: userResult, error: userError } = await supabase.auth.getUser();
+
+          if (userError) {
+            console.warn("Falha ao autenticar usuário:", userError.message || userError);
+            return;
+          }
+
+          const validatedUser = userResult?.user;
+          if (!validatedUser?.id) {
+            console.warn("Usuário não autenticado ou sem ID.");
+            return;
+          }
+
           const { data: profileData, error: profileError } = await supabase
-            .from('user_profiles')
-            .select('*')
-            .eq('id', user.id)
+            .from("profiles")
+            .select("*")
+            .eq("id", validatedUser.id)
             .single();
-            
-          if (profileError) {
-            if (profileError.code !== 'PGRST116') { // PGRST116 = not found
-              console.error("Erro ao carregar perfil:", profileError);
-              // Não interrompe o fluxo, apenas loga o erro
-            }
+
+          if (profileError && profileError.code !== 'PGRST116') {
+            console.warn("Erro ao carregar perfil:", profileError.message || profileError);
           } else if (profileData) {
             setProfile(profileData);
           }
         } catch (profileLoadError) {
-          console.error("Erro ao carregar perfil do usuário:", profileLoadError);
+          console.warn("Erro ao carregar perfil do usuário:", profileLoadError);
           // Continua o fluxo mesmo com erro no perfil
         }
         
         try {
           // Carregar roles do usuário
-          const { data: userRoles, error: rolesError } = await supabase
-            .from('user_roles')
-            .select(`
-              id,
-              role_id,
-              role:roles (
-                id,
-                name,
-                description,
-                is_system,
-                is_active
-              )
-            `)
-            .eq('user_id', user.id)
-            .returns<(UserRole & { role: Role | null })[]>();
-            
+          const { data: rolesData, error: rolesError } = await supabase
+            .from("users_permissions")
+            .select("role")
+            .eq("user_id", validatedUser.id);
+
           if (rolesError) {
-            console.error("Erro ao carregar roles:", rolesError);
-            // Continua com roles vazios
+            console.warn("Erro ao carregar roles:", rolesError.message || rolesError);
             setRoles([]);
           } else {
-            const typedRoles = (userRoles ?? []) as Array<UserRole & { role: Role | null }>;
-            // Filtra roles nulos e inativos
-            const validRoles = typedRoles
-              .filter((ur): ur is UserRole & { role: Role } => Boolean(ur.role) && ur.role.is_active)
-              .map(ur => ur.role);
-            
-            setRoles(validRoles);
-            
+            const roles = rolesData?.map(r => r.role) || [];
+            setRoles(roles);
+
             // Se o usuário tem roles, carregar permissões associadas
-            if (validRoles.length > 0) {
-              const roleIds = validRoles.map(r => r.id);
+            if (roles.length > 0) {
+              const roleIds = roles.map(r => r.id);
               
               try {
                 const { data: permissionsData, error: permissionsError } = await supabase
