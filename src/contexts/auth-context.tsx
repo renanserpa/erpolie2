@@ -132,7 +132,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
           const { data: rolesData, error: rolesError } = await supabase
             .from("users_permissions")
             .select("role")
-            .eq("user_id", validatedUser.id);
+            .eq("user_id", user.id);
 
           if (rolesError) {
             console.warn("Erro ao carregar roles:", rolesError.message || rolesError);
