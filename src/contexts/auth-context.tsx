@@ -424,3 +424,6 @@ export const useAuth = (): AuthContextType => {
   }
   return context;
 };
+
+// Alias para compatibilidade com layouts que esperam AuthContextProvider
+export { AuthProvider as AuthContextProvider };
