@@ -6,10 +6,11 @@ import type { Database } from '@/lib/database.types'
 export default async function Home() {
   const supabase = createServerComponentClient<Database>({ cookies })
   const {
-    data: { session },
-  } = await supabase.auth.getSession()
+    data: { user },
+    error,
+  } = await supabase.auth.getUser()
 
-  if (!session) {
+  if (!user) {
     redirect('/login')
   }
 
