@@ -1,7 +1,9 @@
 import './globals.css'
 import { SupabaseSessionProvider } from '@/contexts/supabase-session-provider'
 import { AuthContextProvider } from '@/contexts/auth-context'
-import { createClient } from '@/lib/supabase/server'
+import { cookies } from 'next/headers'
+import { createServerComponentClient } from '@supabase/auth-helpers-nextjs'
+import type { Database } from '@/lib/database.types'
 import { Inter } from 'next/font/google'
 
 const inter = Inter({ subsets: ['latin'] })
@@ -11,8 +13,8 @@ export const metadata = {
   description: 'Sistema de gestão para produção artesanal',
 }
 
-export default async function RootLayout({ children }) {
-  const supabase = createClient()
+export default async function RootLayout({ children }: { children: React.ReactNode }) {
+  const supabase = createServerComponentClient<Database>({ cookies })
   const {
     data: { session },
   } = await supabase.auth.getSession()
