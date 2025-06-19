@@ -1,71 +1,18 @@
-"use client";
+import { cookies } from 'next/headers'
+import { redirect } from 'next/navigation'
+import { createServerComponentClient } from '@supabase/auth-helpers-nextjs'
+import type { Database } from '@/lib/database.types'
 
-import * as React from "react";
-import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
-import { Loader2 } from "lucide-react";
-import { useAuth } from "@/contexts/auth-context";
+export default async function Home() {
+  const supabase = createServerComponentClient<Database>({ cookies })
+  const {
+    data: { session },
+  } = await supabase.auth.getSession()
 
-const Home: React.FC = (): React.ReactElement => {
-  const router = useRouter();
-  const { user, isLoading } = useAuth();
-  const [loadingTimeout, setLoadingTimeout] = useState(false);
-  
-  useEffect(() => {
-    const timer = setTimeout(() => setLoadingTimeout(true), 5000);
-
-    if (!isLoading) {
-      if (!user) {
-        router.push("/login");
-      }
-      clearTimeout(timer);
-    }
-
-    return () => clearTimeout(timer);
-  }, [isLoading, user, router]);
-  
-  // Se o timeout for atingido, mostrar botões de ação alternativa
-  if (loadingTimeout) {
-    return (
-      <div className="flex flex-col items-center justify-center min-h-screen">
-        <div className="text-center">
-          <h1 className="text-2xl font-bold mb-4">Olie ERP</h1>
-          <p className="text-muted-foreground mb-6">Parece que estamos tendo problemas para carregar o sistema.</p>
-          <div className="flex flex-col gap-4">
-            <button 
-              onClick={() => router.push("/login")} 
-              className="px-4 py-2 bg-primary text-white rounded-md"
-            >
-              Ir para a página de login
-            </button>
-            <button 
-              onClick={() => window.location.reload()} 
-              className="px-4 py-2 border border-gray-300 rounded-md"
-            >
-              Tentar novamente
-            </button>
-          </div>
-        </div>
-      </div>
-    );
+  if (!session) {
+    redirect('/login')
   }
-  
-  
-  if (isLoading) {
-    return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="text-center">
-          <h1 className="text-2xl font-bold mb-4">Olie ERP</h1>
-          <div className="flex items-center justify-center">
-            <Loader2 className="h-8 w-8 animate-spin text-primary mr-2" />
-            <p className="text-muted-foreground">Carregando...</p>
-          </div>
-        </div>
-      </div>
-    );
-  }
-  
-  // Dashboard principal - esta é a página que será exibida quando o usuário estiver autenticado
+
   return (
     <div className="space-y-6">
       <h1 className="text-3xl font-bold tracking-tight text-gray-900 dark:text-white">Dashboard Principal</h1>
@@ -77,19 +24,19 @@ const Home: React.FC = (): React.ReactElement => {
           <p className="text-2xl font-bold">R$ 45.231,89</p>
           <p className="text-xs text-green-500">+12% vs mês passado</p>
         </div>
-        
+
         <div className="bg-white p-6 rounded-lg shadow">
           <h2 className="text-sm font-medium text-gray-500">Novos Clientes</h2>
           <p className="text-2xl font-bold">+24</p>
           <p className="text-xs text-green-500">+8% vs mês passado</p>
         </div>
-        
+
         <div className="bg-white p-6 rounded-lg shadow">
           <h2 className="text-sm font-medium text-gray-500">Pedidos Pendentes</h2>
           <p className="text-2xl font-bold">18</p>
           <p className="text-xs text-gray-500">Aguardando processamento</p>
         </div>
-        
+
         <div className="bg-white p-6 rounded-lg shadow">
           <h2 className="text-sm font-medium text-gray-500">Produção Ativa</h2>
           <p className="text-2xl font-bold">7</p>
@@ -106,7 +53,7 @@ const Home: React.FC = (): React.ReactElement => {
               <p className="text-gray-500">Gráfico de Vendas (Demonstração)</p>
             </div>
           </div>
-          
+
           <div className="bg-white p-6 rounded-lg shadow">
             <h2 className="text-lg font-medium mb-4">Atividade Recente</h2>
             <div className="space-y-4">
@@ -128,7 +75,7 @@ const Home: React.FC = (): React.ReactElement => {
             </div>
           </div>
         </div>
-        
+
         <div className="bg-white p-6 rounded-lg shadow">
           <h2 className="text-lg font-medium mb-4">Alertas de Estoque Baixo</h2>
           <div className="space-y-4">
@@ -148,7 +95,5 @@ const Home: React.FC = (): React.ReactElement => {
         </div>
       </div>
     </div>
-  );
-};
-
-export default Home;
+  )
+}
