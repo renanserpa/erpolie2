@@ -16,13 +16,14 @@ export const metadata = {
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
   const supabase = createServerComponentClient<Database>({ cookies })
   const {
-    data: { session },
-  } = await supabase.auth.getSession()
+    data: { user },
+    error,
+  } = await supabase.auth.getUser()
 
   return (
     <html lang="pt-BR">
       <body className={inter.className}>
-        <SupabaseSessionProvider initialSession={session}>
+        <SupabaseSessionProvider initialSession={null}>
           <AuthContextProvider>
             {children}
           </AuthContextProvider>

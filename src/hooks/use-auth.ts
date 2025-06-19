@@ -13,8 +13,8 @@ export function useAuth(): User | null {
 
   useEffect(() => {
     const getInitialUser = async () => {
-      const { data } = await supabase.auth.getSession();
-      setUser(data.session?.user ?? null);
+      const { data } = await supabase.auth.getUser();
+      setUser(data.user ?? null);
     };
 
     void getInitialUser();
