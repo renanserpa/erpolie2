@@ -71,13 +71,13 @@ export function SupplierForm({ initialData, onSuccess }: SupplierFormProps) {
       };
       
       let result;
-      
+
       if (initialData?.id) {
         // Atualizar fornecedor existente
-        result = await updateRecord('suppliers', initialData.id, supplierData);
+        result = await updateRecord<Supplier>('suppliers', initialData.id, supplierData);
       } else {
         // Criar novo fornecedor
-        result = await createRecord('suppliers', supplierData);
+        result = await createRecord<Supplier>('suppliers', supplierData);
       }
       
       if (result.success) {

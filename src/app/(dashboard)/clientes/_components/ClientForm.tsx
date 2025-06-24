@@ -20,7 +20,6 @@ import { toast } from "sonner";
 import { createRecord, updateRecord } from "@/lib/data-hooks";
 import type { Client } from "@/types/schema";
 import { Switch } from "@/components/ui/switch";
-import { createClient } from "@/lib/supabase/client";
 import { useRouter } from "next/navigation";
 
 // Define Zod schema para validação do formulário de cliente
@@ -61,7 +60,6 @@ export function ClientForm({ initialData, onSuccess }: ClientFormProps) {
     },
   });
 
-  const supabase = createClient();
   const router = useRouter();
 
   async function onSubmit(values: ClientFormValues) {
@@ -82,12 +80,11 @@ export function ClientForm({ initialData, onSuccess }: ClientFormProps) {
           toast.error('Erro ao salvar cliente');
         }
       } else {
-        // Criar novo cliente diretamente via Supabase
-        const { error } = await supabase.from('clients').insert(clientData);
+        // Criar novo cliente
+        const result = await createRecord<Client>('clients', clientData);
 
-        if (error) {
-          toast.error('Erro ao salvar cliente: ' + error.message);
-          console.warn('Erro Supabase insert:', error);
+        if (!result.success) {
+          toast.error('Erro ao salvar cliente: ' + result.error);
         } else {
           toast.success('Cliente salvo com sucesso!');
           router.push('/clientes');
