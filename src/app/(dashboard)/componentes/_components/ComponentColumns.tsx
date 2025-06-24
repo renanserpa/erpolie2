@@ -44,27 +44,18 @@ export const componentColumns = (onEdit: (component: Component) => void, onDelet
   },
   {
     accessorKey: "name",
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Nome
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
-      );
-    },
-    cell: ({ row }) => (
-      <Link href={`/componentes/${row.original.id}`} className="font-medium text-blue-600 hover:underline">
-        {row.getValue("name")}
-      </Link>
-    ),
+    header: "Nome",
+    cell: ({ row }) => row.getValue("name") || "-",
   },
   {
     accessorKey: "description",
     header: "Descrição",
-    cell: ({ row }) => <div className="max-w-[300px] truncate">{row.original.description || "-"}</div>,
+    cell: ({ row }) => row.getValue("description") || "-",
+  },
+  {
+    accessorKey: "unit_of_measurement.abbreviation",
+    header: "Unidade",
+    cell: ({ row }) => row.original.unit_of_measurement?.abbreviation || "-",
   },
   {
     accessorKey: "is_active",

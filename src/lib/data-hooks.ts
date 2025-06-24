@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
+import { toast } from "sonner";
 
 // Tipagem comum para retorno de dados
 interface SupabaseResult<T> {
@@ -64,7 +65,8 @@ export async function getSupplies(filters: Record<string, unknown> = {}): Promis
   const { data, error } = await query;
 
   if (error) {
-    console.error("Erro ao buscar insumos:", error);
+    console.error("Erro ao buscar insumos:", error?.message || error);
+    toast.error("Erro ao buscar insumos: " + (error?.message || ""));
     return { success: false, error: error.message };
   }
 
