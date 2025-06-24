@@ -18,7 +18,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
 import { createClient } from "@/lib/supabase/client";
-import { updateRecord } from "@/lib/data-hooks";
+import { useRouter } from "next/navigation";
 import { Switch } from "@/components/ui/switch";
 import type { Component } from "@/types/schema";
 
@@ -39,6 +39,7 @@ interface ComponentFormProps {
 }
 
 export function ComponentForm({ initialData, onSuccess }: ComponentFormProps) {
+  const router = useRouter();
   const form = useForm<ComponentFormValues>({
     resolver: zodResolver(componentFormSchema) as Resolver<ComponentFormValues>,
     defaultValues: {
@@ -71,6 +72,7 @@ export function ComponentForm({ initialData, onSuccess }: ComponentFormProps) {
         }
         toast.success("Componente atualizado com sucesso");
         onSuccess?.();
+        router.push("/componentes");
       } else {
         const { error } = await supabase
           .from("components")
@@ -84,6 +86,7 @@ export function ComponentForm({ initialData, onSuccess }: ComponentFormProps) {
         }
         toast.success("Componente criado com sucesso");
         onSuccess?.();
+        router.push("/componentes");
       }
     } catch (error) {
       console.error("Erro ao salvar componente:", error);

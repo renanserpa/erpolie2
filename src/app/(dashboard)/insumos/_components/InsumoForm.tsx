@@ -24,7 +24,7 @@ type FormValues = z.infer<typeof formSchema>;
 
 interface InsumoFormProps {
   initialData?: Partial<FormValues>;
-  onSuccess: () => void;
+  onSuccess?: () => void;
 }
 
 export function InsumoForm({ initialData, onSuccess }: InsumoFormProps): React.JSX.Element {
@@ -84,7 +84,7 @@ export function InsumoForm({ initialData, onSuccess }: InsumoFormProps): React.J
       }
 
       toast.success("Insumo salvo com sucesso");
-      onSuccess();
+      onSuccess?.();
       router.push("/insumos");
     } catch (error) {
       console.error("Erro ao salvar insumo:", error);
