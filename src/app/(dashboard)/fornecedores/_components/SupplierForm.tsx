@@ -21,6 +21,7 @@ import { toast } from "sonner";
 import { createRecord, updateRecord } from "@/lib/data-hooks";
 import { Switch } from "@/components/ui/switch";
 import type { Supplier } from "@/types/schema";
+import { useRouter } from "next/navigation";
 
 // Define Zod schema para validação do formulário de fornecedor
 const supplierFormSchema = z.object({
@@ -62,35 +63,44 @@ export function SupplierForm({ initialData, onSuccess }: SupplierFormProps) {
     },
   });
 
+  const router = useRouter();
+
   const onSubmit: SubmitHandler<SupplierFormValues> = async (values) => {
     try {
-      // Preparar dados para envio
       const supplierData = {
         ...values,
-        updated_at: new Date().toISOString()
+        updated_at: new Date().toISOString(),
       };
-      
-      let result;
 
       if (initialData?.id) {
-        // Atualizar fornecedor existente
-        result = await updateRecord<Supplier>('suppliers', initialData.id, supplierData);
+        const { error } = await updateRecord<Supplier>(
+          "suppliers",
+          initialData.id,
+          supplierData,
+        );
+        if (error) {
+          toast.error("Erro ao salvar fornecedor");
+          console.error(error);
+          return;
+        }
+        toast.success("Fornecedor atualizado com sucesso");
       } else {
-        // Criar novo fornecedor
-        result = await createRecord<Supplier>('suppliers', supplierData);
+        const { error } = await createRecord<Supplier>("suppliers", supplierData);
+        if (error) {
+          toast.error("Erro ao criar fornecedor");
+          console.error(error);
+          return;
+        }
+        toast.success("Fornecedor criado com sucesso");
       }
-      
-      if (result.success) {
-        toast.success(initialData ? "Fornecedor atualizado com sucesso" : "Fornecedor criado com sucesso");
-        onSuccess?.();
-      } else {
-        toast.error("Erro ao salvar fornecedor");
-      }
+
+      onSuccess?.();
+      router.push("/fornecedores");
     } catch (error) {
       console.error("Erro ao salvar fornecedor:", error);
       toast.error("Erro ao salvar fornecedor");
     }
-  }
+  };
 
   return (
     <Form {...form}>
