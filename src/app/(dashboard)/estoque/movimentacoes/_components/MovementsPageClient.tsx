@@ -3,6 +3,7 @@
 import React from 'react';
 import { Button } from "@/components/ui/button";
 import { PlusCircle, Download, Upload } from "lucide-react"; // Add icons for import/export
+import { toast } from "sonner";
 import { DataTable } from "@/components/ui/data-table";
 import { movementColumns, type StockMovement } from "./MovementColumns";
 import { MovementForm } from "./MovementForm";
@@ -41,7 +42,7 @@ export function MovementsPageClient() {
   const handleSuccess = () => {
     setIsFormOpen(false);
     fetchAndSetMovements();
-    // TODO: Add toast notification for success
+    toast.success("Movimentação registrada com sucesso");
   };
 
   // Placeholder functions for import/export

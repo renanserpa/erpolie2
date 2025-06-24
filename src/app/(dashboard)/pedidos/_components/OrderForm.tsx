@@ -18,6 +18,7 @@ import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Calendar } from "@/components/ui/calendar";
+import { toast } from "sonner";
 import { CalendarIcon, PlusCircle, Trash2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { format } from "date-fns";
@@ -129,7 +130,7 @@ export function OrderForm({ initialData, onSuccess }: OrderFormProps) {
 
       } catch (error) {
         console.error("Error fetching related data:", error);
-        // TODO: Show error toast to user
+        toast.error("Erro ao carregar dados relacionados");
       } finally {
         setLoadingRelatedData(false);
       }
@@ -211,13 +212,14 @@ export function OrderForm({ initialData, onSuccess }: OrderFormProps) {
         if (insertItemsError) throw insertItemsError;
 
         console.log("Order saved successfully!");
+        toast.success("Pedido salvo com sucesso");
         onSuccess?.(); // Close dialog/sheet on success
-        // TODO: Add success toast
 
     } catch (error) {
         console.error("Failed to save order:", error);
-        // TODO: Show error message to user (toast)
-        alert(`Erro ao salvar pedido: ${error instanceof Error ? error.message : String(error)}`);
+        toast.error(
+          `Erro ao salvar pedido: ${error instanceof Error ? error.message : String(error)}`
+        );
     }
   }
 

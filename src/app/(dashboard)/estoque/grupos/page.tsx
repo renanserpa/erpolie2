@@ -15,6 +15,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { toast } from "sonner";
 // TODO: Import AlertDialog for delete confirmation
 
 // Fetch real group data from Supabase (Placeholder)
@@ -70,7 +71,7 @@ export default function GruposEstoquePage() {
     setIsFormOpen(false);
     setEditingGroup(null);
     fetchAndSetGroups();
-    // TODO: Add toast notification for success
+    toast.success("Grupo salvo com sucesso");
   };
 
   const handleEdit = React.useCallback((group: GrupoDeInsumo) => {
@@ -84,13 +85,11 @@ export default function GruposEstoquePage() {
       try {
         await deleteGroupAPI(groupId);
         console.log(`Group ${groupId} deleted successfully.`);
-        alert(`Grupo "${groupName}" excluído com sucesso (placeholder).`);
         fetchAndSetGroups(); // Refresh data
-        // TODO: Add toast notification for success
+        toast.success(`Grupo "${groupName}" excluído`);
       } catch (error) {
         console.error("Error deleting group:", error);
-        alert(`Erro ao excluir grupo "${groupName}".`);
-        // TODO: Add toast notification for error
+        toast.error(`Erro ao excluir grupo "${groupName}"`);
       }
     }
   }, []);
