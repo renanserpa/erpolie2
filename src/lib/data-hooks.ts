@@ -101,8 +101,16 @@ export async function createRecord<T>(
       .single()
       .returns<T>();
     if (error) return handleSupabaseError(error);
+    if (!result) {
+      console.error("createRecord returned no data for table", table);
+      return {
+        success: false,
+        error: "Erro desconhecido ao criar registro",
+      } as const;
+    }
     return { success: true, data: result as T };
   } catch (err) {
+    console.error("createRecord unexpected error:", err);
     return handleSupabaseError(err);
   }
 }

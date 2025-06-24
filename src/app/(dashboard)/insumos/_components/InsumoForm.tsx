@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { createRecord, updateRecord } from "@/lib/data-hooks";
 import type { StockItem } from "@/types/schema";
 import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 const formSchema = z.object({
   id: z.string().optional(), // utilizado apenas na edição
@@ -42,34 +43,43 @@ export function InsumoForm({ initialData, onSuccess }: InsumoFormProps): React.J
     },
   });
 
+  const router = useRouter();
+
   async function onSubmit(data: FormValues): Promise<void> {
     try {
-      let result;
-
       if (initialData?.id) {
-        // Atualizar insumo existente
-        result = await updateRecord<StockItem>("stock_items", initialData.id, {
-          name: data.name,
-          description: data.description,
-          quantity: data.quantity,
-          unit: data.unit,
-        });
+        const { error } = await updateRecord<StockItem>(
+          "stock_items",
+          initialData.id,
+          {
+            name: data.name,
+            description: data.description,
+            quantity: data.quantity,
+            unit: data.unit,
+          },
+        );
+        if (error) {
+          toast.error("Erro ao salvar insumo");
+          console.error(error);
+          return;
+        }
       } else {
-        // Criar novo insumo
-        result = await createRecord<StockItem>("stock_items", {
+        const { error } = await createRecord<StockItem>("stock_items", {
           name: data.name,
           description: data.description,
           quantity: data.quantity,
           unit: data.unit,
         });
+        if (error) {
+          toast.error("Erro ao criar insumo");
+          console.error(error);
+          return;
+        }
       }
 
-      if (result.success) {
-        toast.success("Insumo salvo com sucesso");
-        onSuccess();
-      } else {
-        toast.error("Erro ao salvar insumo");
-      }
+      toast.success("Insumo salvo com sucesso");
+      onSuccess();
+      router.push("/insumos");
     } catch (error) {
       console.error("Erro ao salvar insumo:", error);
       toast.error("Erro ao salvar insumo");

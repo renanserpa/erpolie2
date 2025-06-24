@@ -64,33 +64,35 @@ export function ClientForm({ initialData, onSuccess }: ClientFormProps) {
 
   async function onSubmit(values: ClientFormValues) {
     try {
-      // Preparar dados para envio
       const clientData = {
         ...values,
-        updated_at: new Date().toISOString()
+        updated_at: new Date().toISOString(),
       };
-      
-      if (initialData?.id) {
-        // Atualizar cliente existente
-        const result = await updateRecord('clients', initialData.id, clientData);
-        if (result.success) {
-          toast.success('Cliente atualizado com sucesso!');
-          onSuccess?.();
-        } else {
-          toast.error('Erro ao salvar cliente');
-        }
-      } else {
-        // Criar novo cliente
-        const result = await createRecord<Client>('clients', clientData);
 
-        if (!result.success) {
-          toast.error('Erro ao salvar cliente: ' + result.error);
-        } else {
-          toast.success('Cliente salvo com sucesso!');
-          router.push('/clientes');
-          onSuccess?.();
+      if (initialData?.id) {
+        const { error } = await updateRecord<Client>(
+          "clients",
+          initialData.id,
+          clientData,
+        );
+        if (error) {
+          toast.error("Erro ao salvar cliente");
+          console.error(error);
+          return;
         }
+        toast.success("Cliente atualizado com sucesso");
+      } else {
+        const { error } = await createRecord<Client>("clients", clientData);
+        if (error) {
+          toast.error("Erro ao criar cliente");
+          console.error(error);
+          return;
+        }
+        toast.success("Cliente criado com sucesso");
       }
+
+      onSuccess?.();
+      router.push("/clientes");
     } catch (error) {
       console.error("Erro ao salvar cliente:", error);
       toast.error("Erro ao salvar cliente");
