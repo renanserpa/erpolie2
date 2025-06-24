@@ -6,11 +6,12 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { createClient } from "@/lib/supabase/client";
+import { createRecord, updateRecord } from "@/lib/data-hooks";
+import type { StockItem } from "@/types/schema";
 import { toast } from "sonner";
 
 const formSchema = z.object({
-  id: z.string().optional(), // necessário para update
+  id: z.string().optional(), // utilizado apenas na edição
   name: z.string().min(1, "Nome obrigatório"),
   description: z.string().optional(),
   quantity: z.coerce.number().nonnegative(),
@@ -25,7 +26,6 @@ interface InsumoFormProps {
 }
 
 export function InsumoForm({ initialData, onSuccess }: InsumoFormProps): React.JSX.Element {
-  const supabase = createClient();
 
   const {
     register,
@@ -43,26 +43,36 @@ export function InsumoForm({ initialData, onSuccess }: InsumoFormProps): React.J
   });
 
   async function onSubmit(data: FormValues): Promise<void> {
-    if (!data.id) {
-      toast.error("ID do insumo ausente.");
-      return;
-    }
+    try {
+      let result;
 
-    const { error } = await supabase
-      .from("stock_items")
-      .update({
-        name: data.name,
-        description: data.description,
-        quantity: data.quantity,
-        unit: data.unit,
-      })
-      .eq("id", data.id);
+      if (initialData?.id) {
+        // Atualizar insumo existente
+        result = await updateRecord<StockItem>("stock_items", initialData.id, {
+          name: data.name,
+          description: data.description,
+          quantity: data.quantity,
+          unit: data.unit,
+        });
+      } else {
+        // Criar novo insumo
+        result = await createRecord<StockItem>("stock_items", {
+          name: data.name,
+          description: data.description,
+          quantity: data.quantity,
+          unit: data.unit,
+        });
+      }
 
-    if (error) {
+      if (result.success) {
+        toast.success("Insumo salvo com sucesso");
+        onSuccess();
+      } else {
+        toast.error("Erro ao salvar insumo");
+      }
+    } catch (error) {
+      console.error("Erro ao salvar insumo:", error);
       toast.error("Erro ao salvar insumo");
-    } else {
-      toast.success("Insumo salvo com sucesso");
-      onSuccess();
     }
   }
 
