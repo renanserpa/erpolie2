@@ -18,7 +18,8 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { InputNumber } from "@/components/ui/input-number";
-import { createRecord, updateRecord, useSupabaseData } from "@/lib/data-hooks";
+import { createClient } from "@/lib/supabase/client";
+import { updateRecord, useSupabaseData } from "@/lib/data-hooks";
 import { toast } from "sonner";
 
 // Define Zod schema para validação do formulário
@@ -91,6 +92,7 @@ export function MovementForm({ initialData, onSuccess }: MovementFormProps) {
 
   async function onSubmit(values: MovementFormValues) {
     try {
+      const supabase = createClient()
       // Validações específicas por tipo de movimentação
       if (values.movement_type === "transferencia") {
         if (!values.source_location_id || !values.destination_location_id) {
@@ -111,21 +113,33 @@ export function MovementForm({ initialData, onSuccess }: MovementFormProps) {
         updated_at: new Date().toISOString()
       };
       
-      let result;
-      
       if (initialData?.id) {
-        // Atualizar movimentação existente
-        result = await updateRecord('stock_movements', initialData.id, movementData);
-      } else {
-        // Criar nova movimentação
-        result = await createRecord('stock_movements', movementData);
-      }
-      
-      if (result.success) {
-        toast.success(initialData ? "Movimentação atualizada com sucesso" : "Movimentação registrada com sucesso");
+        const { error } = await supabase
+          .from('stock_movements')
+          .update(movementData)
+          .eq('id', initialData.id)
+          .select()
+          .single();
+        if (error) {
+          toast.error('Erro ao salvar movimentação: ' + error.message);
+          console.error(error);
+          return;
+        }
+        toast.success('Movimentação atualizada com sucesso');
         onSuccess?.();
       } else {
-        toast.error("Erro ao salvar movimentação");
+        const { error } = await supabase
+          .from('stock_movements')
+          .insert(movementData)
+          .select()
+          .single();
+        if (error) {
+          toast.error('Erro ao registrar movimentação: ' + error.message);
+          console.error(error);
+          return;
+        }
+        toast.success('Movimentação registrada com sucesso');
+        onSuccess?.();
       }
     } catch (error) {
       console.error("Erro ao salvar movimentação:", error);

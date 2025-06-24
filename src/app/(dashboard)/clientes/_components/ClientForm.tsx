@@ -17,7 +17,8 @@ import {
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
-import { createRecord, updateRecord } from "@/lib/data-hooks";
+import { createClient } from "@/lib/supabase/client";
+import { updateRecord } from "@/lib/data-hooks";
 import type { Client } from "@/types/schema";
 import { Switch } from "@/components/ui/switch";
 import { useRouter } from "next/navigation";
@@ -64,31 +65,39 @@ export function ClientForm({ initialData, onSuccess }: ClientFormProps) {
 
   async function onSubmit(values: ClientFormValues) {
     try {
+      const supabase = createClient()
       const clientData = {
         ...values,
         updated_at: new Date().toISOString(),
       };
 
       if (initialData?.id) {
-        const { error } = await updateRecord<Client>(
-          "clients",
-          initialData.id,
-          clientData,
-        );
+        const { error } = await supabase
+          .from("clients")
+          .update(clientData)
+          .eq("id", initialData.id)
+          .select()
+          .single();
         if (error) {
-          toast.error("Erro ao salvar cliente");
+          toast.error("Erro ao salvar cliente: " + error.message);
           console.error(error);
           return;
         }
         toast.success("Cliente atualizado com sucesso");
       } else {
-        const { error } = await createRecord<Client>("clients", clientData);
+        const { data, error } = await supabase
+          .from("clients")
+          .insert(clientData)
+          .select()
+          .single();
         if (error) {
-          toast.error("Erro ao criar cliente");
+          toast.error("Erro ao criar cliente: " + error.message);
           console.error(error);
           return;
         }
-        toast.success("Cliente criado com sucesso");
+        if (data) {
+          toast.success("Cliente criado com sucesso");
+        }
       }
 
       onSuccess?.();

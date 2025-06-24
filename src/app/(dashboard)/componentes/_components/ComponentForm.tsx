@@ -17,7 +17,8 @@ import {
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
-import { createRecord, updateRecord } from "@/lib/data-hooks";
+import { createClient } from "@/lib/supabase/client";
+import { updateRecord } from "@/lib/data-hooks";
 import { Switch } from "@/components/ui/switch";
 import type { Component } from "@/types/schema";
 
@@ -49,35 +50,40 @@ export function ComponentForm({ initialData, onSuccess }: ComponentFormProps) {
 
   async function onSubmit(values: ComponentFormValues) {
     try {
+      const supabase = createClient()
       // Preparar dados para envio
       const componentData = {
         ...values,
         updated_at: new Date().toISOString(),
       };
 
-      let result;
-
       if (initialData?.id) {
-        // Atualizar componente existente
-        result = await updateRecord(
-          "components",
-          initialData.id,
-          componentData,
-        );
-      } else {
-        // Criar novo componente
-        result = await createRecord("components", componentData);
-      }
-
-      if (result.success) {
-        toast.success(
-          initialData
-            ? "Componente atualizado com sucesso"
-            : "Componente criado com sucesso",
-        );
+        const { error } = await supabase
+          .from("components")
+          .update(componentData)
+          .eq("id", initialData.id)
+          .select()
+          .single();
+        if (error) {
+          toast.error("Erro ao salvar componente: " + error.message);
+          console.error(error);
+          return;
+        }
+        toast.success("Componente atualizado com sucesso");
         onSuccess?.();
       } else {
-        toast.error("Erro ao salvar componente");
+        const { error } = await supabase
+          .from("components")
+          .insert(componentData)
+          .select()
+          .single();
+        if (error) {
+          toast.error("Erro ao salvar componente: " + error.message);
+          console.error(error);
+          return;
+        }
+        toast.success("Componente criado com sucesso");
+        onSuccess?.();
       }
     } catch (error) {
       console.error("Erro ao salvar componente:", error);
