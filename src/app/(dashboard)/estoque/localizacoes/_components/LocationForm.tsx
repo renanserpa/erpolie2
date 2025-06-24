@@ -17,7 +17,8 @@ import {
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { InputNumber } from "@/components/ui/input-number";
-import { createRecord, updateRecord } from "@/lib/data-hooks";
+import { createClient } from "@/lib/supabase/client";
+import { updateRecord } from "@/lib/data-hooks";
 import { toast } from "sonner";
 import type { LocalizacaoEstoque } from "@/modules/estoque/estoque.types";
 
@@ -54,27 +55,40 @@ export function LocationForm({ initialData, onSuccess }: LocationFormProps) {
 
   async function onSubmit(values: LocationFormValues) {
     try {
+      const supabase = createClient()
       // Preparar dados para envio
       const locationData = {
         ...values,
         updated_at: new Date().toISOString()
       };
       
-      let result;
-      
       if (initialData?.id) {
-        // Atualizar localização existente
-        result = await updateRecord('locations', initialData.id, locationData);
-      } else {
-        // Criar nova localização
-        result = await createRecord('locations', locationData);
-      }
-      
-      if (result.success) {
-        toast.success(initialData ? "Localização atualizada com sucesso" : "Localização criada com sucesso");
+        const { error } = await supabase
+          .from('locations')
+          .update(locationData)
+          .eq('id', initialData.id)
+          .select()
+          .single();
+        if (error) {
+          toast.error('Erro ao salvar localização: ' + error.message);
+          console.error(error);
+          return;
+        }
+        toast.success('Localização atualizada com sucesso');
         onSuccess?.();
       } else {
-        toast.error("Erro ao salvar localização");
+        const { error } = await supabase
+          .from('locations')
+          .insert(locationData)
+          .select()
+          .single();
+        if (error) {
+          toast.error('Erro ao criar localização: ' + error.message);
+          console.error(error);
+          return;
+        }
+        toast.success('Localização criada com sucesso');
+        onSuccess?.();
       }
     } catch (error) {
       console.error("Erro ao salvar localização:", error);

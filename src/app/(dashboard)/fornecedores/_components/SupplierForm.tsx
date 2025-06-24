@@ -18,7 +18,8 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { toast } from "sonner";
-import { createRecord, updateRecord } from "@/lib/data-hooks";
+import { createClient } from "@/lib/supabase/client";
+import { updateRecord } from "@/lib/data-hooks";
 import { Switch } from "@/components/ui/switch";
 import type { Supplier } from "@/types/schema";
 import { useRouter } from "next/navigation";
@@ -67,27 +68,33 @@ export function SupplierForm({ initialData, onSuccess }: SupplierFormProps) {
 
   const onSubmit: SubmitHandler<SupplierFormValues> = async (values) => {
     try {
+      const supabase = createClient()
       const supplierData = {
         ...values,
         updated_at: new Date().toISOString(),
       };
 
       if (initialData?.id) {
-        const { error } = await updateRecord<Supplier>(
-          "suppliers",
-          initialData.id,
-          supplierData,
-        );
+        const { error } = await supabase
+          .from("suppliers")
+          .update(supplierData)
+          .eq("id", initialData.id)
+          .select()
+          .single();
         if (error) {
-          toast.error("Erro ao salvar fornecedor");
+          toast.error("Erro ao salvar fornecedor: " + error.message);
           console.error(error);
           return;
         }
         toast.success("Fornecedor atualizado com sucesso");
       } else {
-        const { error } = await createRecord<Supplier>("suppliers", supplierData);
+        const { error } = await supabase
+          .from("suppliers")
+          .insert(supplierData)
+          .select()
+          .single();
         if (error) {
-          toast.error("Erro ao criar fornecedor");
+          toast.error("Erro ao criar fornecedor: " + error.message);
           console.error(error);
           return;
         }

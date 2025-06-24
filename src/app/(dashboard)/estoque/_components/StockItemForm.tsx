@@ -17,7 +17,8 @@ import {
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { InputNumber } from "@/components/ui/input-number";
-import { createRecord, updateRecord, useSupabaseData } from "@/lib/data-hooks";
+import { createClient } from "@/lib/supabase/client";
+import { updateRecord, useSupabaseData } from "@/lib/data-hooks";
 import { toast } from "sonner";
 
 // Define Zod schema para validação do formulário
@@ -82,27 +83,40 @@ export function StockItemForm({ initialData, onSuccess }: StockItemFormProps) {
   // Função para enviar o formulário
   async function onSubmit(values: StockItemFormValues) {
     try {
+      const supabase = createClient()
       // Preparar dados para envio
       const itemData = {
         ...values,
         updated_at: new Date().toISOString()
       };
       
-      let result;
-      
       if (initialData?.id) {
-        // Atualizar item existente
-        result = await updateRecord('stock_items', initialData.id, itemData);
-      } else {
-        // Criar novo item
-        result = await createRecord('stock_items', itemData);
-      }
-      
-      if (result.success) {
-        toast.success(initialData ? "Item atualizado com sucesso" : "Item criado com sucesso");
+        const { error } = await supabase
+          .from('stock_items')
+          .update(itemData)
+          .eq('id', initialData.id)
+          .select()
+          .single();
+        if (error) {
+          toast.error('Erro ao salvar item de estoque: ' + error.message);
+          console.error(error);
+          return;
+        }
+        toast.success('Item atualizado com sucesso');
         onSuccess?.();
       } else {
-        toast.error("Erro ao salvar item de estoque");
+        const { error } = await supabase
+          .from('stock_items')
+          .insert(itemData)
+          .select()
+          .single();
+        if (error) {
+          toast.error('Erro ao criar item de estoque: ' + error.message);
+          console.error(error);
+          return;
+        }
+        toast.success('Item criado com sucesso');
+        onSuccess?.();
       }
     } catch (error) {
       console.error("Erro ao salvar item:", error);

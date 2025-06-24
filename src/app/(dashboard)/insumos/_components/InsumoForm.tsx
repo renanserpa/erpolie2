@@ -6,7 +6,8 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { createRecord, updateRecord } from "@/lib/data-hooks";
+import { createClient } from "@/lib/supabase/client";
+import { updateRecord } from "@/lib/data-hooks";
 import type { StockItem } from "@/types/schema";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
@@ -47,6 +48,7 @@ export function InsumoForm({ initialData, onSuccess }: InsumoFormProps): React.J
 
   async function onSubmit(data: FormValues): Promise<void> {
     try {
+      const supabase = createClient();
       if (initialData?.id) {
         const { error } = await updateRecord<StockItem>(
           "stock_items",
@@ -64,14 +66,18 @@ export function InsumoForm({ initialData, onSuccess }: InsumoFormProps): React.J
           return;
         }
       } else {
-        const { error } = await createRecord<StockItem>("stock_items", {
-          name: data.name,
-          description: data.description,
-          quantity: data.quantity,
-          unit: data.unit,
-        });
+        const { error } = await supabase
+          .from("stock_items")
+          .insert({
+            name: data.name,
+            description: data.description,
+            quantity: data.quantity,
+            unit: data.unit,
+          })
+          .select()
+          .single();
         if (error) {
-          toast.error("Erro ao criar insumo");
+          toast.error("Erro ao criar insumo: " + error.message);
           console.error(error);
           return;
         }

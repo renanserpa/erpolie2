@@ -15,7 +15,8 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { createRecord, updateRecord } from "@/lib/data-hooks";
+import { createClient } from "@/lib/supabase/client";
+import { updateRecord } from "@/lib/data-hooks";
 import { toast } from "sonner";
 import type { GrupoDeInsumo } from "@/modules/estoque/estoque.types";
 
@@ -49,27 +50,40 @@ export function GroupForm({ initialData, onSuccess }: GroupFormProps) {
 
   async function onSubmit(values: GroupFormValues) {
     try {
+      const supabase = createClient()
       // Preparar dados para envio
       const groupData = {
         ...values,
         updated_at: new Date().toISOString()
       };
-      
-      let result;
-      
+
       if (initialData?.id) {
-        // Atualizar grupo existente
-        result = await updateRecord('stock_groups', initialData.id, groupData);
-      } else {
-        // Criar novo grupo
-        result = await createRecord('stock_groups', groupData);
-      }
-      
-      if (result.success) {
-        toast.success(initialData ? "Grupo atualizado com sucesso" : "Grupo criado com sucesso");
+        const { error } = await supabase
+          .from('stock_groups')
+          .update(groupData)
+          .eq('id', initialData.id)
+          .select()
+          .single();
+        if (error) {
+          toast.error('Erro ao salvar grupo: ' + error.message);
+          console.error(error);
+          return;
+        }
+        toast.success('Grupo atualizado com sucesso');
         onSuccess?.();
       } else {
-        toast.error("Erro ao salvar grupo");
+        const { error } = await supabase
+          .from('stock_groups')
+          .insert(groupData)
+          .select()
+          .single();
+        if (error) {
+          toast.error('Erro ao criar grupo: ' + error.message);
+          console.error(error);
+          return;
+        }
+        toast.success('Grupo criado com sucesso');
+        onSuccess?.();
       }
     } catch (error) {
       console.error("Erro ao salvar grupo:", error);
