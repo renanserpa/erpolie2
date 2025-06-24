@@ -15,6 +15,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { toast } from "sonner";
 // TODO: Import AlertDialog for delete confirmation
 
 // Fetch real location data from Supabase (Placeholder)
@@ -70,7 +71,7 @@ export default function LocalizacoesEstoquePage() {
     setIsFormOpen(false);
     setEditingLocation(null);
     fetchAndSetLocations();
-    // TODO: Add toast notification for success
+    toast.success("Localização salva com sucesso");
   };
 
   const handleEdit = React.useCallback((location: LocalizacaoEstoque) => {
@@ -84,13 +85,11 @@ export default function LocalizacoesEstoquePage() {
       try {
         await deleteLocationAPI(locationId);
         console.log(`Location ${locationId} deleted successfully.`);
-        alert(`Localização "${locationName}" excluída com sucesso (placeholder).`);
         fetchAndSetLocations(); // Refresh data
-        // TODO: Add toast notification for success
+        toast.success(`Localização "${locationName}" excluída`);
       } catch (error) {
         console.error("Error deleting location:", error);
-        alert(`Erro ao excluir localização "${locationName}".`);
-        // TODO: Add toast notification for error
+        toast.error(`Erro ao excluir localização "${locationName}"`);
       }
     }
   }, []);

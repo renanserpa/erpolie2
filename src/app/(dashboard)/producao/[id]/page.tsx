@@ -7,6 +7,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ArrowLeft, Edit, Trash2, CheckCircle, Clock } from "lucide-react";
+import { toast } from "sonner";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
@@ -123,7 +124,7 @@ export default function ProductionOrderDetailsPage(): React.ReactElement | null 
 
       } catch (error) {
         console.error("Error fetching production order details:", error);
-        // TODO: Show error toast
+        toast.error("Erro ao buscar detalhes da produção");
       } finally {
         setLoading(false);
       }
@@ -154,10 +155,10 @@ export default function ProductionOrderDetailsPage(): React.ReactElement | null 
       
       // Navigate back to production orders list
       router.push("/producao");
-      // TODO: Show success toast
+      toast.success("Ordem de produção excluída");
     } catch (error) {
       console.error("Error deleting production order:", error);
-      // TODO: Show error toast
+      toast.error("Erro ao excluir ordem de produção");
     } finally {
       setDeleteDialogOpen(false);
     }
@@ -260,11 +261,11 @@ export default function ProductionOrderDetailsPage(): React.ReactElement | null 
 
       if (stagesError) throw stagesError;
       setStages(stagesData || []);
-      
-      // TODO: Show success toast
+
+      toast.success("Produção concluída com sucesso");
     } catch (error) {
       console.error("Error completing production order:", error);
-      // TODO: Show error toast
+      toast.error("Erro ao concluir produção");
     } finally {
       setCompleteDialogOpen(false);
     }

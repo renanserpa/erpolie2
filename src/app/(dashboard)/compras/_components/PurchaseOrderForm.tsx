@@ -18,6 +18,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Calendar } from "@/components/ui/calendar";
 import { CalendarIcon, PlusCircle, Trash2 } from "lucide-react";
+import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 import { format } from "date-fns";
 import { ptBR } from 'date-fns/locale';
@@ -115,7 +116,7 @@ export function PurchaseOrderForm({ initialData, onSuccess }: PurchaseOrderFormP
 
       } catch (error) {
         console.error("Error fetching related data for Purchase Order:", error);
-        // TODO: Show error toast to user
+        toast.error("Erro ao carregar dados relacionados");
       } finally {
         setLoadingRelatedData(false);
       }
@@ -196,14 +197,16 @@ export function PurchaseOrderForm({ initialData, onSuccess }: PurchaseOrderFormP
             .insert(itemsToInsert);
         if (insertItemsError) throw insertItemsError;
 
-        console.log("Purchase Order saved successfully!");
+        toast.success("Pedido de compra salvo com sucesso");
         onSuccess?.();
-        // TODO: Add success toast
 
     } catch (error) {
         console.error("Failed to save purchase order:", error);
-        // TODO: Show error message to user (toast)
-        alert(`Erro ao salvar ordem de compra: ${error instanceof Error ? error.message : String(error)}`);
+        toast.error(
+          `Erro ao salvar ordem de compra: ${
+            error instanceof Error ? error.message : String(error)
+          }`
+        );
     }
   }
 
