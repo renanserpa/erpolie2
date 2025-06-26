@@ -152,7 +152,9 @@ export default function ComponentesPage() {
       if (result.success) {
         setComponents(result.data || []);
       } else {
-        setError("Nenhum componente encontrado");
+        setComponents([]);
+        setError(result.error || "Erro ao carregar componentes");
+        toast.error("Erro ao carregar componentes");
       }
     } catch (err: unknown) {
       console.error("Error fetching components:", err);
