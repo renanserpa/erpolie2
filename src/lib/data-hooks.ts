@@ -12,7 +12,10 @@ interface SupabaseResult<T> {
 }
 
 // Hook para buscar dados genéricos com ordenação por campo
-export function useSupabaseData<T>(table: string, orderBy: string): { data: T[]; loading: boolean; error: string | null } {
+export function useSupabaseData<T>(
+  table: string,
+  orderBy: string,
+): { data: T[]; loading: boolean; error: string | null } {
   const [data, setData] = useState<T[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -43,14 +46,12 @@ export function useSupabaseData<T>(table: string, orderBy: string): { data: T[];
 // Função para buscar insumos com filtros opcionais
 export async function getInsumos(
   filters: Record<string, unknown> = {},
-): Promise<{ success: boolean; data?: StockItem[]; error?: string }> {
+): Promise<{ success: boolean; data: StockItem[]; error?: string }> {
   try {
     const supabase = createClient();
     let query = supabase
       .from("stock_items")
-      .select(
-        "*, unit_of_measurement:unit_of_measurement_id(abbreviation)",
-      );
+      .select("*, unit_of_measurement:unit_of_measurement_id(abbreviation)");
 
     Object.entries(filters).forEach(([key, value]) => {
       if (value !== undefined && value !== null && value !== "") {
@@ -73,7 +74,10 @@ export async function getInsumos(
 export const getSupplies = getInsumos;
 
 // --- Generic Supabase helpers ---
-export function handleSupabaseError(error: unknown): { success: false; error: string } {
+export function handleSupabaseError(error: unknown): {
+  success: false;
+  error: string;
+} {
   const message =
     typeof error === "object" && error !== null && "message" in error
       ? String((error as { message: string }).message)
@@ -84,7 +88,7 @@ export function handleSupabaseError(error: unknown): { success: false; error: st
 
 export async function createRecord<T>(
   table: string,
-  data: Partial<T>
+  data: Partial<T>,
 ): Promise<{ success: boolean; data?: T; error?: string }> {
   try {
     const supabase = createClient();
@@ -119,7 +123,7 @@ export async function createRecord<T>(
 export async function updateRecord<T>(
   table: string,
   id: string,
-  data: Partial<T>
+  data: Partial<T>,
 ): Promise<{ success: boolean; data?: T; error?: string }> {
   try {
     const supabase = createClient();
@@ -146,7 +150,7 @@ export async function updateRecord<T>(
 
 export async function deleteRecord(
   table: string,
-  id: string
+  id: string,
 ): Promise<{ success: boolean; error?: string }> {
   try {
     const supabase = createClient();
@@ -160,7 +164,7 @@ export async function deleteRecord(
 
 export async function getRecordById<T>(
   table: string,
-  id: string
+  id: string,
 ): Promise<{ success: boolean; data?: T; error?: string }> {
   try {
     const supabase = createClient();
@@ -179,7 +183,7 @@ export async function getRecordById<T>(
 
 export async function getRecords<T>(
   table: string,
-  query: Record<string, unknown> = {}
+  query: Record<string, unknown> = {},
 ): Promise<{ success: boolean; data?: T[]; error?: string }> {
   try {
     const supabase = createClient();
@@ -219,18 +223,17 @@ export const createSupplier = (data: Partial<Supplier>) =>
 export const updateSupplier = (id: string, data: Partial<Supplier>) =>
   updateRecord<Supplier>("suppliers", id, data);
 
-export const deleteSupplier = (id: string) =>
-  deleteRecord("suppliers", id);
+export const deleteSupplier = (id: string) => deleteRecord("suppliers", id);
 
 export const getStockItems = async (
-  query: Record<string, unknown> = {}
+  query: Record<string, unknown> = {},
 ): Promise<{ success: boolean; data?: StockItem[]; error?: string }> => {
   const lowStock = Boolean(query.low_stock);
   if ("low_stock" in query) delete query.low_stock;
   const result = await getRecords<StockItem>("stock_items", query);
   if (result.success && lowStock) {
     result.data = (result.data || []).filter(
-      (i) => typeof i.min_quantity === "number" && i.quantity < i.min_quantity
+      (i) => typeof i.min_quantity === "number" && i.quantity < i.min_quantity,
     );
   }
   return result;
@@ -238,14 +241,12 @@ export const getStockItems = async (
 
 export const getComponents = async (
   query: Record<string, unknown> = {},
-): Promise<{ success: boolean; data?: Component[]; error?: string }> => {
+): Promise<{ success: boolean; data: Component[]; error?: string }> => {
   try {
     const supabase = createClient();
     let builder = supabase
       .from("components")
-      .select(
-        "*, unit_of_measurement:unit_of_measurement_id(abbreviation)",
-      );
+      .select("*, unit_of_measurement:unit_of_measurement_id(abbreviation)");
 
     Object.entries(query).forEach(([key, value]) => {
       if (value !== undefined && value !== null && value !== "") {
@@ -274,6 +275,4 @@ export const createComponent = (data: Partial<Component>) =>
 export const updateComponent = (id: string, data: Partial<Component>) =>
   updateRecord<Component>("components", id, data);
 
-export const deleteComponent = (id: string) =>
-  deleteRecord("components", id);
-
+export const deleteComponent = (id: string) => deleteRecord("components", id);
