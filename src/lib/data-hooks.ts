@@ -66,10 +66,16 @@ export async function getInsumos(
     });
 
     const { data, error } = await query.returns<StockItem[]>();
-    if (error) return handleSupabaseError(error);
+    if (error) {
+      toast.error("Erro ao carregar dados");
+      const err = handleSupabaseError(error);
+      return { success: false, data: [], error: err.error };
+    }
     return { success: true, data: Array.isArray(data) ? data : [] };
   } catch (err) {
-    return handleSupabaseError(err);
+    toast.error("Erro ao carregar dados");
+    const result = handleSupabaseError(err);
+    return { success: false, data: [], error: result.error };
   }
 }
 
@@ -210,11 +216,27 @@ export async function getRecords<T>(
 // --- Entity helpers ---
 import type { Client, Supplier, StockItem, Component } from "@/types/schema";
 
-export const getClients = (query: Record<string, unknown> = {}) =>
-  getRecords<Client>("clients", query);
+export const getClients = async (
+  query: Record<string, unknown> = {},
+): Promise<{ success: boolean; data: Client[]; error?: string }> => {
+  const result = await getRecords<Client>("clients", query);
+  if (!result.success) {
+    toast.error("Erro ao carregar dados");
+    return { success: false, data: [], error: result.error };
+  }
+  return { success: true, data: result.data ?? [] };
+};
 
-export const getSuppliers = (query: Record<string, unknown> = {}) =>
-  getRecords<Supplier>("suppliers", query);
+export const getSuppliers = async (
+  query: Record<string, unknown> = {},
+): Promise<{ success: boolean; data: Supplier[]; error?: string }> => {
+  const result = await getRecords<Supplier>("suppliers", query);
+  if (!result.success) {
+    toast.error("Erro ao carregar dados");
+    return { success: false, data: [], error: result.error };
+  }
+  return { success: true, data: result.data ?? [] };
+};
 
 export const getSupplierById = (id: string) =>
   getRecordById<Supplier>("suppliers", id);
@@ -263,10 +285,16 @@ export const getComponents = async (
     });
 
     const { data, error } = await builder.returns<Component[]>();
-    if (error) return handleSupabaseError(error);
+    if (error) {
+      toast.error("Erro ao carregar dados");
+      const err = handleSupabaseError(error);
+      return { success: false, data: [], error: err.error };
+    }
     return { success: true, data: Array.isArray(data) ? data : [] };
   } catch (err) {
-    return handleSupabaseError(err);
+    toast.error("Erro ao carregar dados");
+    const result = handleSupabaseError(err);
+    return { success: false, data: [], error: result.error };
   }
 };
 
