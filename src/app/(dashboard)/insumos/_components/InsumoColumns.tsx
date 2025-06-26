@@ -35,9 +35,9 @@ export type Insumo = {
     name: string;
   } | null;
   unit_of_measurement?: {
-    id: string;
-    name: string;
-    symbol: string;
+    id?: string;
+    name?: string;
+    abbreviation: string;
   } | null;
   supplier?: {
     id: string;
@@ -95,7 +95,7 @@ export const insumoColumns = (onEdit: (insumo: Insumo) => void, onDelete: (insum
     header: "Quantidade",
     cell: ({ row }) => {
       const quantity = row.original.quantity || 0;
-      const unit = row.original.unit_of_measurement?.symbol || "un";
+      const unit = row.original.unit_of_measurement?.abbreviation || "un";
       const minQuantity = row.original.min_quantity || 0;
       
       // Verificar se está abaixo do estoque mínimo
@@ -114,9 +114,10 @@ export const insumoColumns = (onEdit: (insumo: Insumo) => void, onDelete: (insum
     },
   },
   {
-    accessorKey: "unit_of_measurement.symbol",
+    id: "unit",
     header: "Unidade",
-    cell: ({ row }) => <div>{row.original.unit_of_measurement?.symbol || "un"}</div>,
+    accessorFn: (row) => row.unit_of_measurement?.abbreviation ?? "-",
+    cell: ({ row }) => row.getValue("unit") as string,
   },
   {
     accessorKey: "cost_price",

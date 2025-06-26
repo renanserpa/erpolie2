@@ -41,37 +41,36 @@ export function useSupabaseData<T>(table: string, orderBy: string): { data: T[];
 }
 
 // Função para buscar insumos com filtros opcionais
-export async function getSupplies(filters: Record<string, unknown> = {}): Promise<SupabaseResult<any>> {
-  const supabase = createClient();
-  let query = supabase
-    .from("stock_items")
-    .select(
-      `
-      *,
-      supplier:supplier_id ( id, name ),
-      unit_of_measurement:unit_of_measurement_id ( id, name, symbol )
-    `
-    );
+export async function getInsumos(
+  filters: Record<string, unknown> = {},
+): Promise<{ success: boolean; data?: StockItem[]; error?: string }> {
+  try {
+    const supabase = createClient();
+    let query = supabase
+      .from("stock_items")
+      .select(
+        "*, unit_of_measurement:unit_of_measurement_id(abbreviation)",
+      );
 
-  // Aplicar filtros se houver
-  Object.entries(filters).forEach(([key, value]) => {
-    if (typeof value === "string" && value.startsWith("ilike.")) {
-      query = query.ilike(key, value.replace("ilike.", ""));
-    } else {
-      query = query.eq(key, value);
-    }
-  });
+    Object.entries(filters).forEach(([key, value]) => {
+      if (value !== undefined && value !== null && value !== "") {
+        if (typeof value === "string" && value.startsWith("ilike.")) {
+          query = query.ilike(key, value.replace("ilike.", ""));
+        } else {
+          query = query.eq(key, value as string);
+        }
+      }
+    });
 
-  const { data, error } = await query;
-
-  if (error) {
-    console.error("Erro ao buscar insumos:", error?.message || error);
-    toast.error("Erro ao buscar insumos: " + (error?.message || ""));
-    return { success: false, error: error.message };
+    const { data, error } = await query.returns<StockItem[]>();
+    if (error) return handleSupabaseError(error);
+    return { success: true, data: Array.isArray(data) ? data : [] };
+  } catch (err) {
+    return handleSupabaseError(err);
   }
-
-  return { success: true, data: data as any[] };
 }
+
+export const getSupplies = getInsumos;
 
 // --- Generic Supabase helpers ---
 export function handleSupabaseError(error: unknown): { success: false; error: string } {
@@ -237,8 +236,34 @@ export const getStockItems = async (
   return result;
 };
 
-export const getComponents = (query: Record<string, unknown> = {}) =>
-  getRecords<Component>("components", query);
+export const getComponents = async (
+  query: Record<string, unknown> = {},
+): Promise<{ success: boolean; data?: Component[]; error?: string }> => {
+  try {
+    const supabase = createClient();
+    let builder = supabase
+      .from("components")
+      .select(
+        "*, unit_of_measurement:unit_of_measurement_id(abbreviation)",
+      );
+
+    Object.entries(query).forEach(([key, value]) => {
+      if (value !== undefined && value !== null && value !== "") {
+        if (typeof value === "string" && value.startsWith("ilike.")) {
+          builder = builder.ilike(key, value.replace("ilike.", ""));
+        } else {
+          builder = builder.eq(key, value as string);
+        }
+      }
+    });
+
+    const { data, error } = await builder.returns<Component[]>();
+    if (error) return handleSupabaseError(error);
+    return { success: true, data: Array.isArray(data) ? data : [] };
+  } catch (err) {
+    return handleSupabaseError(err);
+  }
+};
 
 export const getComponentById = (id: string) =>
   getRecordById<Component>("components", id);
