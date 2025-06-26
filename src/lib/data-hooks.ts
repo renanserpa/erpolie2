@@ -51,7 +51,9 @@ export async function getInsumos(
     const supabase = createClient();
     let query = supabase
       .from("stock_items")
-      .select("*, unit_of_measurement:unit_of_measurement_id(abbreviation)");
+      .select(
+        "*, unit_of_measurement:unit_of_measurement_id(id, name, abbreviation)"
+      );
 
     Object.entries(filters).forEach(([key, value]) => {
       if (value !== undefined && value !== null && value !== "") {
@@ -246,7 +248,9 @@ export const getComponents = async (
     const supabase = createClient();
     let builder = supabase
       .from("components")
-      .select("*, unit_of_measurement:unit_of_measurement_id(abbreviation)");
+      .select(
+        "*, unit_of_measurement:unit_of_measurement_id(id, name, abbreviation)"
+      );
 
     Object.entries(query).forEach(([key, value]) => {
       if (value !== undefined && value !== null && value !== "") {
