@@ -57,7 +57,7 @@ export const componentColumns = (onEdit: (component: Component) => void, onDelet
   {
     id: "unit",
     header: "Unidade",
-    accessorFn: (row) => row.unit_of_measurement?.abbreviation ?? "-",
+    accessorFn: (row) => row.unit_of_measurement?.abbreviation || "-",
     cell: ({ row }) => row.getValue("unit") as string,
   },
   {

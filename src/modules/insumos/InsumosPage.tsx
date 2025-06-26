@@ -166,43 +166,9 @@ export default function InsumosPage() {
       if (result.success) {
         setInsumos(result.data || []);
       } else {
-        // Usar dados mockados para demonstração
-        setInsumos([
-          {
-            id: "1",
-            name: "Tecido Algodão 100%",
-            sku: "TAL100",
-            quantity: 200,
-            min_quantity: 50,
-            unit_of_measurement_id: "1",
-            unit_of_measurement: { id: "1", name: "Metro", abbreviation: "m" },
-            supplier_id: "1",
-            supplier: { id: "1", name: "Fornecedor Têxtil Ltda" },
-            is_active: true,
-            created_at: new Date().toISOString(),
-          },
-          {
-            id: "2",
-            name: "Linha para Costura",
-            sku: "LIN001",
-            quantity: 30,
-            min_quantity: 100,
-            unit_of_measurement_id: "2",
-            unit_of_measurement: {
-              id: "2",
-              name: "Unidade",
-              abbreviation: "un",
-            },
-            supplier_id: "2",
-            supplier: {
-              id: "2",
-              name: "Distribuidora de Tecidos Nacional S.A.",
-            },
-            is_active: true,
-            created_at: new Date().toISOString(),
-          },
-        ]);
-        console.warn("Usando dados mockados para insumos");
+        setInsumos([]);
+        setError(result.error || "Erro ao carregar insumos");
+        toast.error("Erro ao carregar lista de insumos.");
       }
     } catch (err: unknown) {
       const error = err as Error;
