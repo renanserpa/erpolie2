@@ -16,7 +16,7 @@ import type { ParseError, ParseResult } from 'papaparse';
 import { saveAs } from 'file-saver';
 import { toast } from "sonner";
 import { InsumoForm } from "./_components/InsumoForm";
-import { getSupplies, useSupabaseData } from "@/lib/data-hooks";
+import { getInsumos, useSupabaseData } from "@/lib/data-hooks";
 import type { Insumo } from "./_components/InsumoColumns";
 
 interface CSVInsumoParseResult {
@@ -58,8 +58,8 @@ export default function InsumosPage() {
     { id: "supplier_id", label: "Fornecedor", type: "select", options: 
       suppliers.map(supplier => ({ value: supplier.id, label: supplier.name }))
     },
-    { id: "unit_of_measurement_id", label: "Unidade", type: "select", options: 
-      units.map(unit => ({ value: unit.id, label: `${unit.name} (${unit.symbol})` }))
+    { id: "unit_of_measurement_id", label: "Unidade", type: "select", options:
+      units.map(unit => ({ value: unit.id, label: `${unit.name} (${unit.abbreviation})` }))
     },
     { id: "low_stock", label: "Estoque Baixo", type: "boolean" }
   ];
@@ -120,7 +120,7 @@ export default function InsumosPage() {
         }
       });
 
-      const result = await getSupplies(query);
+      const result = await getInsumos(query);
       
       if (result.success) {
         setInsumos(result.data || []);
@@ -134,7 +134,7 @@ export default function InsumosPage() {
             quantity: 200,
             min_quantity: 50,
             unit_of_measurement_id: '1',
-            unit_of_measurement: { id: '1', name: 'Metro', symbol: 'm' },
+            unit_of_measurement: { id: '1', name: 'Metro', abbreviation: 'm' },
             supplier_id: '1',
             supplier: { id: '1', name: 'Fornecedor Têxtil Ltda' },
             is_active: true,
@@ -147,7 +147,7 @@ export default function InsumosPage() {
             quantity: 30,
             min_quantity: 100,
             unit_of_measurement_id: '2',
-            unit_of_measurement: { id: '2', name: 'Unidade', symbol: 'un' },
+            unit_of_measurement: { id: '2', name: 'Unidade', abbreviation: 'un' },
             supplier_id: '2',
             supplier: { id: '2', name: 'Distribuidora de Tecidos Nacional S.A.' },
             is_active: true,

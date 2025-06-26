@@ -14,11 +14,13 @@ export type Component = {
   id: string;
   name: string;
   description?: string | null;
+  unit_of_measurement?: {
+    abbreviation: string;
+  } | null;
   image_url?: string | null;
   is_active?: boolean | null;
   created_at: string;
   updated_at?: string | null;
-  // Relacionamentos podem ser adicionados aqui conforme necessário
 };
 
 // Define columns as a function to accept callbacks
@@ -53,9 +55,10 @@ export const componentColumns = (onEdit: (component: Component) => void, onDelet
     cell: ({ row }) => row.getValue("description") || "-",
   },
   {
-    accessorKey: "unit_of_measurement.abbreviation",
+    id: "unit",
     header: "Unidade",
-    cell: ({ row }) => row.original.unit_of_measurement?.abbreviation || "-",
+    accessorFn: (row) => row.unit_of_measurement?.abbreviation ?? "-",
+    cell: ({ row }) => row.getValue("unit") as string,
   },
   {
     accessorKey: "is_active",
