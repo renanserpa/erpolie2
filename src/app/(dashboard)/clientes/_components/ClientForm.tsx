@@ -17,8 +17,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
-import { createClient } from "@/lib/supabase/client";
-import { updateRecord } from "@/lib/data-hooks";
+import { createRecord, updateRecord } from "@/lib/data-hooks";
 import type { Client } from "@/types/schema";
 import { Switch } from "@/components/ui/switch";
 import { useRouter } from "next/navigation";
@@ -65,39 +64,29 @@ export function ClientForm({ initialData, onSuccess }: ClientFormProps) {
 
   async function onSubmit(values: ClientFormValues) {
     try {
-      const supabase = createClient()
       const clientData = {
         ...values,
         updated_at: new Date().toISOString(),
       };
 
       if (initialData?.id) {
-        const { error } = await supabase
-          .from("clients")
-          .update(clientData)
-          .eq("id", initialData.id)
-          .select()
-          .single();
-        if (error) {
-          toast.error("Erro ao salvar cliente: " + error.message);
-          console.error(error);
+        const result = await updateRecord<Client>(
+          "clients",
+          initialData.id,
+          clientData,
+        );
+        if (!result.success) {
+          toast.error("Erro ao salvar cliente: " + result.error);
           return;
         }
         toast.success("Cliente atualizado com sucesso");
       } else {
-        const { data, error } = await supabase
-          .from("clients")
-          .insert(clientData)
-          .select()
-          .single();
-        if (error) {
-          toast.error("Erro ao criar cliente: " + error.message);
-          console.error(error);
+        const result = await createRecord<Client>("clients", clientData);
+        if (!result.success) {
+          toast.error("Erro ao criar cliente: " + result.error);
           return;
         }
-        if (data) {
-          toast.success("Cliente criado com sucesso");
-        }
+        toast.success("Cliente criado com sucesso");
       }
 
       onSuccess?.();
