@@ -18,7 +18,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { toast } from "sonner";
-import { createRecord, updateRecord } from "@/lib/data-hooks";
+import { createClient as createSupabaseClient } from "@/lib/supabase/client";
 import { Switch } from "@/components/ui/switch";
 import type { Supplier } from "@/types/schema";
 import { useRouter } from "next/navigation";
@@ -67,29 +67,31 @@ export function SupplierForm({ initialData, onSuccess }: SupplierFormProps) {
 
   const onSubmit: SubmitHandler<SupplierFormValues> = async (values) => {
     try {
+      const supabase = createSupabaseClient();
       const supplierData = {
         ...values,
         updated_at: new Date().toISOString(),
       };
 
+      let error;
       if (initialData?.id) {
-        const result = await updateRecord<Supplier>(
-          "suppliers",
-          initialData.id,
-          supplierData,
-        );
-        if (!result.success) {
-          toast.error("Erro ao salvar fornecedor: " + result.error);
-          return;
+        ({ error } = await supabase
+          .from("suppliers")
+          .update(supplierData)
+          .eq("id", initialData.id));
+        if (!error) {
+          toast.success("Fornecedor atualizado com sucesso!");
         }
-        toast.success("Fornecedor atualizado com sucesso");
       } else {
-        const result = await createRecord<Supplier>("suppliers", supplierData);
-        if (!result.success) {
-          toast.error("Erro ao criar fornecedor: " + result.error);
-          return;
+        ({ error } = await supabase.from("suppliers").insert(supplierData));
+        if (!error) {
+          toast.success("Fornecedor criado com sucesso!");
         }
-        toast.success("Fornecedor criado com sucesso");
+      }
+
+      if (error) {
+        toast.error("Erro ao salvar fornecedor: " + error.message);
+        return;
       }
 
       onSuccess?.();
