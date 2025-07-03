@@ -67,7 +67,7 @@ export function SupplierForm({ initialData, onSuccess }: SupplierFormProps) {
 
   const onSubmit: SubmitHandler<SupplierFormValues> = async (values) => {
     try {
-      const supabase = createSupabaseClient();
+      const supabase = await createSupabaseClient();
       const supplierData = {
         ...values,
         updated_at: new Date().toISOString(),
@@ -90,6 +90,8 @@ export function SupplierForm({ initialData, onSuccess }: SupplierFormProps) {
       }
 
       if (error) {
+        console.error(error);
+        console.log(supplierData);
         toast.error("Erro ao salvar fornecedor: " + error.message);
         return;
       }
