@@ -49,9 +49,12 @@ export function ComponentForm({ initialData, onSuccess }: ComponentFormProps) {
     },
   });
 
+  const [isSubmitting, setIsSubmitting] = React.useState(false);
+
   async function onSubmit(values: ComponentFormValues) {
+    setIsSubmitting(true);
     try {
-      const supabase = createClient()
+      const supabase = await createClient()
       // Preparar dados para envio
       const componentData = {
         ...values,
@@ -66,8 +69,8 @@ export function ComponentForm({ initialData, onSuccess }: ComponentFormProps) {
           .select()
           .single();
         if (error) {
+          console.error("Erro Supabase:", error, "Payload:", componentData);
           toast.error("Erro ao salvar componente: " + error.message);
-          console.error(error);
           return;
         }
         toast.success("Componente atualizado com sucesso");
@@ -80,17 +83,19 @@ export function ComponentForm({ initialData, onSuccess }: ComponentFormProps) {
           .select()
           .single();
         if (error) {
+          console.error("Erro Supabase:", error, "Payload:", componentData);
           toast.error("Erro ao salvar componente: " + error.message);
-          console.error(error);
           return;
         }
         toast.success("Componente criado com sucesso");
         onSuccess?.();
         router.push("/componentes");
       }
-    } catch (error) {
-      console.error("Erro ao salvar componente:", error);
-      toast.error("Erro ao salvar componente");
+    } catch (err) {
+      console.error("Erro inesperado:", err);
+      toast.error("Erro inesperado ao criar componente");
+    } finally {
+      setIsSubmitting(false);
     }
   }
 
@@ -164,7 +169,7 @@ export function ComponentForm({ initialData, onSuccess }: ComponentFormProps) {
           <Button type="button" variant="outline" onClick={() => onSuccess?.()}>
             Cancelar
           </Button>
-          <Button type="submit" disabled={form.formState.isSubmitting}>
+          <Button type="submit" disabled={isSubmitting}>
             {initialData ? "Salvar Alterações" : "Criar Componente"}
           </Button>
         </div>

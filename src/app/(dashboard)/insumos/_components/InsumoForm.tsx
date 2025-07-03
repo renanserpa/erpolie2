@@ -32,7 +32,7 @@ export function InsumoForm({ initialData, onSuccess }: InsumoFormProps): React.J
   const {
     register,
     handleSubmit,
-    formState: { errors, isSubmitting },
+    formState: { errors },
   } = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -45,10 +45,12 @@ export function InsumoForm({ initialData, onSuccess }: InsumoFormProps): React.J
   });
 
   const router = useRouter();
+  const [isSubmitting, setIsSubmitting] = React.useState(false);
 
   async function onSubmit(data: FormValues): Promise<void> {
+    setIsSubmitting(true);
     try {
-      const supabase = createClient();
+      const supabase = await createClient();
       if (initialData?.id) {
         const { error } = await updateRecord<StockItem>(
           "stock_items",
@@ -61,8 +63,8 @@ export function InsumoForm({ initialData, onSuccess }: InsumoFormProps): React.J
           },
         );
         if (error) {
-          toast.error("Erro ao salvar insumo");
-          console.error(error);
+          console.error("Erro Supabase:", error, "Payload:", data);
+          toast.error("Erro ao salvar insumo: " + error.message);
           return;
         }
       } else {
@@ -77,8 +79,8 @@ export function InsumoForm({ initialData, onSuccess }: InsumoFormProps): React.J
           .select()
           .single();
         if (error) {
+          console.error("Erro Supabase:", error, "Payload:", data);
           toast.error("Erro ao criar insumo: " + error.message);
-          console.error(error);
           return;
         }
       }
@@ -86,9 +88,11 @@ export function InsumoForm({ initialData, onSuccess }: InsumoFormProps): React.J
       toast.success("Insumo salvo com sucesso");
       onSuccess?.();
       router.push("/insumos");
-    } catch (error) {
-      console.error("Erro ao salvar insumo:", error);
-      toast.error("Erro ao salvar insumo");
+    } catch (err) {
+      console.error("Erro inesperado:", err);
+      toast.error("Erro inesperado ao criar insumo");
+    } finally {
+      setIsSubmitting(false);
     }
   }
 

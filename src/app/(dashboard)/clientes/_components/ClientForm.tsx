@@ -17,7 +17,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
-import { createClient as createSupabaseClient } from "@/lib/supabase/client";
+import { createClient } from "@/lib/supabase/client";
 import type { Client } from "@/types/schema";
 import { Switch } from "@/components/ui/switch";
 import { useRouter } from "next/navigation";
@@ -61,10 +61,12 @@ export function ClientForm({ initialData, onSuccess }: ClientFormProps) {
   });
 
   const router = useRouter();
+  const [isSubmitting, setIsSubmitting] = React.useState(false);
 
   async function onSubmit(values: ClientFormValues) {
+    setIsSubmitting(true);
     try {
-      const supabase = await createSupabaseClient();
+      const supabase = await createClient();
       const clientData = {
         ...values,
         updated_at: new Date().toISOString(),
@@ -87,17 +89,18 @@ export function ClientForm({ initialData, onSuccess }: ClientFormProps) {
       }
 
       if (error) {
-        console.error(error);
-        console.log(clientData);
-        toast.error("Erro ao salvar cliente: " + error.message);
+        console.error("Erro Supabase:", error, "Payload:", clientData);
+        toast.error("Erro ao criar cliente: " + error.message);
         return;
       }
 
       onSuccess?.();
       router.push("/clientes");
-    } catch (error) {
-      console.error("Erro ao salvar cliente:", error);
-      toast.error("Erro ao salvar cliente");
+    } catch (err) {
+      console.error("Erro inesperado:", err);
+      toast.error("Erro inesperado ao criar cliente");
+    } finally {
+      setIsSubmitting(false);
     }
   }
 
@@ -274,7 +277,7 @@ export function ClientForm({ initialData, onSuccess }: ClientFormProps) {
           <Button type="button" variant="outline" onClick={() => onSuccess?.()}>
             Cancelar
           </Button>
-          <Button type="submit" disabled={form.formState.isSubmitting}>
+          <Button type="submit" disabled={isSubmitting}>
             {initialData ? "Salvar Alterações" : "Criar Cliente"}
           </Button>
         </div>
