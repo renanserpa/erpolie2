@@ -50,15 +50,20 @@ yarn install # ou npm install
 cp .env.example .env.local
 # Preencha suas variáveis Supabase (URL, Anon Key, etc)
 ```
-4. **Execução Local**
+4. **Ajuste de Ambiente**
+```bash
+./scripts/setup-and-validate.sh
+```
+
+5. **Execução Local**
 ```bash
 yarn dev # ou npm run dev
 ```
-5. **Testes**
+6. **Testes**
 ```bash
 yarn test # ou npm test
 ```
-6. **Build para Produção**
+7. **Build para Produção**
 ```bash
 yarn build # ou npm run build
 ```
