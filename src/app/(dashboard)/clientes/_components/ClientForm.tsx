@@ -18,6 +18,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
 import { createClient } from "@/lib/supabase/client";
+import type { PostgrestError } from "@supabase/supabase-js";
 import type { Client } from "@/types/schema";
 import { Switch } from "@/components/ui/switch";
 import { useRouter } from "next/navigation";
@@ -66,31 +67,33 @@ export function ClientForm({ initialData, onSuccess }: ClientFormProps) {
   async function onSubmit(values: ClientFormValues) {
     setIsSubmitting(true);
     try {
-      const supabase = await createClient();
+      const supabase = createClient();
       const clientData = {
         ...values,
         updated_at: new Date().toISOString(),
       };
 
-      let error;
+      let supabaseError: PostgrestError | null = null;
       if (initialData?.id) {
-        ({ error } = await supabase
-          .from("clients")
+        const { error } = await supabase
+          .from("clientes")
           .update(clientData)
-          .eq("id", initialData.id));
+          .eq("id", initialData.id);
+        supabaseError = error;
         if (!error) {
           toast.success("Cliente atualizado com sucesso!");
         }
       } else {
-        ({ error } = await supabase.from("clients").insert(clientData));
+        const { error } = await supabase.from("clientes").insert(clientData);
+        supabaseError = error;
         if (!error) {
           toast.success("Cliente criado com sucesso!");
         }
       }
 
-      if (error) {
-        console.error("Erro Supabase:", error, "Payload:", clientData);
-        toast.error("Erro ao criar cliente: " + error.message);
+      if (supabaseError) {
+        console.error("Erro Supabase:", supabaseError, "Payload:", clientData);
+        toast.error(`Erro ao salvar cliente: ${supabaseError.message}`);
         return;
       }
 
@@ -98,7 +101,7 @@ export function ClientForm({ initialData, onSuccess }: ClientFormProps) {
       router.push("/clientes");
     } catch (err) {
       console.error("Erro inesperado:", err);
-      toast.error("Erro inesperado ao criar cliente");
+      toast.error("Erro inesperado ao salvar cliente");
     } finally {
       setIsSubmitting(false);
     }
