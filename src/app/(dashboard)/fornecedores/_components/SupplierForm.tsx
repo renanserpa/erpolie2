@@ -18,7 +18,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { toast } from "sonner";
-import { createClient as createSupabaseClient } from "@/lib/supabase/client";
+import { createClient } from "@/lib/supabase/client";
 import { Switch } from "@/components/ui/switch";
 import type { Supplier } from "@/types/schema";
 import { useRouter } from "next/navigation";
@@ -64,10 +64,12 @@ export function SupplierForm({ initialData, onSuccess }: SupplierFormProps) {
   });
 
   const router = useRouter();
+  const [isSubmitting, setIsSubmitting] = React.useState(false);
 
   const onSubmit: SubmitHandler<SupplierFormValues> = async (values) => {
+    setIsSubmitting(true);
     try {
-      const supabase = await createSupabaseClient();
+      const supabase = await createClient();
       const supplierData = {
         ...values,
         updated_at: new Date().toISOString(),
@@ -90,17 +92,18 @@ export function SupplierForm({ initialData, onSuccess }: SupplierFormProps) {
       }
 
       if (error) {
-        console.error(error);
-        console.log(supplierData);
-        toast.error("Erro ao salvar fornecedor: " + error.message);
+        console.error("Erro Supabase:", error, "Payload:", supplierData);
+        toast.error("Erro ao criar fornecedor: " + error.message);
         return;
       }
 
       onSuccess?.();
       router.push("/fornecedores");
-    } catch (error) {
-      console.error("Erro ao salvar fornecedor:", error);
-      toast.error("Erro ao salvar fornecedor");
+    } catch (err) {
+      console.error("Erro inesperado:", err);
+      toast.error("Erro inesperado ao criar fornecedor");
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -292,7 +295,7 @@ export function SupplierForm({ initialData, onSuccess }: SupplierFormProps) {
           <Button type="button" variant="outline" onClick={() => onSuccess?.()}>
             Cancelar
           </Button>
-          <Button type="submit" disabled={form.formState.isSubmitting}>
+          <Button type="submit" disabled={isSubmitting}>
             {initialData ? "Salvar Alterações" : "Criar Fornecedor"}
           </Button>
         </div>
