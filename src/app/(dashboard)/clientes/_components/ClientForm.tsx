@@ -64,7 +64,7 @@ export function ClientForm({ initialData, onSuccess }: ClientFormProps) {
 
   async function onSubmit(values: ClientFormValues) {
     try {
-      const supabase = createSupabaseClient();
+      const supabase = await createSupabaseClient();
       const clientData = {
         ...values,
         updated_at: new Date().toISOString(),
@@ -87,6 +87,8 @@ export function ClientForm({ initialData, onSuccess }: ClientFormProps) {
       }
 
       if (error) {
+        console.error(error);
+        console.log(clientData);
         toast.error("Erro ao salvar cliente: " + error.message);
         return;
       }
